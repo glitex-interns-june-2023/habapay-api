@@ -14,10 +14,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "habapay_prod",
-    "host": "127.0.0.1",
+    "username": "PLACEHOLDER_USER",
+    "password": "PLACEHOLDER_PASS",
+    "database": "PLACEHODER_DB",
+    "host": "PLACEHOLDER_HOST",
     "dialect": "mysql"
   }
 }
