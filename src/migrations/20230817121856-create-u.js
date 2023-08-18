@@ -9,19 +9,25 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      googleId : {
+        type: Sequelize.STRING
+      },
       email: {
         type: Sequelize.STRING
       },
-      first_name: {
+      firstName: {
         type: Sequelize.STRING
       },
-      last_name: {
+      lastName: {
+        type: Sequelize.STRING
+      },
+      userName: {
         type: Sequelize.STRING
       },
       phone: {
         type: Sequelize.STRING
       },
-      verified: {
+      isVerified: {
         type: Sequelize.BOOLEAN
       },
       createdAt: {
