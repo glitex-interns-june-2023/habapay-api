@@ -27,8 +27,19 @@ module.exports = {
       phone: {
         type: Sequelize.STRING
       },
+      profileUrl: {
+        type: Sequelize.STRING
+      },
       isVerified: {
         type: Sequelize.BOOLEAN
+      },
+      password: {
+        type: Sequelize.STRING
+      },
+      role: {
+        type: Sequelize.ENUM('superadmin', 'admin', 'user'),
+        allowNull: false,
+        defaultValue: 'user'
       },
       createdAt: {
         allowNull: false,

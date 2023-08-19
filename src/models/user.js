@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
       lastName: DataTypes.STRING,
       userName: DataTypes.STRING,
       phone: DataTypes.STRING,
+      profileUrl: DataTypes.STRING,
+      password: DataTypes.STRING,
+      role: {
+        type: DataTypes.ENUM('superadmin', 'admin', 'user'),
+      },
       isVerified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
