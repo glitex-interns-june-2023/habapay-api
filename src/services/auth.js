@@ -28,15 +28,17 @@ const checkLogin = async (email, password) => {
     if (!user) {
       return false;
     }
-    console.log(user);
+
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
+      console.log("Not password match", passwordMatch)
       return false;
     }
 
     return user;
   } catch (error) {
+    console.log("Error: ", err)
     return false;
   }
 };

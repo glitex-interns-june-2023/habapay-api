@@ -21,7 +21,7 @@ module.exports = {
       lastName: {
         type: Sequelize.STRING
       },
-      userName: {
+      username: {
         type: Sequelize.STRING
       },
       phone: {
@@ -31,7 +31,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       isVerified: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       password: {
         type: Sequelize.STRING
@@ -43,7 +44,7 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
