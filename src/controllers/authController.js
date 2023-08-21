@@ -18,6 +18,8 @@ const login = async (req, res, next) => {
   }
 
   const user = await authService.checkLogin(email, password);
+  const { password: passwordToRemove, ...userData } = user.get({ raw: true });
+
   if (!user) {
     return res.status(401).json({
       success: false,
@@ -28,14 +30,14 @@ const login = async (req, res, next) => {
     });
   }
 
-  const accessToken = createAccessToken(user);
-  const refreshToken = createRefreshToken(user);
+  const accessToken = createAccessToken(userData);
+  const refreshToken = createRefreshToken(userData);
 
   return res.status(200).json({
     success: true,
     messsage: "Login successful",
     data: {
-      ...user,
+      ...userData,
       accessToken,
       refreshToken,
     },

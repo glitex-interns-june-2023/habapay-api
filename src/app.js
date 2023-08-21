@@ -26,4 +26,5 @@ app.use("/api/v1/auth/google", googleAuth);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/super-admin", superAdminRouter);
 
+
 module.exports = app;

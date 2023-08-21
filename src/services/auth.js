@@ -23,6 +23,9 @@ const checkLogin = async (email, password) => {
       where: {
         email: email,
       },
+      attributes: {
+        include: ['password']
+      }
     });
 
     if (!user) {
