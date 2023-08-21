@@ -1,6 +1,6 @@
 const { User } = require("../models");
 const user = require("../models/user");
-const bcrypt = require("bcrypt");
+const { hashPassword } = require("../services/auth");
 
 const findByGoogleId = async (googleId) => {
   try {
@@ -41,25 +41,20 @@ const findByPhone = async (phone) => {
 };
 
 const saveUser = async (data) => {
-  const { passsword = "" } = data;
-  const hashedPassword = hashPassword(passsword);
+  const { password } = data;
+  const hashedPassword = hashPassword(password);
 
   try {
     const user = await User.create({
       ...data,
       password: hashedPassword,
     });
+
     return user;
   } catch (err) {
     console.log("Register user error: ", err);
     return null;
   }
-};
-
-const hashPassword = (password) => {
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
-  return hash;
 };
 
 const deleteUser = async (email) => {
@@ -73,7 +68,7 @@ const deleteUser = async (email) => {
 
     return true;
   } catch (error) {
-    console.log("Delete User: ", error);
+    console.log("Delete User error: ", error);
     return false;
   }
 };
@@ -82,5 +77,5 @@ module.exports = {
   findByEmail,
   findByPhone,
   saveUser,
-  deleteUser
+  deleteUser,
 };

@@ -1,6 +1,5 @@
 const { validationResult } = require("express-validator");
 const validateInput = (req, res, next) => {
-  console.log("reqBod: "+req.body.password)
     // check if there are validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

@@ -5,7 +5,6 @@ const createSuperAdmin = async (req, res, next) => {
   const email = process.env.SUPER_ADMIN_EMAIL;
   const password = process.env.SUPER_ADMIN_PASSWORD;
   const username = process.env.SUPER_ADMIN_USERNAME;
-  console.log(email, password, username);
 
   if (!email || !password || !username) {
     console.log("Cannot create SuperAdmin: Missing super admin credentials");
@@ -26,7 +25,7 @@ const createSuperAdmin = async (req, res, next) => {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hashSync(password, 10);
     const superAdmin = await User.create({
       email: email,
       password: hashedPassword,

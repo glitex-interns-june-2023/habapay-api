@@ -8,7 +8,6 @@ const {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-  console.log("pass: "+password)
   const checkEmail = await userService.findByEmail(email);
 
   if (!checkEmail) {
@@ -19,7 +18,6 @@ const login = async (req, res, next) => {
   }
 
   const user = await authService.checkLogin(email, password);
-
   if (!user) {
     return res.status(401).json({
       success: false,

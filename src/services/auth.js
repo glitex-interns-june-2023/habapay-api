@@ -29,10 +29,10 @@ const checkLogin = async (email, password) => {
       return false;
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    const passwordMatch = await comparePassword(password, user.password);
 
     if (!passwordMatch) {
-      console.log("Not password match", passwordMatch)
       return false;
     }
 
@@ -43,7 +43,20 @@ const checkLogin = async (email, password) => {
   }
 };
 
+const hashPassword = (password) => {
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync(password, salt);
+  return hash;
+};
+
+const comparePassword = (password, hash) => {
+  const match = bcrypt.compareSync(password, hash);
+  return match;
+}
+
 module.exports = {
   verifyGoogleToken,
   checkLogin,
+  hashPassword,
+  comparePassword,
 };
