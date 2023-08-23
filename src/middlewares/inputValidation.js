@@ -1,10 +1,12 @@
 const { validationResult } = require("express-validator");
-const validateInput = (req, res, next) => {
+const { snakeCase } = require("../utils");
+
+const validateInputs = (req, res, next) => {
   // check if there are validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorDetails = errors.array().map((error) => ({
-      field: error.path,
+      field: snakeCase(error.path),
       message: error.msg,
     }));
 
@@ -27,7 +29,7 @@ const validateQueryParams = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorDetails = errors.array().map((error) => ({
-      param: error.param,
+      param: snakeCase(error.param),
       message: error.msg,
     }));
 
@@ -48,7 +50,7 @@ const validateRouteParams = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorDetails = errors.array().map((error) => ({
-      param: error.param,
+      param: snakeCase(error.param),
       message: error.msg,
     }));
 
@@ -65,8 +67,55 @@ const validateRouteParams = (req, res, next) => {
   next();
 };
 
+
+const validateInput = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = errors.array()[0];
+
+    return res.status(400).json({
+      success: false,
+      message: error.msg,
+      field: snakeCase(error.path)
+    });
+  }
+
+  next();
+};
+const validateRouteParam = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = errors.array()[0];
+
+    return res.status(400).json({
+      success: false,
+      message: error.msg,
+      param: snakeCase(error.param),
+    });
+  }
+
+  next();
+};
+
+const validateQueryParam = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = errors.array()[0];
+    return res.status(400).json({
+      success: false,
+      message: error.msg,
+      param: snakeCase(error.param)
+    });
+  }
+
+  next();
+};
+
 module.exports = {
+  validateInputs,
   validateInput,
   validateQueryParams,
+  validateQueryParam,
   validateRouteParams,
+  validateRouteParam,
 };
