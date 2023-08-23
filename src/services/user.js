@@ -5,9 +5,10 @@ const { hashPassword } = require("../services/auth");
 const findByGoogleId = async (googleId) => {
   try {
     const user = await User.findOne({ where: { googleId } });
+    if (!user) return null;
     return user;
   } catch (error) {
-    return null;
+    throw error;
   }
 };
 
@@ -20,8 +21,8 @@ const findByEmail = async (email) => {
     });
     if (foundUser) return foundUser;
     return null;
-  } catch (err) {
-    return null;
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -36,7 +37,7 @@ const findByPhone = async (phone) => {
 
     return user;
   } catch (error) {
-    return null;
+    throw error;
   }
 };
 
@@ -49,11 +50,9 @@ const saveUser = async (data) => {
       ...data,
       password: hashedPassword,
     });
-
     return user;
-  } catch (err) {
-    console.log("Register user error: ", err);
-    return null;
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -69,7 +68,7 @@ const deleteUser = async (email) => {
     return true;
   } catch (error) {
     console.log("Delete User error: ", error);
-    return false;
+    throw error;
   }
 };
 module.exports = {

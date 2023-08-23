@@ -9,47 +9,18 @@ const {
 const handleGoogleAuth = async (req, res, next) => {
   const { token } = req.body;
 
-  if (!token)
-    return res.status(400).json({
-      success: false,
-      message: "Google token is required",
-      error: {
-        code: "ERR_MISSING_FIELDS",
-        details: [
-          {
-            field: "token",
-            message: "Google token is required",
-          },
-        ],
-      },
-    });
+  try {
+    const payload = await authService.verifyGoogleToken(token);
+    const existingUser = await userService.findByGoogleId(payload.sub);
 
-  const payload = await authService.verifyGoogleToken(token);
+    if (!existingUser) {
+      const email = payload.email;
+      const firstName = payload.given_name;
+      const lastName = payload.family_name;
+      const username = payload.name;
+      const profileUrl = payload.picture;
 
-  if (!payload) {
-    return res.status(401).json({
-      success: false,
-      message: "Invalid google token",
-    });
-  }
-
-  const existingUser = await userService.findByGoogleId(payload.sub);
-
-  if (!existingUser) {
-    const email = payload.email;
-    const firstName = payload.given_name;
-    const lastName = payload.family_name;
-    const username = payload.name;
-    const profileUrl = payload.picture;
-
-    try {
-      const foundUser = await userService.findByEmail(email);
-
-      if (foundUser)
-        return res.status(409).json({
-          success: false,
-          message: "User already exists",
-        });
+      await userService.findByEmail(email);
 
       let data = {
         email,
@@ -75,34 +46,36 @@ const handleGoogleAuth = async (req, res, next) => {
 
       return res.status(200).json({
         success: true,
-        message: "User registered successfully",
+        message: "Registration successful",
         data,
       });
-    } catch (err) {
-      return res.status(500).json({
-        success: false,
-        message: "Unable to create user",
-      });
     }
+
+    const userData = existingUser.get({ raw: true });
+    // user exists
+    const accessToken = createAccessToken(userData);
+    const refreshToken = createRefreshToken(userData);
+
+    const user = {
+      ...userData,
+      accessToken,
+      refreshToken,
+    };
+
+    req.user = user;
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      data: user,
+    });
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    return res.status(statusCode).json({
+      success: false,
+      message: error.message,
+    });
   }
-
-  // user exists
-  const accessToken = createAccessToken(existingUser);
-  const refreshToken = createRefreshToken(existingUser);
-
-  const user = {
-    ...userData,
-    accessToken,
-    refreshToken,
-  };
-
-  req.user = user;
-
-  return res.status(200).json({
-    success: true,
-    message: "User logged in successfully",
-    data: user,
-  });
 };
 
 module.exports = {

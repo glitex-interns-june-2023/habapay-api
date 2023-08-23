@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+
   User.init(
     {
       id: {
@@ -37,11 +38,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
+      },
     },
     {
       sequelize,
       modelName: "User",
-      timestamps: true,
       defaultScope: {
         attributes: {
           exclude: ["password", "googleId"],
@@ -49,5 +57,25 @@ module.exports = (sequelize, DataTypes) => {
       },
     }
   );
+
+  // User Scopes
+  User.addScope("admin", {
+    where: {
+      role: "admin",
+    },
+  });
+
+  User.addScope("superadmin", {
+    where: {
+      role: "superadmin",
+    },
+  });
+
+  User.addScope("user", {
+    where: {
+      role: "user",
+    },
+  });
+
   return User;
 };

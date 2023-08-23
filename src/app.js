@@ -19,14 +19,14 @@ app.get("/", (req, res, next) => {
 const auth = require("./routes/auth");
 const googleAuth = require("./routes/googleAuth");
 const superAdminRouter = require("./routes/superAdmin");
-const adminRouter = require("./routes/admin");
+const adminRouter = require("./routes/admins");
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/auth/google", googleAuth);
 app.use("/api/v1/admins", adminRouter);
 app.use("/api/v1/super-admin", superAdminRouter);
 
-// sequelize.sync({ alter: true }).then(() => {
+// sequelize.sync({ force: true }).then(() => {
 //   console.log("Models synced successfully");
 // }).catch(err => {
 //   console.log("Error syncing models")

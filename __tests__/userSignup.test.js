@@ -14,21 +14,23 @@ const data = {
   password: "12345678",
 };
 
-beforeEach(async () => {
+beforeAll(async () => {
   await sequelize.sync({ force: true });
+});
+
+beforeEach(async () => {
   // create initial test data
   await saveUser(data);
 });
 
 afterEach(async () => {
   // clear test data and database connection
-  await User.destroy({ truncate: true });
+  await User.destroy({ where: {} });
 });
 
 afterAll(async () => {
   await sequelize.close();
 });
-
 
 describe("POST /api/v1/auth/register", () => {
   it("should delete test user if exists in database ", async () => {
@@ -47,7 +49,7 @@ describe("POST /api/v1/auth/register", () => {
     const response = await request.post("/api/v1/auth/register").send({
       ...data,
       email: "testuser2@habapay.com",
-      phone: "0712354876"
+      phone: "0712354876",
     });
 
     expect(response.status).toBe(200);

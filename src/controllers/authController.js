@@ -7,86 +7,78 @@ const {
 } = require("../middlewares/authMiddleware");
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
-  const checkEmail = await userService.findByEmail(email);
+  try {
+    const { email, password } = req.body;
+    await userService.findByEmail(email);
 
-  if (!checkEmail) {
-    return res.status(400).json({
-      success: false,
-      message: "No user with such email was found",
-    });
-  }
+    const user = await authService.checkLogin(email, password);
+    const { password: passwordToRemove, ...userData } = user.get({ raw: true });
 
-  const user = await authService.checkLogin(email, password);
-  const { password: passwordToRemove, ...userData } = user.get({ raw: true });
+    const accessToken = createAccessToken(userData);
+    const refreshToken = createRefreshToken(userData);
 
-  if (!user) {
-    return res.status(401).json({
-      success: false,
-      message: "Invalid login details. Please try again",
-      error: {
-        code: "ERR_INVALID_LOGIN",
+    return res.status(200).json({
+      success: true,
+      messsage: "Login successful",
+      data: {
+        ...userData,
+        accessToken,
+        refreshToken,
       },
     });
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    return res.status(statusCode).json({
+      success: false,
+      message: error.message,
+    });
   }
-
-  const accessToken = createAccessToken(userData);
-  const refreshToken = createRefreshToken(userData);
-
-  return res.status(200).json({
-    success: true,
-    messsage: "Login successful",
-    data: {
-      ...userData,
-      accessToken,
-      refreshToken,
-    },
-  });
 };
 
 const register = async (req, res, next) => {
   const { email, firstName, lastName, username, phone, password } = req.body;
+  try {
+    let existingUser = await userService.findByEmail(email);
 
-  let existingUser = await userService.findByEmail(email);
+    if (existingUser) {
+      let error = new Error(
+        "A user with a simmilar email is already registered"
+      );
+      error.statusCode = 409;
+      throw error;
+    }
 
-  if (existingUser) {
-    return res.status(409).json({
+    existingUser = await userService.findByPhone(phone);
+    if (existingUser) {
+      let error = new Error("This phone has alredy been registered");
+      error.statusCode = 409;
+      throw error;
+    }
+
+    const savedUser = await userService.saveUser({
+      email,
+      firstName,
+      lastName,
+      username,
+      phone,
+      password,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "User registered successfully",
+      data: {
+        ...savedUser,
+      },
+    });
+    
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    return res.status(statusCode).json({
       success: false,
-      message: "A user with a simmilar email is already registered",
+      message: error.message,
     });
   }
-
-  existingUser = await userService.findByPhone(phone);
-  if (existingUser) {
-    return res.status(409).json({
-      success: false,
-      message: "This phone has alredy been registered",
-    });
-  }
-
-  const savedUser = await userService.saveUser({
-    email,
-    firstName,
-    lastName,
-    username,
-    phone,
-    password,
-  });
-
-  if (!savedUser) {
-    return res.status(500).json({
-      success: false,
-      message: "Unable to register user. Please try again",
-    });
-  }
-
-  return res.status(200).json({
-    success: true,
-    message: "User registered successfully",
-    data: {
-      ...savedUser,
-    },
-  });
 };
 
 module.exports = {
