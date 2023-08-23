@@ -27,22 +27,26 @@ module.exports = (sequelize, DataTypes) => {
       profileUrl: DataTypes.STRING,
       password: DataTypes.STRING,
       role: {
-        type: DataTypes.ENUM('superadmin', 'admin', 'user'),
+        type: DataTypes.ENUM("superadmin", "admin", "user"),
       },
       isVerified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
       },
     },
     {
       sequelize,
       modelName: "User",
       timestamps: true,
-      defaultScope:{
+      defaultScope: {
         attributes: {
-          exclude: ["password", "googleId"]
-        }
-      }
+          exclude: ["password", "googleId"],
+        },
+      },
     }
   );
   return User;
