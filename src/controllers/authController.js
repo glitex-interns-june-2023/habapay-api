@@ -1,5 +1,6 @@
 const authService = require("../services/auth");
 const userService = require("../services/user");
+const messageService = require("../services/messaging");
 
 const {
   createAccessToken,
@@ -71,6 +72,40 @@ const register = async (req, res, next) => {
         ...savedUser,
       },
     });
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    return res.status(statusCode).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const sendOTP = async (req, res, next) => {
+  const { phoneNumber } = req.body;
+  try {
+    await messageService.sendOTP(phoneNumber);
+    res.status(200).json({
+      success: true,
+      message: "OTP sent successfully",
+    });
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    return res.status(statusCode).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const verifyOTP = async (req, res, next) => {
+  const { phoneNumber, otp } = req.body;
+  try {
+    await messageService.verifyOTP(phoneNumber, otp);
+    res.status(200).json({
+      success: true,
+      message: "Phone number verified successfully",
+    });
     
   } catch (error) {
     const statusCode = error.statusCode || 500;
@@ -84,4 +119,6 @@ const register = async (req, res, next) => {
 module.exports = {
   login,
   register,
+  sendOTP,
+  verifyOTP,
 };
