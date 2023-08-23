@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
+
   User.init(
     {
       id: {
@@ -49,5 +50,25 @@ module.exports = (sequelize, DataTypes) => {
       },
     }
   );
+
+  // User Scopes
+  User.addScope("admin", {
+    where: {
+      role: "admin",
+    },
+  });
+
+  User.addScope("superadmin", {
+    where: {
+      role: "superadmin",
+    },
+  });
+  
+  User.addScope("user", {
+    where: {
+      role: "user",
+    },
+  });
+
   return User;
 };
