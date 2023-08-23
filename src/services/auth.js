@@ -12,8 +12,10 @@ const verifyGoogleToken = async (token) => {
 
     const payload = ticket.getPayload();
     return payload;
-  } catch (err) {
-    return null;
+  } catch (error) {
+    const err = new Error("Invalid google token");
+    err.statusCode = 401;
+    throw err
   }
 };
 
@@ -24,25 +26,28 @@ const checkLogin = async (email, password) => {
         email: email,
       },
       attributes: {
-        include: ['password']
-      }
+        include: ["password"],
+      },
     });
 
     if (!user) {
-      return false;
-    }
+      let error = new Error("No user with such email was found");
+      error.statusCode = 404;
 
+      throw error;
+    }
 
     const passwordMatch = await comparePassword(password, user.password);
 
     if (!passwordMatch) {
-      return false;
+      let error = new Error("Pasword is incorrect");
+      error.statusCode = 401;
+      throw error;
     }
 
     return user;
   } catch (error) {
-    console.log("Error: ", err)
-    return false;
+    throw error;
   }
 };
 
@@ -55,7 +60,7 @@ const hashPassword = (password) => {
 const comparePassword = (password, hash) => {
   const match = bcrypt.compareSync(password, hash);
   return match;
-}
+};
 
 module.exports = {
   verifyGoogleToken,

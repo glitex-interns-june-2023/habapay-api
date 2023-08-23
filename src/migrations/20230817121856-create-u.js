@@ -39,16 +39,15 @@ module.exports = {
       },
       role: {
         type: Sequelize.ENUM('superadmin', 'admin', 'user'),
-        allowNull: false,
         defaultValue: 'user'
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       }
     });
   },
