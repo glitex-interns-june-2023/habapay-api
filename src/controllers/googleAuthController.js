@@ -14,7 +14,7 @@ const handleGoogleAuth = async (req, res, next) => {
       success: false,
       message: "Google token is required",
       error: {
-        code: "MISSING_FIELDS",
+        code: "ERR_MISSING_FIELDS",
         details: [
           {
             field: "token",
@@ -60,14 +60,13 @@ const handleGoogleAuth = async (req, res, next) => {
       };
 
       const newUser = await userService.saveUser(data);
+      const userData = newUser.get({ raw: true });
 
-      const accessToken = createAccessToken(newUser);
-      const refreshToken = createRefreshToken(newUser);
+      const accessToken = createAccessToken(userData);
+      const refreshToken = createRefreshToken(userData);
 
       data = {
-        ...data,
-        id: newUser.id,
-        isVerified: newUser.isVerified,
+        ...userData,
         accessToken,
         refreshToken,
       };
@@ -88,23 +87,11 @@ const handleGoogleAuth = async (req, res, next) => {
   }
 
   // user exists
-  const email = existingUser.email;
-  const firstName = existingUser.firstName;
-  const lastName = existingUser.lastName;
-  const username = existingUser.username;
-  const profileUrl = existingUser.profileUrl;
-
   const accessToken = createAccessToken(existingUser);
   const refreshToken = createRefreshToken(existingUser);
 
   const user = {
-    id: existingUser.id,
-    email,
-    firstName,
-    lastName,
-    username,
-    profileUrl,
-    isVerified: existingUser.isVerified,
+    ...userData,
     accessToken,
     refreshToken,
   };

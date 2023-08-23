@@ -12,7 +12,7 @@ const snakeCaseFormatter = (req, res, next) => {
 function convertToSnakeCase(data) {
   if (Array.isArray(data)) {
     return data.map(convertToSnakeCase);
-  } else if (data !== null && data.constructor === Object) {
+  } else if (data !== null && typeof data === 'object') {
     return Object.keys(data).reduce((result, key) => {
       const value = data[key];
       const formattedKey = snakeCase(key);

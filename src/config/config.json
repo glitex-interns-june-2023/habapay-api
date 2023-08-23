@@ -11,13 +11,15 @@
     "password": null,
     "database": "habapay_test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": false
   },
   "production": {
     "username": "PLACEHOLDER_USER",
     "password": "PLACEHOLDER_PASS",
     "database": "PLACEHODER_DB",
     "host": "PLACEHOLDER_HOST",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": false
   }
 }
