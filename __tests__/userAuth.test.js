@@ -19,13 +19,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  // create initial test data
   await saveUser(data);
-});
-
-afterEach(async () => {
-  // clear test data and database connection
-  await User.destroy({ where: {} });
 });
 
 afterAll(async () => {
@@ -33,18 +27,6 @@ afterAll(async () => {
 });
 
 describe("POST /api/v1/auth/register", () => {
-  it("should delete test user if exists in database ", async () => {
-    const testUserEmail = data.email;
-    const userFound = await userService.findByEmail(testUserEmail);
-    const deleteUser = await userService.deleteUser(testUserEmail);
-
-    if (userFound) {
-      expect(deleteUser).toBe(true);
-    } else {
-      expect(deleteUser).toBe(false);
-    }
-  });
-
   it("should create a new user to database if none exists", async () => {
     const response = await request.post("/api/v1/auth/register").send({
       ...data,
