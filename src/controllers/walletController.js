@@ -1,16 +1,20 @@
 const walletService = require("../services/walletService");
 const userService = require("../services/user");
+const UserNotFoundError = require("../errors/UserNotFoundError");
 
 const getBalance = async (req, res, next) => {
   try {
     const { phone } = req.body;
-    const { id } = await userService.findByPhone(phone);
-    
-    const wallet = await walletService.getWallet(userId);
-    const balance = await walletService.getBalance(userId);
+    const user = await userService.findByPhone(phone);
+    if (!user) {
+      throw new UserNotFoundError("No user with the given phone was found");
+    }
+
+    const wallet = await walletService.getWallet(user.id);
+    const balance = await walletService.getBalance(user.id);
 
     const response = {
-      userId: userId,
+      userId: user.id,
       balance,
       currency: wallet.currency,
       lastUpdate: wallet.updatedAt,
@@ -20,7 +24,6 @@ const getBalance = async (req, res, next) => {
       success: true,
       data: response,
     });
-
   } catch (error) {
     const statusCode = error.statusCode || 500;
     return res.status(statusCode).json({

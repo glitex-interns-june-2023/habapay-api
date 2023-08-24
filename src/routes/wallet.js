@@ -13,3 +13,6 @@ router.get("/balance",[
 router.post("/send", sendMoney);
 router.post("/deposit", depositMoney);
 router.post("/withdraw", withdrawMoney);
+
+
+module.exports = router;

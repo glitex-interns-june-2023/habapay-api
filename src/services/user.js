@@ -19,8 +19,8 @@ const findByEmail = async (email) => {
         email: email,
       },
     });
-    if (foundUser) return foundUser;
-    return null;
+    if (!foundUser) return null;
+    return foundUser;
   } catch (error) {
     throw error;
   }
@@ -52,6 +52,7 @@ const saveUser = async (data) => {
     });
     return user;
   } catch (error) {
+    console.log("Create user error: ", error);
     throw error;
   }
 };

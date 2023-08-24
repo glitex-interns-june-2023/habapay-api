@@ -13,7 +13,7 @@ const generateUsers = (size) => {
     firstName: "Test",
     lastName: "User",
     username: "Test User",
-    phone: "0767876364",
+    phone: "0712345678",
     password: hashPassword("12345678"),
   });
 
@@ -22,7 +22,7 @@ const generateUsers = (size) => {
     firstName: "Admin",
     lastName: "User",
     username: "Admin User",
-    phone: "0789776445",
+    phone: "0114662464",
     role: "admin",
     password: hashPassword("12345678"),
   });
@@ -44,6 +44,39 @@ const generateUsers = (size) => {
   return users;
 };
 
+const generateUserWallets = (size) => {
+  let wallets = [];
+  
+  wallets.push({
+    userId: 1,
+    balance: 0.00,
+    currency: "Ksh",
+    updateAt: faker.date.past(),
+  });
+
+  wallets.push({
+    userId: 2,
+    balance: 1000.00,
+    currency: "Ksh",
+    updateAt: faker.date.past(),
+  });
+
+  for (let i = 2; i < size; i++) {
+    const wallet = {
+      userId: i + 1,
+      balance: faker.finance.amount(),
+      currency: "Ksh",
+      updateAt: faker.date.past(),
+    };
+
+    wallets.push(wallet);
+  }
+
+  return wallets;
+}
+
+
 module.exports = {
   generateUsers,
+  generateUserWallets
 };
