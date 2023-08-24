@@ -35,9 +35,9 @@ const createSendTransaction = async (senderWallet, receiverWallet, amount) => {
 
 module.exports = {
   createSendTransaction,
-  getTransactions,
-  getTransaction,
-  updateTransaction,
-  deleteTransaction,
-  getTransactionsByUserId,
+  // getTransactions,
+  // getTransaction,
+  // updateTransaction,
+  // deleteTransaction,
+  // getTransactionsByUserId,
 };
