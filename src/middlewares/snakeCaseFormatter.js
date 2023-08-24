@@ -1,5 +1,14 @@
+/**
+ * Format incoming requests to receive snake_case params and request body
+ * Send snake_cased json response
+ * Snake cased incoming requests are converted to camelCase(Javascript standard)
+ */
+const { snakeCase, camelCase } = require("../utils");
+
 const snakeCaseFormatter = (req, res, next) => {
   const originalJson = res.json;
+  req.body = convertToCamelCase(req.body);
+  req.query = convertToCamelCase(req.query);
 
   res.json = function (data) {
     const formattedData = convertToSnakeCase(data);
@@ -27,8 +36,22 @@ function convertToSnakeCase(data) {
   }
 }
 
-function snakeCase(str) {
-  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+function convertToCamelCase(data) {
+  if (Array.isArray(data)) {
+    return data.map(convertToCamelCase);
+  } else if (data !== null && typeof data === 'object') {
+    return Object.keys(data).reduce((result, key) => {
+      const value = data[key];
+      const formattedKey = camelCase(key);
+      const formattedValue = convertToCamelCase(value);
+
+      result[formattedKey] = formattedValue;
+
+      return result;
+    }, {});
+  } else {
+    return data;
+  }
 }
 
 module.exports = {snakeCaseFormatter};

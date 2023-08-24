@@ -8,7 +8,7 @@ const { sequelize } = require("./models");
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(snakeCaseFormatter);
+app.use(snakeCaseFormatter);
 
 // api routes
 app.get("/", (req, res, next) => {
