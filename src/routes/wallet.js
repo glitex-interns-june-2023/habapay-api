@@ -1,18 +1,23 @@
 const express = require("express");
 const router = express.Router();
-const { body } = require("express-validator");
-const { validateInput } = require("../middlewares/inputValidation");
+const { body,query } = require("express-validator");
+const { validateInput, validateInputs, validateQueryParam } = require("../middlewares/inputValidation");
 
 const { sendMoney, getBalance, depositMoney, withdrawMoney } = require("../controllers/walletController");
 
 router.get("/balance",[
-    body("phone").notEmpty().withMessage("Phone number is required"),
-    validateInput,
+    query("phone").notEmpty().withMessage("Phone number is required"),
+    validateQueryParam,
 ], getBalance);
 
-router.post("/send", sendMoney);
+router.post("/send-money",[
+    body("senderPhone").notEmpty().withMessage("Sender phone is required"),
+    body("receiverPhone").notEmpty().withMessage("Receiver phone is required"),
+    body("amount").notEmpty().withMessage("Amount is required"),
+    validateInputs
+], sendMoney);
+
 router.post("/deposit", depositMoney);
 router.post("/withdraw", withdrawMoney);
-
 
 module.exports = router;
