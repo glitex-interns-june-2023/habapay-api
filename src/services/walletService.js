@@ -1,4 +1,4 @@
-const { UserWallet } = require("../models");
+const { Wallet } = require("../models");
 const walletService = require("../services/walletService");
 const transactionService = require("../services/transactionService");
 
@@ -35,7 +35,7 @@ const sendMoney = async (senderId, receiverId, amount) => {
 
 const getWallet = async (userId) => {
   try {
-    const wallet = await UserWallet.findOne({
+    const wallet = await Wallet.findOne({
       where: {
         userId,
       },

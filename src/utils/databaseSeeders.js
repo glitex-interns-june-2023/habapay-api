@@ -44,7 +44,7 @@ const generateUsers = (size) => {
   return users;
 };
 
-const generateUserWallets = (size) => {
+const generateWallets = (size) => {
   let wallets = [];
   
   wallets.push({
@@ -78,5 +78,5 @@ const generateUserWallets = (size) => {
 
 module.exports = {
   generateUsers,
-  generateUserWallets
+  generateWallets
 };

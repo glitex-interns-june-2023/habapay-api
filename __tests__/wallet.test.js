@@ -1,14 +1,14 @@
 const app = require("../src/app");
 const supertest = require("supertest");
 const request = supertest(app);
-const { sequelize, User, UserWallet } = require("../src/models");
+const { sequelize, User, Wallet } = require("../src/models");
 const {
-  generateUserWallets,
+  generateWallets,
   generateUsers,
 } = require("../src/utils/databaseSeeders");
 
 const userData = generateUsers(20);
-const walletData = generateUserWallets(20);
+const walletData = generateWallets(20);
 
 beforeAll(async () => {
     await sequelize.sync({ force: true });
@@ -16,7 +16,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await User.bulkCreate(userData);
-    await UserWallet.bulkCreate(walletData);
+    await Wallet.bulkCreate(walletData);
 });
 afterEach(async () => {
     await sequelize.sync({ force: true });
