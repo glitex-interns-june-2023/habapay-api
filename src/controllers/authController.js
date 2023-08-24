@@ -82,9 +82,19 @@ const register = async (req, res, next) => {
 };
 
 const sendOTP = async (req, res, next) => {
-  const { phoneNumber } = req.body;
+  const { phoneNumber, email } = req.body;
   try {
+    const foundUser = await userService.findByEmail(email);
+    if (!foundUser) {
+      let error = new Error("No user with this email was found");
+      error.statusCode = 404;
+      throw error;
+    }
+
     await messageService.sendOTP(phoneNumber);
+
+    await userService.updatePhoneNumber(foundUser.id, phoneNumber);
+
     res.status(200).json({
       success: true,
       message: "OTP sent successfully",
@@ -101,12 +111,22 @@ const sendOTP = async (req, res, next) => {
 const verifyOTP = async (req, res, next) => {
   const { phoneNumber, otp } = req.body;
   try {
+    const foundUser = await userService.findByPhone(phoneNumber);
+
+    if (!foundUser) {
+      let error = new Error("No user with this phone number was found");
+      error.statusCode = 404;
+      throw error;
+    }
+
     await messageService.verifyOTP(phoneNumber, otp);
+
+    await userService.setVerified(foundUser.id);
+
     res.status(200).json({
       success: true,
       message: "Phone number verified successfully",
     });
-    
   } catch (error) {
     const statusCode = error.statusCode || 500;
     return res.status(statusCode).json({

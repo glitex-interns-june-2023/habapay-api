@@ -5,6 +5,7 @@ const getAdminsWithPagination = async (req, res, next) => {
 
   try {
     const admins = await adminService.getAdminsWithPagination(page, perPage);
+
     return res.status(200).json({
       success: true,
       message: "Admins retrieved successfully",
@@ -25,10 +26,12 @@ const getAdmin = async (req, res, next) => {
 
   try {
     const admin = await adminService.getAdmin(adminId);
+    const data = admin.get({raw: true});
+    
     return res.status(200).json({
       success: true,
       message: "Admin retrieved successfully",
-      data: admin,
+      data: data,
     });
   } catch (error) {
     const statusCode = error.statusCode || 500;

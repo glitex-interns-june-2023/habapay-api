@@ -71,10 +71,47 @@ const deleteUser = async (email) => {
     throw error;
   }
 };
+
+const updatePhoneNumber = async (userId, phoneNumber) => {
+  try {
+    const updatedUser = await User.update(
+      { phone: phoneNumber },
+      { where: { id: userId } }
+    );
+
+    if (!updatedUser) {
+      throw new Error("Could not update user Phone Number");
+    }
+
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const setVerified = async (userId) => {
+  try {
+    const updatedUser = await User.update(
+      { isVerified: true },
+      { where: { id: userId } }
+    );
+
+    if (!updatedUser) {
+      throw new Error("Could not update user verification status");
+    }
+
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   findByGoogleId,
   findByEmail,
   findByPhone,
   saveUser,
   deleteUser,
+  updatePhoneNumber,
+  setVerified,
 };

@@ -25,20 +25,27 @@ const sendOTP = async (phoneNumber) => {
       Channel: "sms",
     }).toString();
 
-    const response = await axios.post(URL, data, options);
-    const { status } = response.data;
+    try {
+      const response = await axios.post(URL, data, options);
+      const status = response.data.status;
 
-    // confirm verificatoion code sent successfully
-    if (status != "pending") {
-      const error = new Error("Could not send verification code");
-      error.statusCode = response.status;
+      // confirm verification code sent successfully
+      if (status != "pending") {
+        const error = new Error("Could not send verification code");
+        error.statusCode = response.status;
+        throw error;
+      }
+
+      return data;
+    } catch (error) {
+      // axios error handling
+      const statusCode = error.response.status || 500;
+      const message = error.response.data.message || "Verification failed";
+      error = new Error(message);
+      error.statusCode = statusCode;
       throw error;
     }
-
-    return data;
   } catch (error) {
-    const { status } = error.response;
-    error.statusCode = status;
     throw error;
   }
 };
@@ -68,19 +75,27 @@ const verifyOTP = async (phoneNumber, otp) => {
       },
     };
 
-    const response = await axios.post(URL, data, options);
-    const { status } = response.data;
+    try {
+      const response = await axios.post(URL, data, options);
+      const status = response.data.status;
 
-    if (status != "approved") {
-      const error = new Error("Verification failed: Invalid OTP");
-      error.statusCode = 401;
+      if (status != "approved") {
+        const error = new Error("Verification failed: Invalid OTP");
+        error.statusCode = 401;
+        throw error;
+      }
+
+      return data;
+
+    } catch (error) {
+      // axios error handling
+      const statusCode = error.response.status || 500;
+      const message = error.response.data.message || "Verification failed";
+      error = new Error(message);
+      error.statusCode = statusCode;
       throw error;
     }
-
-    return data;
   } catch (error) {
-    const { status } = error.response;
-    error.statusCode = status;
     throw error;
   }
 };

@@ -29,6 +29,7 @@ router.post(
 
 router.post("/send-otp", [
   body("phoneNumber").notEmpty().withMessage("Phone number is required"),
+  body("email").notEmpty().withMessage("Email is required"),
   validateInput,
 ], sendOTP);
 

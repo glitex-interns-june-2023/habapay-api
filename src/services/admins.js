@@ -1,15 +1,16 @@
 const { User } = require("../models");
-const paginator  = require("../middlewares/paginator");
+const paginator = require("../middlewares/paginator");
 
 const getAdminsWithPagination = async (page, perPage) => {
-    page = parseInt(page);
-    perPage = parseInt(perPage);
+  page = parseInt(page);
+  perPage = parseInt(perPage);
 
   const offset = (page - 1) * perPage;
   try {
     const admins = await User.scope(["defaultScope", "admin"]).findAndCountAll({
       offset,
       limit: perPage,
+      raw: true
     });
 
     if (!admins) {
@@ -18,7 +19,7 @@ const getAdminsWithPagination = async (page, perPage) => {
       throw error;
     }
 
-    const paginatedData = paginator(admins, page, perPage)
+    const paginatedData = paginator(admins, page, perPage);
 
     return paginatedData;
   } catch (error) {
@@ -28,7 +29,7 @@ const getAdminsWithPagination = async (page, perPage) => {
 
 const getAdmin = async (adminId) => {
   try {
-    const admin = await User.scope(["defaultScope","admin"]).findByPk(adminId);
+    const admin = await User.scope(["defaultScope", "admin"]).findByPk(adminId);
 
     if (!admin) {
       const error = new Error("No admin with the given id was found");
