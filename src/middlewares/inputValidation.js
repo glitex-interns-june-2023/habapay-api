@@ -90,11 +90,11 @@ const validateRouteParam = (req, res, next) => {
     return res.status(400).json({
       success: false,
       message: error.msg,
-      param: snakeCase(error.param),
+      param: snakeCase(error.path),
     });
   }
 
-  next();
+  return next();
 };
 
 const validateQueryParam = (req, res, next) => {
@@ -104,11 +104,11 @@ const validateQueryParam = (req, res, next) => {
     return res.status(400).json({
       success: false,
       message: error.msg,
-      param: snakeCase(error.param)
+      param: snakeCase(error.path)
     });
   }
 
-  next();
+  return next();
 };
 
 module.exports = {
