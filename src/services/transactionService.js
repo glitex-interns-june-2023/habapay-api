@@ -20,7 +20,8 @@ const createSendTransaction = async (senderWallet, receiverWallet, amount) => {
   );
 
   try {
-    const savedTransaction = await Transaction.crete(transaction);
+    const savedTransaction = await Transaction.create(transaction);
+
     if (!savedTransaction) {
       const error = new Error(`Failed to save transaction to database`);
       error.statusCode = 400;

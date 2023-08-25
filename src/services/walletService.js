@@ -1,4 +1,4 @@
-const { UserWallet } = require("../models");
+const { Wallet } = require("../models");
 const walletService = require("../services/walletService");
 const transactionService = require("../services/transactionService");
 
@@ -21,13 +21,13 @@ const sendMoney = async (senderId, receiverId, amount) => {
 
     await transferFunds(senderWallet, receiverWallet, amount);
 
-    await transactionService.createSendTransaction(
+    const transaction = await transactionService.createSendTransaction(
       senderWallet,
       receiverWallet,
       amount
     );
 
-    return senderWallet;
+    return transaction;
   } catch (error) {
     throw error;
   }
@@ -35,7 +35,7 @@ const sendMoney = async (senderId, receiverId, amount) => {
 
 const getWallet = async (userId) => {
   try {
-    const wallet = await UserWallet.findOne({
+    const wallet = await Wallet.findOne({
       where: {
         userId,
       },
@@ -57,8 +57,7 @@ const verifyCanSend = (wallet, amount) => {
   try {
     if (wallet.balance < amount) {
       const error =
-        new Error(`Transaction failed. You have insufficient funds to send ${wallet.currency} ${amount}.
-        Your available account balance is ${wallet.currency} ${wallet.balance}`);
+        new Error(`Transaction failed. You have insufficient funds to send ${wallet.currency} ${amount}. Your available account balance is ${wallet.currency} ${wallet.balance}`);
       error.statusCode = 400;
       throw error;
     }
