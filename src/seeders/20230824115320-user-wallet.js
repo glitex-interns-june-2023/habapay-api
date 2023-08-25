@@ -1,6 +1,9 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
+const { generateWallets } = require('../utils/databaseSeeders');
+const walletData = generateWallets(20);
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -12,6 +15,8 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+
+   await queryInterface.bulkInsert('Wallets', walletData, {});
   },
 
   async down (queryInterface, Sequelize) {
@@ -21,5 +26,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    await queryInterface.bulkDelete('Wallets', null, {});
   }
 };
