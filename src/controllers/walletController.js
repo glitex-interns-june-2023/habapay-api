@@ -2,6 +2,7 @@ const walletService = require("../services/walletService");
 const userService = require("../services/user");
 const UserNotFoundError = require("../errors/UserNotFoundError");
 const { formatTimestamp } = require("../utils");
+const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");
 
 const getBalance = async (req, res, next) => {
   try {
@@ -26,11 +27,7 @@ const getBalance = async (req, res, next) => {
       data: response,
     });
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -72,16 +69,12 @@ const sendMoney = async (req, res) => {
         transactionMessage: message,
         amount: amount,
         currency: transaction.currency,
-        timestamp: timestamp ,
+        timestamp: timestamp,
         balance: balance,
       },
     });
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -103,28 +96,32 @@ const confirmDetails = async (req, res, next) => {
       data: response,
     });
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const withdrawMoney = async (req, res) => {
+const withdrawMoney = async (req, res, next) => {
   const { senderPhone, receiverPhone, amount } = req.body;
   try {
     const sender = await userService.findByPhone(senderPhone);
     const receiver = await userService.findByPhone(receiverPhone);
 
-    if(!sender){
-      throw new UserNotFoundError(`No sender with phone: ${senderPhone} was found.`)
+    if (!sender) {
+      throw new UserNotFoundError(
+        `No sender with phone: ${senderPhone} was found.`
+      );
     }
-    if(!receiver){
-      throw new UserNotFoundError(`No receiver with phone: ${receiverPhone} was found.`)
+    if (!receiver) {
+      throw new UserNotFoundError(
+        `No receiver with phone: ${receiverPhone} was found.`
+      );
     }
 
-    const transaction = await walletService.withdrawMoney(sender.id, receiver.id, amount);
+    const transaction = await walletService.withdrawMoney(
+      sender.id,
+      receiver.id,
+      amount
+    );
 
     const wallet = await walletService.getWallet(sender.id);
     const balance = wallet.balance;
@@ -138,25 +135,27 @@ const withdrawMoney = async (req, res) => {
       amount: transaction.amount,
       currency: transaction.currency,
       timestamp: timestamp,
-      balance: balance
-    }
+      balance: balance,
+    };
 
     return res.status(200).json({
       success: true,
       message: "Deposit successful",
-      data: response
+      data: response,
     });
-
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const depositMoney = async (req, res) => {};
+const depositMoney = async (req, res, next) => {
+  const { senderPhone, mpesaNumber, amount } = req.body;
+  try {
+    await walletService.depositMoney(senderPhone, mpesaNumber, amount);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   getBalance,

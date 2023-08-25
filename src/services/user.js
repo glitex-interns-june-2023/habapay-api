@@ -34,11 +34,11 @@ const findByPhone = async (phone) => {
 };
 
 const ensurePhoneRegistered = async (phone) => {
-  const phoneRegistered = await findByPhone(phone);
-  if (!phoneRegistered) {
+  const user = await findByPhone(phone);
+  if (!user) {
     throw new PhoneNotRegisteredError(phone);
   }
-  return true;
+  return user;
 };
 
 const ensurePhoneVerified = async (phone) => {
@@ -50,7 +50,7 @@ const ensurePhoneVerified = async (phone) => {
     throw new PhoneNotVerifiedError(phone);
   }
 
-  return true;
+  return user;
 };
 
 const saveUser = async (data) => {
@@ -112,5 +112,5 @@ module.exports = {
   updatePhoneNumber,
   setVerified,
   ensurePhoneRegistered,
-  ensurePhoneRegistered
+  ensurePhoneRegistered,
 };

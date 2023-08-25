@@ -1,5 +1,6 @@
 const { Wallet } = require("../models");
 const walletService = require("../services/walletService");
+const userService = require("../services/user");
 const transactionService = require("../services/transactionService");
 
 const getBalance = async (userId) => {
@@ -89,9 +90,13 @@ const withdrawMoney = async (senderId, receiverId, amount) => {
     const senderWallet = await getWallet(senderId);
     const receiverWallet = await getWallet(receiverId);
     verifyCanWithdraw(senderWallet, amount);
-    
+
     await transferFunds(senderWallet, receiverWallet, amount);
-    const transaction = await transactionService.createWithdrawTransaction(senderWallet, receiverWallet, amount);
+    const transaction = await transactionService.createWithdrawTransaction(
+      senderWallet,
+      receiverWallet,
+      amount
+    );
     return transaction;
   } catch (error) {
     throw error;
@@ -106,9 +111,15 @@ const transferFunds = async (senderWallet, receiverWallet, amount) => {
   await receiverWallet.save();
 };
 
+const depositMoney = async (senderPhone, mpesaNumber, amount) => {
+  const sender = await userService.ensurePhoneRegistered(senderPhone);
+  
+};
+
 module.exports = {
   getWallet,
   getBalance,
   sendMoney,
   withdrawMoney,
+  depositMoney,
 };
