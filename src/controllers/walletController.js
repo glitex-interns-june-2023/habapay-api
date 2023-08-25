@@ -56,7 +56,7 @@ const sendMoney = async (req, res) => {
       receiver.id,
       amount
     );
-    
+
     const senderWallet = await walletService.getWallet(sender.id);
     const balance = senderWallet.balance;
 
@@ -71,7 +71,32 @@ const sendMoney = async (req, res) => {
         newBalance: balance,
       },
     });
-    
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    return res.status(statusCode).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const confirmDetails = async (req, res, next) => {
+  const { phone } = req.query;
+  try {
+    const user = await userService.findByPhone(phone);
+    if (!user) {
+      throw new UserNotFoundError("No user with the given phone was found");
+    }
+
+    const response = {
+      phone: user.phone,
+      fullName: `${user.firstName} ${user.lastName}`,
+    };
+
+    return res.status(200).json({
+      success: true,
+      data: response,
+    });
   } catch (error) {
     const statusCode = error.statusCode || 500;
     return res.status(statusCode).json({
@@ -87,6 +112,7 @@ const depositMoney = async (req, res) => {};
 
 module.exports = {
   getBalance,
+  confirmDetails,
   sendMoney,
   withdrawMoney,
   depositMoney,
