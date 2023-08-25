@@ -51,14 +51,14 @@ const generateWallets = (size) => {
     userId: 1,
     balance: 0.00,
     currency: "Ksh",
-    updateAt: faker.date.past(),
+    updatedAt: faker.date.past(),
   });
 
   wallets.push({
     userId: 2,
     balance: 1000.00,
     currency: "Ksh",
-    updateAt: faker.date.past(),
+    updatedAt: faker.date.past(),
   });
 
   for (let i = 2; i < size; i++) {
@@ -66,7 +66,7 @@ const generateWallets = (size) => {
       userId: i + 1,
       balance: faker.finance.amount(),
       currency: "Ksh",
-      updateAt: faker.date.past(),
+      updatedAt: faker.date.past(),
     };
 
     wallets.push(wallet);

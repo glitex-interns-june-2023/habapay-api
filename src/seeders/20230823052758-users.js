@@ -2,12 +2,10 @@
 
 /** @type {import('sequelize-cli').Migration} */
 const { generateUsers } = require("../utils/databaseSeeders");
-
+const userData = generateUsers(50);
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert("Users", [
-      ...generateUsers(50),
-    ]);
+    await queryInterface.bulkInsert("Users", userData, {});
   },
 
   async down(queryInterface, Sequelize) {
