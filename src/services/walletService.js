@@ -56,8 +56,9 @@ const getWallet = async (userId) => {
 const verifyCanSend = (wallet, amount) => {
   try {
     if (wallet.balance < amount) {
-      const error =
-        new Error(`Transaction failed. You have insufficient funds to send ${wallet.currency} ${amount}. Your available account balance is ${wallet.currency} ${wallet.balance}`);
+      const error = new Error(
+        `Transaction failed. You have insufficient funds to send ${wallet.currency} ${amount}. Your available account balance is ${wallet.currency} ${wallet.balance}`
+      );
       error.statusCode = 400;
       throw error;
     }
@@ -83,6 +84,20 @@ const verifyCanWithdraw = (wallet, amount) => {
   }
 };
 
+const withdrawMoney = async (senderId, receiverId, amount) => {
+  try {
+    const senderWallet = await getWallet(senderId);
+    const receiverWallet = await getWallet(receiverId);
+    verifyCanWithdraw(senderWallet, amount);
+    
+    await transferFunds(senderWallet, receiverWallet, amount);
+    const transaction = await transactionService.createWithdrawTransaction(senderWallet, receiverWallet, amount);
+    return transaction;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const transferFunds = async (senderWallet, receiverWallet, amount) => {
   senderWallet.balance -= amount;
   await senderWallet.save();
@@ -91,10 +106,9 @@ const transferFunds = async (senderWallet, receiverWallet, amount) => {
   await receiverWallet.save();
 };
 
-
-
 module.exports = {
-    getWallet,
-    getBalance,
-    sendMoney,
-}
+  getWallet,
+  getBalance,
+  sendMoney,
+  withdrawMoney,
+};
