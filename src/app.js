@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const { snakeCaseFormatter } = require("./middlewares/snakeCaseFormatter");
+const errorHandler = require("./middlewares/errorHandler");
 const { sequelize } = require("./models");
 app.use(cors());
 app.use(express.json());
@@ -27,6 +28,9 @@ app.use("/api/v1/auth/google", googleAuth);
 app.use("/api/v1/admins", adminRouter);
 app.use("/api/v1/super-admin", superAdminRouter);
 app.use("/api/v1/wallet", walletRouter);
+
+// error handler
+app.use(errorHandler);
 
 // sequelize.sync({ force: true }).then(() => {
 //   console.log("Models synced successfully");
