@@ -27,7 +27,7 @@ router.get(
 router.get(
   "/confirm-details",
   [
-    query("phone").notEmpty().withMessage("Phone number is required"),
+    query("phone").notEmpty().withMessage("Query param phone is required"),
     validateQueryParam,
   ],
   confirmDetails
