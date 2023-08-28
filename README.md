@@ -650,3 +650,32 @@ Get all transactions info
   ]
 }
 ```
+
+#### Single Transaction
+
+**Endpoint** `GET /api/v1/transactions/:id`
+
+#### Description
+
+Get a single transaction based on its transaction ID
+
+#### Parameters
+
+- `id` (integer, required) - Transaction id
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "transaction_id": 12,
+    "full_name": "Obie Pagac",
+    "phone": "316-351-6939",
+    "amount": 493.36,
+    "type": "withdraw",
+    "currency": "Ksh",
+    "timestamp": "27 May 2023, 4:14 AM"
+  }
+}
+```
