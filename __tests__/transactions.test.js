@@ -38,7 +38,7 @@ describe("GET /api/v1/transactions", () => {
     expect(response.body.data).toBeDefined();
   });
 
-  it.only("should filter transactions by type when ?type parameter is passed", async () => {
+  it("should filter transactions by type when ?type parameter is passed", async () => {
     const response = await request.get("/api/v1/transactions").query({
       type: "withdraw",
     });

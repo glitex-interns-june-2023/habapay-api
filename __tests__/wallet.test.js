@@ -82,7 +82,7 @@ describe("POST /api/v1/wallet/send-money", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
-    expect(originalSenderBal - amount).toBe(response.body.data.new_balance);
+    expect(originalSenderBal - amount).toBe(response.body.data.balance);
   });
 
   it("on sending, it should deduct the amount from sender and credit the receiver", async () => {
@@ -107,7 +107,7 @@ describe("POST /api/v1/wallet/send-money", () => {
       amount,
     });
 
-    expect(senderBal - amount).toBe(response.body.data.new_balance);
+    expect(senderBal - amount).toBe(response.body.data.balance);
 
     // get new receiver balance
     const newReceiverBalance = await request
