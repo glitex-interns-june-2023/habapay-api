@@ -1,6 +1,6 @@
 const { Wallet } = require("../models");
-const userService = require("../userService");
-const transactionService = require("../transactionService");
+const userService = require("../services/user");
+const transactionService = require("../services/transactionService");
 const mpesaService = require("../services/mpesaService");
 
 const getBalance = async (userId) => {
