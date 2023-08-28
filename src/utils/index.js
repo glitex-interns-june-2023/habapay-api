@@ -9,7 +9,18 @@ function camelCase(str) {
 // format timestamp to 25 August 2023, 06:30 AM
 function formatTimestamp(timestamp) {
   const months = [
-    "January","February","March","April","May","June","July","August","September","October","November","December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   const date = new Date(timestamp);
@@ -26,9 +37,24 @@ function formatTimestamp(timestamp) {
   return formattedTimestamp;
 }
 
+const getTimestamp = () => {
+  const dateString = new Date().toLocaleDateString("en-us", {
+    timeZone: "Africa/Nairobi",
+  });
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hour = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  const timestamp = `${year}${month}${day}${hour}${minutes}${seconds}`;
+  return timestamp;
+};
 
 module.exports = {
-    snakeCase,
-    camelCase,
-    formatTimestamp
-}
+  snakeCase,
+  camelCase,
+  formatTimestamp,
+  getTimestamp,
+};
