@@ -1,9 +1,14 @@
 const { hashPassword } = require("../services/auth");
 const faker = require("faker");
 const roles = ["superadmin", "admin", "user"];
+const transactionTypes = ["deposit", "withdraw", "sent"];
 const pickRandomRole = () => {
   const randomIndex = Math.floor(Math.random() * roles.length);
   return roles[randomIndex];
+};
+const pickRandomTransactionType = () => {
+  const randomIndex = Math.floor(Math.random() * transactionTypes.length);
+  return transactionTypes[randomIndex];
 };
 
 const generateUsers = (size) => {
@@ -46,17 +51,17 @@ const generateUsers = (size) => {
 
 const generateWallets = (size) => {
   let wallets = [];
-  
+
   wallets.push({
     userId: 1,
-    balance: 0.00,
+    balance: 0.0,
     currency: "Ksh",
     updatedAt: faker.date.past(),
   });
 
   wallets.push({
     userId: 2,
-    balance: 1000.00,
+    balance: 1000.0,
     currency: "Ksh",
     updatedAt: faker.date.past(),
   });
@@ -73,10 +78,32 @@ const generateWallets = (size) => {
   }
 
   return wallets;
-}
+};
 
+/**
+ * Generate random transactons for users with userId between 1-20
+ * @param {*} size 
+ * @returns 
+ */
+const generateTransactions = (size) => {
+  let transactions = [];
+  for (let i = 0; i < size; i++) {
+    const transaction = {
+      senderId: Math.floor(Math.random() * 20) + 1,
+      receiverId: Math.floor(Math.random() * 20) + 1,
+      amount: faker.finance.amount(),
+      currency: "Ksh",
+      type: pickRandomTransactionType(),
+      timestamp: faker.date.past(),
+    };
+
+    transactions.push(transaction);
+  }
+  return transactions;
+};
 
 module.exports = {
   generateUsers,
-  generateWallets
+  generateWallets,
+  generateTransactions
 };
