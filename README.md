@@ -20,6 +20,7 @@ Below are the avaialble endopoints and their usage.
 - [Send Money](#send-money)
 - [Withdraw Cash](#withdraw-cash)
 - [Deposit Cash](#deposit-cash)
+- [List all Transactions](#list-all-transactions)
 
 ---
 
@@ -592,5 +593,60 @@ Deposit funds into an account from M-Pesa
 {
   "success": false,
   "message": "string|Error message from server"
+}
+```
+
+### List All Transactions
+
+**Endpoint** `GET /api/v1/transactions`
+
+#### Description
+
+Get all transactions info
+
+#### Parameters
+
+- `type` (string, optional) - Transaction type - (sent|withdwaw|deposit)
+- `page` (integer, optional) - Page to start querying(default 1)
+- `per_page` (integer) - Number of records to show(default 10)
+
+### Success Response
+
+```json
+{
+  "page": 1,
+  "total": 68,
+  "per_page": 10,
+  "previous_page": null,
+  "next_page": 2,
+  "last_page": 7,
+  "data": [
+    {
+      "date": "Thu Aug 24 2023",
+      "transactions": [
+        {
+          "full_name": "Celestine Goldner",
+          "phone": "250-617-4427",
+          "currency": "Ksh",
+          "amount": 184.93,
+          "type": "withdraw",
+          "timestamp": " 2:26 AM"
+        }
+      ]
+    },
+    {
+      "date": "Thu Aug 17 2023",
+      "transactions": [
+        {
+          "full_name": "Josianne Okuneva",
+          "phone": "849-342-8945",
+          "currency": "Ksh",
+          "amount": 962.61,
+          "type": "withdraw",
+          "timestamp": " 8:16 PM"
+        }
+      ]
+    }
+  ]
 }
 ```

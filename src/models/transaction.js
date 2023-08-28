@@ -1,9 +1,8 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+"use strict";
+const { Sequelize, Model } = require("sequelize");
+const { formatTimestamp } = require("../utils");
 
+module.exports = (sequelize, DataTypes) => {
   class Transaction extends Model {
     /**
      * Helper method for defining associations.
@@ -12,48 +11,64 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      
+      Transaction.belongsTo(models.User, {
+        foreignKey: "senderId",
+        as: "sender",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+    }
+
+    getFormattedTimestamp() {
+      return formatTimestamp(this.timestamp);
     }
   }
 
-
-  Transaction.init({
-    id: {
-      primaryKey: true,
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+  Transaction.init(
+    {
+      id: {
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+      },
+      senderId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      receiverId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      amount: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        defaultValue: 0.0,
+      },
+      type: {
+        type: DataTypes.ENUM,
+        values: ["deposit", "withdraw", "sent"],
+        allowNull: false,
+      },
+      currency: {
+        type: DataTypes.ENUM,
+        values: ["Ksh", "USD", "EUR"],
+        allowNull: false,
+        defaultValue: "Ksh",
+      },
+      timestamp: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.literal(
+          "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+        ),
+      },
     },
-    senderId: {
-     type:DataTypes.INTEGER,
-     allowNull: false,
-    },
-    receiverId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    amount: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-      defaultValue: 0.0,
-    },
-    type: {
-      type: DataTypes.ENUM,
-      values: ["deposit", "withdraw", "send"],
-      allowNull: false,
-    },
-    currency: {
-      type: DataTypes.ENUM,
-      values: ["Ksh", "USD", "EUR"],
-      allowNull: false,
-      defaultValue: "Ksh",
-    },
-    timestamp: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
+    {
+      sequelize,
+      modelName: "Transaction",
+      timestamps: false,
     }
-  }, {
-    sequelize,
-    modelName: 'Transaction',
-  });
-  
+  );
+
   return Transaction;
 };

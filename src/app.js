@@ -22,7 +22,8 @@ const googleAuth = require("./routes/googleAuth");
 const superAdminRouter = require("./routes/superAdmin");
 const adminRouter = require("./routes/admins");
 const walletRouter = require("./routes/wallet");
-const mpesaRouter = require("./routes/mpesa")
+const mpesaRouter = require("./routes/mpesa");
+const transactionsRouter = require("./routes/transactions");
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/auth/google", googleAuth);
@@ -30,6 +31,7 @@ app.use("/api/v1/admins", adminRouter);
 app.use("/api/v1/super-admin", superAdminRouter);
 app.use("/api/v1/wallet", walletRouter);
 app.use("/api/v1/mpesa", mpesaRouter);
+app.use("/api/v1/transactions", transactionsRouter);
 // error handler
 app.use(errorHandler);
 

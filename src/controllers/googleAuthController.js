@@ -70,11 +70,7 @@ const handleGoogleAuth = async (req, res, next) => {
       data: user,
     });
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
+    next(error)
   }
 };
 

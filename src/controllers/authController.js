@@ -28,11 +28,7 @@ const login = async (req, res, next) => {
       },
     });
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -73,11 +69,7 @@ const register = async (req, res, next) => {
       },
     });
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -100,11 +92,7 @@ const sendOTP = async (req, res, next) => {
       message: "OTP sent successfully",
     });
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -128,11 +116,7 @@ const verifyOTP = async (req, res, next) => {
       message: "Phone number verified successfully",
     });
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    return res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 

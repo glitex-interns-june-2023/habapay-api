@@ -42,12 +42,7 @@ const createSuperAdmin = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log("Error creating superAdmin: ", error);
-    return res.status(500).json({
-      success: false,
-      message: "Error creating superAdmin: ",
-      error,
-    });
+    next(error);
   }
 };
 
