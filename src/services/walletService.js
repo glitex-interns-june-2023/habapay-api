@@ -89,7 +89,7 @@ const transferFunds = async (senderWallet, receiverWallet, amount) => {
 
 const depositMoney = async (senderPhone, mpesaNumber, amount) => {
   const sender = await userService.ensurePhoneRegistered(senderPhone);
-  await mpesaService.sendStkPush(mpesaNumber, amount);
+  // await mpesaService.sendStkPush(mpesaNumber, amount);
   const wallet = await getWallet(sender.id);
   wallet.balance += amount;
   await wallet.save();
