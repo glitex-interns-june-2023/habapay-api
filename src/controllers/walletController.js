@@ -9,7 +9,7 @@ const getBalance = async (req, res, next) => {
     const { phone } = req.query;
     const user = await userService.findByPhone(phone);
     if (!user) {
-      throw new UserNotFoundError("No user with the given phone was found");
+      throw new PhoneNotRegisteredError(phone);
     }
 
     const wallet = await walletService.getWallet(user.id);
@@ -37,9 +37,7 @@ const sendMoney = async (req, res) => {
 
     const sender = await userService.findByPhone(senderPhone);
     if (!sender) {
-      throw new UserNotFoundError(
-        `No user with phone :${senderPhone} was found`
-      );
+      throw new PhoneNotRegisteredError(senderPhone);
     }
     const receiver = await userService.findByPhone(receiverPhone);
 
@@ -83,7 +81,7 @@ const confirmDetails = async (req, res, next) => {
   try {
     const user = await userService.findByPhone(phone);
     if (!user) {
-      throw new UserNotFoundError("No user with the given phone was found");
+      throw new PhoneNotRegisteredError(phone);
     }
 
     const response = {
@@ -140,7 +138,7 @@ const withdrawMoney = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      message: "Deposit successful",
+      message: "Withdraw successful",
       data: response,
     });
   } catch (error) {
@@ -152,6 +150,10 @@ const depositMoney = async (req, res, next) => {
   const { senderPhone, mpesaNumber, amount } = req.body;
   try {
     await walletService.depositMoney(senderPhone, mpesaNumber, amount);
+    return res.status(200).json({
+      success: true,
+      message: "Deposit successful",
+    });
   } catch (error) {
     next(error);
   }

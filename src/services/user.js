@@ -2,7 +2,7 @@ const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");
 const PhoneNotVerifiedError = require("../errors/PhoneNotVerifiedError");
 const { User } = require("../models");
 const user = require("../models/user");
-const { hashPassword } = require("../services/auth");
+const { hashPassword } = require("./auth");
 
 const findByGoogleId = async (googleId) => {
   const user = await User.findOne({ where: { googleId } });
@@ -112,5 +112,5 @@ module.exports = {
   updatePhoneNumber,
   setVerified,
   ensurePhoneRegistered,
-  ensurePhoneRegistered,
+  ensurePhoneVerified,
 };
