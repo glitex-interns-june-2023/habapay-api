@@ -19,6 +19,7 @@ Below are the avaialble endopoints and their usage.
 - [Confirm Recipient Details](#confirm-recipient-details)
 - [Send Money](#send-money)
 - [Withdraw Cash](#withdraw-cash)
+- [Deposit Cash](#deposit-cash)
 
 ---
 
@@ -540,6 +541,51 @@ Withdraw funds fron one account
   }
 }
 ```
+
+#### Failure Response
+
+```json
+{
+  "success": false,
+  "message": "string|Error message from server"
+}
+```
+
+### Deposit Cash
+
+**Endpoint**: `POST /api/v1/wallet/deposit`
+
+#### Description
+
+Deposit funds into an account from M-Pesa
+
+#### Request Body
+
+```json
+{
+  "sender_phone": "string|required",
+  "mpesa_number": "string|required",
+  "amount": "float|required"
+}
+```
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "string|(Deposit successful)",
+  "data": {
+    "transaction_id": "integer",
+    "transaction_message": "string",
+    "amount": "float",
+    "currency": "string",
+    "timestamp": "date",
+    "balance": "float"
+  }
+}
+```
+
 #### Failure Response
 
 ```json
