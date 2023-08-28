@@ -1,3 +1,4 @@
+const ResourceNotFoundError = require("../errors/ResourceNotFoundError");
 const paginator = require("../middlewares/paginator");
 const { Transaction, User, sequelize } = require("../models");
 const { formatTimestamp } = require("../utils");
@@ -151,9 +152,36 @@ const formatAndGroupTransactions = (transactions) => {
   return formattedData;
 };
 
+const getTransaction = async (transactionId) => {
+  const transaction = await Transaction.findByPk(transactionId, {
+    include: {
+      model: User,
+      as: "sender",
+      attributes: ["firstName", "lastName", "phone"],
+    },
+    raw: true,
+  });
+  if (!transaction) {
+    throw new ResourceNotFoundError(`/transactions/${transactionId}`);
+  }
+
+  const response = {
+    transactionId: transaction.id,
+    full_name: `${transaction["sender.firstName"]} ${transaction["sender.lastName"]}`,
+    phone: transaction["sender.phone"],
+    amount: transaction.amount,
+    type: transaction.type,
+    currency: transaction.currency,
+    timestamp: formatTimestamp(transaction.timestamp),
+  };
+
+  return response;
+};
+
 module.exports = {
   createSendTransaction,
   createWithdrawTransaction,
   createDepositTransaction,
   getTransactions,
+  getTransaction,
 };

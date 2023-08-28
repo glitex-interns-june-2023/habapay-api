@@ -64,3 +64,19 @@ describe("GET /api/v1/transactions", () => {
     expect(response.body.data.data).toHaveLength(1);
   });
 });
+
+describe("GET /api/v1/transactions/:id", () => {
+  it("Should return 404 if not transaction like that was found", async () => {
+    const response = await request.get("/api/v1/transactions/30001");
+    expect(response.status).toBe(404);
+    expect(response.body.success).toBe(false);
+    expect(response.body).toHaveProperty("message");
+  });
+
+  it("should return the transaction matching the transaction id if found ", async () => {
+    const response = await request.get("/api/v1/transactions/12");
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(response.body.data).toBeDefined();
+  });
+});
