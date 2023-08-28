@@ -18,7 +18,7 @@ const createSendTransaction = async (senderWallet, receiverWallet, amount) => {
     senderWallet,
     receiverWallet,
     amount,
-    "send"
+    "sent"
   );
 
   const savedTransaction = await Transaction.create(transaction);

@@ -31,7 +31,7 @@ const getBalance = async (req, res, next) => {
   }
 };
 
-const sendMoney = async (req, res) => {
+const sendMoney = async (req, res, next) => {
   try {
     const { senderPhone, receiverPhone, amount } = req.body;
 
@@ -57,7 +57,7 @@ const sendMoney = async (req, res) => {
     const balance = senderWallet.balance;
     const timestamp = formatTimestamp(transaction.timestamp);
 
-    const message = `${transaction.id} Confirmed. ${transaction.currency}. ${transaction.amount} sent to ${receiver.username} ${receiver.phone} on ${timestamp}. New wallet balance is ${wallet.currency} ${balance}`;
+    const message = `${transaction.id} Confirmed. ${transaction.currency}. ${transaction.amount} sent to ${receiver.username} ${receiver.phone} on ${timestamp}. New wallet balance is ${senderWallet.currency} ${balance}`;
 
     return res.status(200).json({
       success: true,
