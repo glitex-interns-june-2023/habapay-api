@@ -44,7 +44,19 @@ router.post(
   sendMoney
 );
 
-router.post("/deposit", depositMoney);
+router.post(
+  "/deposit",
+  [
+    body("senderPhone")
+      .notEmpty()
+      .withMessage("Phone to deposit from is required"),
+    body("mpesaNumber").notEmpty().withMessage("M-Pesa numeber is required"),
+    body("amount").notEmpty().withMessage("Amount to deposit is required"),
+    validateInput,
+  ],
+  depositMoney
+);
+
 router.post(
   "/withdraw",
   [

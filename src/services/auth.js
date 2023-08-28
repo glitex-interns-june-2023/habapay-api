@@ -1,6 +1,7 @@
 const { OAuth2Client } = require("google-auth-library");
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
+const axios = require("axios");
 
 const verifyGoogleToken = async (token) => {
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -15,7 +16,7 @@ const verifyGoogleToken = async (token) => {
   } catch (error) {
     const err = new Error("Invalid google token");
     err.statusCode = 401;
-    throw err
+    throw err;
   }
 };
 
@@ -62,9 +63,30 @@ const comparePassword = (password, hash) => {
   return match;
 };
 
+const generateMpesaAccessToken = async () => {
+  const url =
+    "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
+  const token = Buffer.from(
+    `${process.env.DARAJA_CONSUMER_KEY}:${process.env.DARAJA_CONSUMER_SECRET}`
+  ).toString("base64");
+
+  const response = await axios.get(url, {
+    headers: {
+      Authorization: `Basic ${token}`,
+    },
+  });
+
+  if (!response.data || !response.data.access_token) {
+    throw new Error("Could not get access token");
+  }
+
+  return response.data.access_token;
+};
+
 module.exports = {
   verifyGoogleToken,
   checkLogin,
   hashPassword,
   comparePassword,
+  generateMpesaAccessToken,
 };

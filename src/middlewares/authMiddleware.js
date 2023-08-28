@@ -67,9 +67,6 @@ const ensureSuperAdmin = async () => {
   next();
 };
 
-
-
-
 module.exports = {
     createAccessToken,
     createRefreshToken,

@@ -1,101 +1,82 @@
 const { Wallet } = require("../models");
-const walletService = require("../services/walletService");
+const userService = require("../services/user");
 const transactionService = require("../services/transactionService");
+const mpesaService = require("../services/mpesaService");
 
 const getBalance = async (userId) => {
-  try {
-    const wallet = await getWallet(userId);
+  const wallet = await getWallet(userId);
 
-    return wallet.balance;
-  } catch (error) {
-    throw error;
-  }
+  return wallet.balance;
 };
 
 const sendMoney = async (senderId, receiverId, amount) => {
-  try {
-    const senderWallet = await getWallet(senderId);
-    const receiverWallet = await getWallet(receiverId);
+  const senderWallet = await getWallet(senderId);
+  const receiverWallet = await getWallet(receiverId);
 
-    verifyCanSend(senderWallet, amount);
+  verifyCanSend(senderWallet, amount);
 
-    await transferFunds(senderWallet, receiverWallet, amount);
+  await transferFunds(senderWallet, receiverWallet, amount);
 
-    const transaction = await transactionService.createSendTransaction(
-      senderWallet,
-      receiverWallet,
-      amount
-    );
+  const transaction = await transactionService.createSendTransaction(
+    senderWallet,
+    receiverWallet,
+    amount
+  );
 
-    return transaction;
-  } catch (error) {
-    throw error;
-  }
+  return transaction;
 };
 
 const getWallet = async (userId) => {
-  try {
-    const wallet = await Wallet.findOne({
-      where: {
-        userId,
-      },
-    });
+  const wallet = await Wallet.findOne({
+    where: {
+      userId,
+    },
+  });
 
-    if (!wallet) {
-      const error = new Error(`No wallet found for userId: ${userId}`);
-      error.statusCode = 404;
-      throw error;
-    }
-
-    return wallet;
-  } catch (error) {
+  if (!wallet) {
+    const error = new Error(`No wallet found for userId: ${userId}`);
+    error.statusCode = 404;
     throw error;
   }
+
+  return wallet;
 };
 
 const verifyCanSend = (wallet, amount) => {
-  try {
-    if (wallet.balance < amount) {
-      const error = new Error(
-        `Transaction failed. You have insufficient funds to send ${wallet.currency} ${amount}. Your available account balance is ${wallet.currency} ${wallet.balance}`
-      );
-      error.statusCode = 400;
-      throw error;
-    }
-    return true;
-  } catch (error) {
+  if (wallet.balance < amount) {
+    const error = new Error(
+      `Transaction failed. You have insufficient funds to send ${wallet.currency} ${amount}. Your available account balance is ${wallet.currency} ${wallet.balance}`
+    );
+    error.statusCode = 400;
     throw error;
   }
+  return true;
 };
 
 const verifyCanWithdraw = (wallet, amount) => {
-  try {
-    if (wallet.balance < amount) {
-      const error =
-        new Error(`Transaction failed. You have insufficient funds to withdraw ${wallet.currency} ${amount}. 
+  if (wallet.balance < amount) {
+    const error =
+      new Error(`Transaction failed. You have insufficient funds to withdraw ${wallet.currency} ${amount}. 
         Your current account balance is ${wallet.currency} ${wallet.balance}`);
-      error.statusCode = 400;
-      throw error;
-    }
-
-    return true;
-  } catch (error) {
+    error.statusCode = 400;
     throw error;
   }
+
+  return true;
 };
 
 const withdrawMoney = async (senderId, receiverId, amount) => {
-  try {
-    const senderWallet = await getWallet(senderId);
-    const receiverWallet = await getWallet(receiverId);
-    verifyCanWithdraw(senderWallet, amount);
-    
-    await transferFunds(senderWallet, receiverWallet, amount);
-    const transaction = await transactionService.createWithdrawTransaction(senderWallet, receiverWallet, amount);
-    return transaction;
-  } catch (error) {
-    throw error;
-  }
+  const senderWallet = await getWallet(senderId);
+  const receiverWallet = await getWallet(receiverId);
+  verifyCanWithdraw(senderWallet, amount);
+
+  await transferFunds(senderWallet, receiverWallet, amount);
+  const transaction = await transactionService.createWithdrawTransaction(
+    senderWallet,
+    receiverWallet,
+    amount
+  );
+  return transaction;
 };
 
 const transferFunds = async (senderWallet, receiverWallet, amount) => {
@@ -106,9 +87,20 @@ const transferFunds = async (senderWallet, receiverWallet, amount) => {
   await receiverWallet.save();
 };
 
+const depositMoney = async (senderId, mpesaNumber, amount) => {
+  // await mpesaService.sendStkPush(mpesaNumber, amount);
+  const wallet = await getWallet(senderId);
+  wallet.balance += amount;
+  await wallet.save();
+  const transaction = await transactionService.createDepositTransaction(wallet,amount);
+
+  return transaction;
+};
+
 module.exports = {
   getWallet,
   getBalance,
   sendMoney,
   withdrawMoney,
+  depositMoney,
 };

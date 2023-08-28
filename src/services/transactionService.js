@@ -19,19 +19,15 @@ const createSendTransaction = async (senderWallet, receiverWallet, amount) => {
     "send"
   );
 
-  try {
-    const savedTransaction = await Transaction.create(transaction);
+  const savedTransaction = await Transaction.create(transaction);
 
-    if (!savedTransaction) {
-      const error = new Error(`Failed to save transaction to database`);
-      error.statusCode = 400;
-      throw error;
-    }
-
-    return savedTransaction;
-  } catch (error) {
+  if (!savedTransaction) {
+    const error = new Error(`Failed to save transaction to database`);
+    error.statusCode = 400;
     throw error;
   }
+
+  return savedTransaction;
 };
 
 const createWithdrawTransaction = async (
@@ -46,24 +42,40 @@ const createWithdrawTransaction = async (
     "withdraw"
   );
 
-  try {
-    const savedTransaction = await Transaction.create(transaction);
+  const savedTransaction = await Transaction.create(transaction);
 
-    if (!savedTransaction) {
-      const error = new Error(`Failed to save transaction to database`);
-      error.statusCode = 400;
-      throw error;
-    }
-
-    return savedTransaction;
-  } catch (error) {
+  if (!savedTransaction) {
+    const error = new Error(`Failed to save transaction to database`);
+    error.statusCode = 400;
     throw error;
   }
+
+  return savedTransaction;
+};
+
+const createDepositTransaction = async (senderWallet, amount) => {
+  const transaction = createTransaction(
+    senderWallet,
+    senderWallet,
+    amount,
+    "deposit"
+  );
+
+  const savedTransaction = await Transaction.create(transaction);
+
+  if (!savedTransaction) {
+    const error = new Error(`Failed to save transaction to database`);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return savedTransaction;
 };
 
 module.exports = {
   createSendTransaction,
   createWithdrawTransaction,
+  createDepositTransaction,
   // getTransactions,
   // getTransaction,
   // updateTransaction,
