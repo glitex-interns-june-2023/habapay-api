@@ -57,7 +57,7 @@ const sendMoney = async (req, res) => {
     const balance = senderWallet.balance;
     const timestamp = formatTimestamp(transaction.timestamp);
 
-    const message = `${transaction.id} confirmed. ${transaction.currency}. ${transaction.amount} sent to ${receiver.username} ${receiver.phone} on ${timestamp}. New wallet balance is ${balance}`;
+    const message = `${transaction.id} Confirmed. ${transaction.currency}. ${transaction.amount} sent to ${receiver.username} ${receiver.phone} on ${timestamp}. New wallet balance is ${wallet.currency} ${balance}`;
 
     return res.status(200).json({
       success: true,
@@ -125,7 +125,7 @@ const withdrawMoney = async (req, res, next) => {
     const balance = wallet.balance;
     const timestamp = formatTimestamp(transaction.timestamp);
 
-    const message = `${transaction.id} confirmed. Withdraw of ${transaction.currency}. ${transaction.amount} to ${receiver.username}, ${receiver.phone} on ${timestamp}. New wallet balance is ${balance}`;
+    const message = `${transaction.id} Confirmed. Withdraw of ${transaction.currency}. ${transaction.amount} to ${receiver.username}, ${receiver.phone} on ${timestamp}. New wallet balance is ${wallet.currency} ${balance}.`;
 
     const response = {
       transactionId: transaction.id,
@@ -149,10 +149,33 @@ const withdrawMoney = async (req, res, next) => {
 const depositMoney = async (req, res, next) => {
   const { senderPhone, mpesaNumber, amount } = req.body;
   try {
-    await walletService.depositMoney(senderPhone, mpesaNumber, amount);
+    const user = await userService.ensurePhoneRegistered(senderPhone);
+    const userId = user.id;
+
+    const transaction = await walletService.depositMoney(
+      userId,
+      mpesaNumber,
+      amount
+    );
+    
+    const wallet = await walletService.getWallet(userId);
+    const balance = wallet.balance;
+    const timestamp = formatTimestamp(transaction.timestamp);
+
+    const message = `${transaction.id} Confirmed. Deposit of ${transaction.currency} ${transaction.amount} to ${user.username},${user.phone} on ${timestamp}. New wallet balance is ${wallet.currency} ${balance}.`;
+    const response = {
+      transactionId: transaction.id,
+      transactionMessage: message,
+      amount: transaction.amount,
+      currency: transaction.currency,
+      timestamp: timestamp,
+      balance: balance,
+    };
+
     return res.status(200).json({
       success: true,
       message: "Deposit successful",
+      data: response,
     });
   } catch (error) {
     next(error);
