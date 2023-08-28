@@ -15,8 +15,22 @@ const getTransactions = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
+
+const getTransaction = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const transaction = await transactionService.getTransaction(id);
+    return res.status(200).json({
+      success: true,
+      data: transaction,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
-  getTransactions
+  getTransactions,
+  getTransaction,
 };
