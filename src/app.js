@@ -35,10 +35,10 @@ app.use("/api/v1/transactions", transactionsRouter);
 // error handler
 app.use(errorHandler);
 
-// sequelize.sync({ force: true }).then(() => {
-//   console.log("Models synced successfully");
-// }).catch(err => {
-//   console.log("Error syncing models")
-// })
+sequelize.sync({ force: true }).then(() => {
+  console.log("Models synced successfully");
+}).catch(err => {
+  console.log("Error syncing models")
+})
 
 module.exports = app;
