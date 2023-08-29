@@ -30,7 +30,26 @@ const getTransaction = async (req, res, next) => {
   }
 };
 
+const getUserTransactions = async (req, res, next) => {
+  const { id: userId } = req.params;
+  const { page = 1, perPage = 10, type } = req.query;
+  try {
+    const transaction = await transactionService.getUserTransactions(userId, {
+      page,
+      perPage,
+      type,
+    });
+    return res.status(200).json({
+      success: true,
+      data: transaction,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getTransactions,
   getTransaction,
+  getUserTransactions,
 };

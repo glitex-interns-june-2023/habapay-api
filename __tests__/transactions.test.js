@@ -80,3 +80,63 @@ describe("GET /api/v1/transactions/:id", () => {
     expect(response.body.data).toBeDefined();
   });
 });
+
+describe("GET /api/v1/user/:id/transactions", () => {
+  it("Should return 404 if no user with the given id is found", async () => {
+    const userId = 1236;
+    const response = await request.get(`/api/v1/users/${userId}/transactions`);
+    expect(response.status).toBe(404);
+    expect(response.body.success).toBe(false);
+    expect(response.body.message).toBeDefined();
+  });
+
+  it("Should get user transactions", async () => {
+    const userId = 2;
+    const response = await request.get(`/api/v1/users/${userId}/transactions`);
+    expect(response.status).toBe(200);
+    expect(response.body.data).toBeDefined();
+    expect(response.body.data.data).toBeDefined();
+    expect(response.body.data.data.length).toBeGreaterThan(0);
+  });
+
+  it.only("should allow pagination of response data", async () => {
+    const userId = 2;
+    const response = await request
+      .get(`/api/v1/users/${userId}/transactions`)
+      .query({
+        page: 1,
+        per_page: 20,
+      });
+
+      console.log(JSON.stringify(response.body, null, 2));
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    console.log(response.body)
+    // expect(response.body.data.data).toHaveLength(2);
+  });
+
+  it("should also filter results based on transaction type (sent,withdraw or deposit)", async () => {
+    const userId = 2;
+    let response = await request
+      .get(`/api/v1/user/${userId}/transactions`)
+      .query({
+        type: "sent",
+        page: 1,
+        per_page: 1,
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.data).toBeDefined();
+    expect(response.data.data[0].type).toBe("sent");
+
+    response = await request.get(`/api/v1/user/${userId}/transactions`).query({
+      type: "withdraw",
+      page: 1,
+      per_page: 1,
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.data).toBeDefined();
+    expect(response.data.data[0].type).toBe("withdraw");
+  });
+});
