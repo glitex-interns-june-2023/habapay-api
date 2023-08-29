@@ -21,7 +21,7 @@ Below are the avaialble endopoints and their usage.
 - [Withdraw Cash](#withdraw-cash)
 - [Deposit Cash](#deposit-cash)
 - [List all Transactions](#list-all-transactions)
-
+- [Single Transaction](#single-transaction)
 ---
 
 ### Signup and Signing with Google
