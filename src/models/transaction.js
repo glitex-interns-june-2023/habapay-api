@@ -18,6 +18,14 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+      
+      Transaction.belongsTo(models.User, {
+        foreignKey: "receiverId",
+        as: "receiver",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
+      });
+      
     }
 
     getFormattedTimestamp() {

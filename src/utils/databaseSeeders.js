@@ -82,12 +82,38 @@ const generateWallets = (size) => {
 
 /**
  * Generate random transactons for users with userId between 1-20
- * @param {*} size 
- * @returns 
+ * @param {*} size
+ * @returns
  */
 const generateTransactions = (size) => {
-  let transactions = [];
-  for (let i = 0; i < size; i++) {
+  let transactions = [
+    {
+      senderId: 2,
+      receiverId: Math.floor(Math.random() * 20) + 1,
+      amount: faker.finance.amount(),
+      currency: "Ksh",
+      type: "sent",
+      timestamp: faker.date.past(),
+    },
+    {
+      senderId: 2,
+      receiverId: Math.floor(Math.random() * 20) + 1,
+      amount: faker.finance.amount(),
+      currency: "Ksh",
+      type: "withdraw",
+      timestamp: faker.date.past(),
+    },
+    {
+      senderId: 2,
+      receiverId: Math.floor(Math.random() * 20) + 1,
+      amount: faker.finance.amount(),
+      currency: "Ksh",
+      type: "deposit",
+      timestamp: faker.date.past(),
+    },
+  ];
+
+  for (let i = 2; i < size; i++) {
     const transaction = {
       senderId: Math.floor(Math.random() * 20) + 1,
       receiverId: Math.floor(Math.random() * 20) + 1,
@@ -105,5 +131,5 @@ const generateTransactions = (size) => {
 module.exports = {
   generateUsers,
   generateWallets,
-  generateTransactions
+  generateTransactions,
 };

@@ -1,7 +1,15 @@
+const { Op } = require("sequelize");
 const ResourceNotFoundError = require("../errors/ResourceNotFoundError");
+const UserNotFoundError = require("../errors/UserNotFoundError");
 const paginator = require("../middlewares/paginator");
 const { Transaction, User, sequelize } = require("../models");
 const { formatTimestamp } = require("../utils");
+const {
+  formatAllTransactions,
+  formatAllUserTransactions,
+  formatSentUserTransactions,
+  formatReceivedUserTransactions,
+} = require("../services/transactionsFormatter");
 
 const createTransaction = (senderWallet, receiverWallet, amount, type) => {
   return {
@@ -98,61 +106,16 @@ const getTransactions = async (type, { page, perPage }) => {
 
   const transactions = await Transaction.findAndCountAll(queryOptions);
 
-  const { data, ...paginatedTransactions } = paginator(
-    transactions,
-    page,
-    perPage
-  );
+  const { data, ...paginationInfo } = paginator(transactions, page, perPage);
 
-  const groupedTransactions = formatAndGroupTransactions(data);
+  const groupedTransactions = formatAllTransactions(data);
 
-  const formattedData = { ...paginatedTransactions, data: groupedTransactions };
-  return formattedData;
-};
-
-/**
- * Json string representation for transaction
- * Note this is not the same as the transaction model, it's a plain javascript object
- * It has no nested values, that's why accessing fields like firstName is done like transaction["sender.firstName"]
- * @param {JSON} transactions
- * @returns
- */
-const formatAndGroupTransactions = (transactions) => {
-  const formattedData = transactions.reduce((acc, transaction) => {
-    const transactionDate = transaction.timestamp.toDateString();
-
-    const existingEntry = acc.find((entry) => entry.date === transactionDate);
-    // create new entry if none exists
-    if (!existingEntry) {
-      acc.push({
-        date: transactionDate,
-        transactions: [
-          {
-            full_name: `${transaction["sender.firstName"]} ${transaction["sender.lastName"]}`,
-            phone: transaction["sender.phone"],
-            currency: transaction.currency,
-            amount: transaction.amount,
-            type: transaction.type,
-            timestamp: formatTimestamp(transaction.timestamp).split(",")[1],
-          },
-        ],
-      });
-    } else {
-      existingEntry.transactions.push({
-        full_name: `${transaction["sender.firstName"]} ${transaction["sender.lastName"]}`,
-        phone: transaction["sender.phone"],
-        currency: transaction.currency,
-        amount: transaction.amount,
-        type: transaction.type,
-        timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
-      });
-    }
-    return acc;
-  }, []);
+  const formattedData = { ...paginationInfo, data: groupedTransactions };
   return formattedData;
 };
 
 const getTransaction = async (transactionId) => {
+  transactionId = parseInt(transactionId);
   const transaction = await Transaction.findByPk(transactionId, {
     include: {
       model: User,
@@ -178,10 +141,134 @@ const getTransaction = async (transactionId) => {
   return response;
 };
 
+const getUserTransactions = async (userId, { page, perPage, type }) => {
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+  userId = parseInt(userId);
+
+  const user = await User.findByPk(userId);
+
+  const offset = (page - 1) * perPage;
+  const queryOptions = {
+    where: {
+      [Op.or]: {
+        senderId: userId,
+        receiverId: userId,
+      },
+    },
+    offset,
+    limit: perPage,
+    include: [
+      {
+        model: User,
+        as: "sender",
+        attributes: ["firstName", "lastName", "phone"],
+        order: [["timestamp", "DESC"]],
+      },
+      {
+        model: User,
+        as: "receiver",
+        attributes: ["firstName", "lastName", "phone"],
+        order: [["timestamp", "DESC"]],
+      },
+    ],
+    raw: true,
+  };
+
+  if (type) {
+    if (type == "received") {
+      type = "sent";
+    }
+
+    queryOptions.where.type = type;
+  }
+
+  const transactions = await Transaction.findAndCountAll(queryOptions);
+
+  if (transactions.count == 0) {
+    // verify if user is registered or not
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new UserNotFoundError(`User with userId: ${userId} was not found`);
+    }
+  }
+
+  const { data, ...paginationInfo } = paginator(transactions, page, perPage);
+  const groupedTransactions = formatAllUserTransactions(data, user);
+  const formattedData = { ...paginationInfo, data: groupedTransactions };
+  return formattedData;
+};
+
+const getSentUserTransactions = async (userId, { page, perPage }) => {
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+  userId = parseInt(userId);
+
+  const offset = (page - 1) * perPage;
+
+  const queryOptions = {
+    where: {
+      senderId: userId,
+      type: "sent",
+    },
+    limit: perPage,
+    offset,
+    include: {
+      model: User,
+      as: "receiver",
+      attributes: ["firstName", "lastName", "phone"],
+    },
+    order: [["timestamp", "DESC"]],
+    raw: true,
+  };
+
+  const transactions = await Transaction.findAndCountAll(queryOptions);
+
+  const { data, ...paginationInfo } = paginator(transactions, page, perPage);
+  const groupedTransactions = formatSentUserTransactions(data);
+  const formattedData = { ...paginationInfo, data: groupedTransactions };
+  return formattedData;
+};
+
+const getReceivedUserTransactions = async (userId, { page, perPage }) => {
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+  userId = parseInt(userId);
+
+  const offset = (page - 1) * perPage;
+
+  const queryOptions = {
+    where: {
+      receiverId: userId,
+      type: "sent",
+    },
+    limit: perPage,
+    offset,
+    include: {
+      model: User,
+      as: "sender",
+      attributes: ["firstName", "lastName", "phone"],
+    },
+    order: [["timestamp", "DESC"]],
+    raw: true,
+  };
+
+  const transactions = await Transaction.findAndCountAll(queryOptions);
+
+  const { data, ...paginationInfo } = paginator(transactions, page, perPage);
+
+  const groupedTransactions = formatReceivedUserTransactions(data);
+  const formattedData = { ...paginationInfo, data: groupedTransactions };
+  return formattedData;
+};
+
 module.exports = {
   createSendTransaction,
   createWithdrawTransaction,
   createDepositTransaction,
   getTransactions,
   getTransaction,
+  getUserTransactions,
+  getSentUserTransactions,
+  getReceivedUserTransactions,
 };

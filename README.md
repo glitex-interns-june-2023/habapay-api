@@ -22,6 +22,8 @@ Below are the avaialble endopoints and their usage.
 - [Deposit Cash](#deposit-cash)
 - [List all Transactions](#list-all-transactions)
 - [Single Transaction](#single-transaction)
+- [List User Transactions](#list-user-transactions)
+
 ---
 
 ### Signup and Signing with Google
@@ -679,3 +681,69 @@ Get a single transaction based on its transaction ID
   }
 }
 ```
+
+### List User Transactions
+
+**Endpoint** `GET /api/v1/users/:userId/transactions`
+
+#### Description
+
+Get transactions made by the user identified by the :userId parameter.  
+Transaction types in response body can either be: `sent|received|deposit|withdraw`
+
+#### Route Params
+
+- `userId`- (integer,required) - Id of the user
+
+#### Query Params
+
+- `page` (integer, optional) - Page to start querying. Defaults to `1`
+- `per_page` (integer, optional)- Number of records to fetch per each page. Defaults to `10`
+- `type` (string, optional) - Filter results by transacton type. Either: `sent|received|deposit|withdraw`
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "page": 1,
+    "total": 15,
+    "per_page": 10,
+    "previous_page": null,
+    "next_page": 2,
+    "last_page": 2,
+    "data": [
+      {
+        "date": "Mon Aug 07 2023",
+        "transactions": [
+          {
+            "full_name": "Admin User",
+            "phone": "0114662464",
+            "currency": "Ksh",
+            "amount": 53.29,
+            "type": "sent",
+            "timestamp": "3:38 PM"
+          }
+        ]
+      },
+      {
+        "date": "Fri Jul 28 2023",
+        "transactions": [
+          {
+            "full_name": "Jolie Powlowski",
+            "phone": "766-227-1867",
+            "currency": "Ksh",
+            "amount": 142.88,
+            "type": "received",
+            "timestamp": "7:04 AM"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+#### Validations
+- User must exist
