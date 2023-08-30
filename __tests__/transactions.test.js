@@ -66,7 +66,7 @@ describe("GET /api/v1/transactions", () => {
 });
 
 describe("GET /api/v1/transactions/:id", () => {
-  it("Should return 404 if not transaction like that was found", async () => {
+  it("Should return 404 if not transaction with the given transaction id was found", async () => {
     const response = await request.get("/api/v1/transactions/30001");
     expect(response.status).toBe(404);
     expect(response.body.success).toBe(false);
@@ -99,44 +99,54 @@ describe("GET /api/v1/user/:id/transactions", () => {
     expect(response.body.data.data.length).toBeGreaterThan(0);
   });
 
-  it.only("should allow pagination of response data", async () => {
+  it("should allow pagination of response data", async () => {
     const userId = 2;
     const response = await request
       .get(`/api/v1/users/${userId}/transactions`)
       .query({
         page: 1,
-        per_page: 20,
+        per_page: 2,
       });
 
-      console.log(JSON.stringify(response.body, null, 2));
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
-    console.log(response.body)
-    // expect(response.body.data.data).toHaveLength(2);
+    expect(response.body.data.data).toHaveLength(2);
   });
 
-  it("should also filter results based on transaction type (sent,withdraw or deposit)", async () => {
+  it("should also filter results based on transaction type (ie. ?type=sent,received,withdraw or deposit)", async () => {
     const userId = 2;
+    let transactions;
+
     let response = await request
-      .get(`/api/v1/user/${userId}/transactions`)
-      .query({
-        type: "sent",
-        page: 1,
-        per_page: 1,
-      });
-
+      .get(`/api/v1/users/${userId}/transactions`)
+      .query({ type: "sent" });
     expect(response.status).toBe(200);
     expect(response.body.data.data).toBeDefined();
-    expect(response.data.data[0].type).toBe("sent");
+    transactions = response.body.data.data;
+    expect(transactions[0].transactions[0].type).toBe("sent");
 
-    response = await request.get(`/api/v1/user/${userId}/transactions`).query({
-      type: "withdraw",
-      page: 1,
-      per_page: 1,
-    });
-
+    response = await request
+      .get(`/api/v1/users/${userId}/transactions`)
+      .query({ type: "received" });
     expect(response.status).toBe(200);
     expect(response.body.data.data).toBeDefined();
-    expect(response.data.data[0].type).toBe("withdraw");
+    transactions = response.body.data.data;
+    expect(transactions[0].transactions[0].type).toBe("received");
+
+    response = await request
+      .get(`/api/v1/users/${userId}/transactions`)
+      .query({ type: "withdraw" });
+    expect(response.status).toBe(200);
+    expect(response.body.data.data).toBeDefined();
+    transactions = response.body.data.data;
+    expect(transactions[0].transactions[0].type).toBe("withdraw");
+
+    response = await request
+      .get(`/api/v1/users/${userId}/transactions`)
+      .query({ type: "deposit" });
+    expect(response.status).toBe(200);
+    expect(response.body.data.data).toBeDefined();
+    transactions = response.body.data.data;
+    expect(transactions[0].transactions[0].type).toBe("deposit");
   });
 });
