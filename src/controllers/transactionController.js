@@ -34,11 +34,29 @@ const getUserTransactions = async (req, res, next) => {
   const { id: userId } = req.params;
   const { page = 1, perPage = 10, type } = req.query;
   try {
-    const transaction = await transactionService.getUserTransactions(userId, {
-      page,
-      perPage,
-      type,
-    });
+    let transaction;
+    // sent and received transactions need to be handled differently
+    if (type == "sent") {
+      transaction = await transactionService.getSentUserTransactions(userId, {
+        page,
+        perPage,
+      });
+    } else if (type == "received") {
+      transaction = await transactionService.getReceivedUserTransactions(
+        userId,
+        {
+          page,
+          perPage,
+        }
+      );
+    } else {
+      transaction = await transactionService.getUserTransactions(userId, {
+        page,
+        perPage,
+        type,
+      });
+    }
+
     return res.status(200).json({
       success: true,
       data: transaction,
