@@ -1,4 +1,3 @@
-const { formatTimestamp } = require("../utils");
 const formatSentUserTransactions = (transactions) => {
   const formattedData = transactions.reduce((acc, transaction) => {
     const transactionDate = transaction.timestamp.toDateString();
@@ -13,8 +12,6 @@ const formatSentUserTransactions = (transactions) => {
         date: transactionDate,
         transactions: [
           {
-            senderId: transaction.senderId,
-            receiverId: transaction.receiverId,
             fullName,
             phone,
             currency: transaction.currency,
@@ -54,8 +51,6 @@ const formatReceivedUserTransactions = (transactions) => {
         date: transactionDate,
         transactions: [
           {
-            senderId: transaction.senderId,
-            receiverId: transaction.receiverId,
             fullName,
             phone,
             currency: transaction.currency,
@@ -101,8 +96,6 @@ const formatAllTransactions = (transactions) => {
         date: transactionDate,
         transactions: [
           {
-            senderId: transaction.senderId,
-            receiverId: transaction.receiverId,
             fullName,
             phone,
             currency: transaction.currency,
@@ -174,8 +167,6 @@ const formatAllUserTransactions = (transactions, user) => {
         date: transactionDate,
         transactions: [
           {
-            senderId: transaction.senderId,
-            receiverId: transaction.receiverId,
             fullName: getUser(transaction).fullName,
             phone: getUser(transaction).phone,
             currency: transaction.currency,
