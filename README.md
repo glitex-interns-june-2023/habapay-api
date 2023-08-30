@@ -718,6 +718,7 @@ Transaction types in response body can either be: `sent|received|deposit|withdra
         "date": "Mon Aug 07 2023",
         "transactions": [
           {
+            "transaction_id":"20",
             "full_name": "Admin User",
             "phone": "0114662464",
             "currency": "Ksh",
@@ -731,6 +732,7 @@ Transaction types in response body can either be: `sent|received|deposit|withdra
         "date": "Fri Jul 28 2023",
         "transactions": [
           {
+            "transaction_id":"54",
             "full_name": "Jolie Powlowski",
             "phone": "766-227-1867",
             "currency": "Ksh",

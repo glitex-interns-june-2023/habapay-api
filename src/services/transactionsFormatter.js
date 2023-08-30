@@ -12,6 +12,7 @@ const formatSentUserTransactions = (transactions) => {
         date: transactionDate,
         transactions: [
           {
+            transactionId: transaction.id,
             fullName,
             phone,
             currency: transaction.currency,
@@ -23,6 +24,7 @@ const formatSentUserTransactions = (transactions) => {
       });
     } else {
       existingEntry.transactions.push({
+        transactionId: transaction.id,
         fullName,
         phone,
         currency: transaction.currency,
@@ -51,6 +53,7 @@ const formatReceivedUserTransactions = (transactions) => {
         date: transactionDate,
         transactions: [
           {
+            transactionId: transaction.id,
             fullName,
             phone,
             currency: transaction.currency,
@@ -62,6 +65,7 @@ const formatReceivedUserTransactions = (transactions) => {
       });
     } else {
       existingEntry.transactions.push({
+        transactionId: transaction.id,
         fullName,
         phone,
         currency: transaction.currency,
@@ -96,6 +100,7 @@ const formatAllTransactions = (transactions) => {
         date: transactionDate,
         transactions: [
           {
+            transactionId: transaction.id,
             fullName,
             phone,
             currency: transaction.currency,
@@ -107,6 +112,7 @@ const formatAllTransactions = (transactions) => {
       });
     } else {
       existingEntry.transactions.push({
+        transactionId: transaction.id,
         fullName,
         phone,
         currency: transaction.currency,
@@ -167,6 +173,7 @@ const formatAllUserTransactions = (transactions, user) => {
         date: transactionDate,
         transactions: [
           {
+            transactionId: transaction.id,
             fullName: getUser(transaction).fullName,
             phone: getUser(transaction).phone,
             currency: transaction.currency,
@@ -178,6 +185,7 @@ const formatAllUserTransactions = (transactions, user) => {
       });
     } else {
       existingEntry.transactions.push({
+        transactionId: transaction.id,
         fullName: getUser(transaction).fullName,
         phone: getUser(transaction).phone,
         currency: transaction.currency,
