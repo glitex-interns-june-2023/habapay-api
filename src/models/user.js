@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: "CASCADE",
       });
     }
+
+    toJSON() {
+      const { password, googleId, ...rest } = this;
+      return rest;
+    }
   }
 
   User.init(
@@ -43,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       role: {
         type: DataTypes.ENUM("superadmin", "admin", "user"),
+        defaultValue: "user"
       },
       isVerified: {
         type: DataTypes.BOOLEAN,

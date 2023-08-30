@@ -55,7 +55,8 @@ const ensurePhoneVerified = async (phone) => {
 
 const saveUser = async (data) => {
   const { password } = data;
-  const hashedPassword = hashPassword(password);
+
+  const hashedPassword = password ? hashPassword(password) : null;
 
   const user = await User.create({
     ...data,

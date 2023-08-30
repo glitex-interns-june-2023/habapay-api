@@ -11,6 +11,7 @@ const handleGoogleAuth = async (req, res, next) => {
 
   try {
     const payload = await authService.verifyGoogleToken(token);
+
     const existingUser = await userService.findByGoogleId(payload.sub);
 
     if (!existingUser) {
@@ -20,9 +21,8 @@ const handleGoogleAuth = async (req, res, next) => {
       const username = payload.name;
       const profileUrl = payload.picture;
 
-      await userService.findByEmail(email);
-
       let data = {
+        googleId: payload.sub,
         email,
         firstName,
         lastName,
@@ -31,7 +31,7 @@ const handleGoogleAuth = async (req, res, next) => {
       };
 
       const newUser = await userService.saveUser(data);
-      const userData = newUser.get({ raw: true });
+      const { password, googleId, ...userData } = newUser.get({ raw: true });
 
       const accessToken = createAccessToken(userData);
       const refreshToken = createRefreshToken(userData);
@@ -70,7 +70,7 @@ const handleGoogleAuth = async (req, res, next) => {
       data: user,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 

@@ -2,6 +2,7 @@ const { OAuth2Client } = require("google-auth-library");
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
+const InvalidGoogleTokenError = require("../errors/InvalidGoogleTokenError");
 
 const verifyGoogleToken = async (token) => {
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -14,9 +15,7 @@ const verifyGoogleToken = async (token) => {
     const payload = ticket.getPayload();
     return payload;
   } catch (error) {
-    const err = new Error("Invalid google token");
-    err.statusCode = 401;
-    throw err;
+    throw new InvalidGoogleTokenError(error.message);
   }
 };
 
@@ -25,10 +24,7 @@ const checkLogin = async (email, password) => {
     const user = await User.findOne({
       where: {
         email: email,
-      },
-      attributes: {
-        include: ["password"],
-      },
+      }
     });
 
     if (!user) {
