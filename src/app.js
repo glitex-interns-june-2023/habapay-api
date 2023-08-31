@@ -36,10 +36,10 @@ app.use("/api/v1/users", usersRouter);
 // error handler
 app.use(errorHandler);
 
-// sequelize.sync({ force: true }).then(() => {
-//   console.log("Models synced successfully");
-// }).catch(err => {
-//   console.log("Error syncing models", err)
-// })
+sequelize.sync({ force: true }).then(() => {
+  console.log("Models synced successfully");
+}).catch(err => {
+  console.log("Error syncing models", err)
+})
 
 module.exports = app;
