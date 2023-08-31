@@ -3,7 +3,8 @@ const { getTimestamp } = require("../utils");
 const { generateMpesaAccessToken } = require("../services/auth");
 
 const sendStkPush = async (phone, amount) => {
-  const url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/processrequest";
+  phone = `254${phone.substring(phone.length - 9)}`;
+  const url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
   const accessToken = await generateMpesaAccessToken();
   const auth = `Bearer ${accessToken}`;
   const timestamp = getTimestamp();
@@ -35,9 +36,6 @@ const sendStkPush = async (phone, amount) => {
   );
 
   const data = response.data;
-
-  console.log("STK Response: ", data);
-
   return data;
 };
 
