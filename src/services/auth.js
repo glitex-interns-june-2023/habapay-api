@@ -3,6 +3,8 @@ const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const InvalidGoogleTokenError = require("../errors/InvalidGoogleTokenError");
+const InvalidLoginDetailsError = require("../errors/InvalidLoginDetailsError");
+const UserNotFoundError = require("../errors/UserNotFoundError");
 
 const verifyGoogleToken = async (token) => {
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -20,42 +22,80 @@ const verifyGoogleToken = async (token) => {
 };
 
 const checkLogin = async (email, password) => {
-  try {
-    const user = await User.findOne({
-      where: {
-        email: email,
-      }
-    });
+  const user = await User.findOne({
+    where: {
+      email: email,
+    },
+    attributes: {
+      include: ["password"],
+    },
+    raw: true,
+  });
 
-    if (!user) {
-      let error = new Error("No user with such email was found");
-      error.statusCode = 404;
-
-      throw error;
-    }
-
-    const passwordMatch = await comparePassword(password, user.password);
-
-    if (!passwordMatch) {
-      let error = new Error("Pasword is incorrect");
-      error.statusCode = 401;
-      throw error;
-    }
-
-    return user;
-  } catch (error) {
-    throw error;
+  if (!user) {
+    throw new UserNotFoundError("No user with such email was found");
   }
+
+  const { password: savedPassword, ...userData } = user;
+  const passwordMatch = comparePassword(password, savedPassword);
+
+  if (!passwordMatch) {
+    throw new InvalidLoginDetailsError("Invalid login password");
+  }
+
+  return userData;
+};
+
+const pinLogin = async (email, pin) => {
+  const user = await User.findOne({
+    where: {
+      email,
+    },
+    attributes: {
+      include: ["loginPin"],
+    },
+    raw: true,
+  });
+
+  if (!user) {
+    throw new UserNotFoundError();
+  }
+
+  const { loginPin, ...userData } = user;
+
+  const pinMatch = comparePassword(pin, loginPin);
+
+  if (!pinMatch) {
+    throw new InvalidLoginDetailsError();
+  }
+
+  return userData;
+};
+
+const createOrUpdateLoginPin = async (email, pin) => {
+  const user = await User.findOne({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    throw new UserNotFoundError();
+  }
+
+  user.loginPin = hashPassword(pin);
+  await user.save();
+  return true;
 };
 
 const hashPassword = (password) => {
   const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
+  const hash = bcrypt.hashSync(String(password), salt);
   return hash;
 };
 
 const comparePassword = (password, hash) => {
-  const match = bcrypt.compareSync(password, hash);
+  const match = bcrypt.compareSync(String(password), hash);
   return match;
 };
 
@@ -85,4 +125,6 @@ module.exports = {
   hashPassword,
   comparePassword,
   generateMpesaAccessToken,
+  pinLogin,
+  createOrUpdateLoginPin,
 };
