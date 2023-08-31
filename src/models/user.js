@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     toJSON() {
-      const { password, googleId, ...rest } = this;
+      const { password, googleId, loginPin, ...rest } = this;
       return rest;
     }
   }
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       role: {
         type: DataTypes.ENUM("superadmin", "admin", "user"),
-        defaultValue: "user"
+        defaultValue: "user",
       },
       isVerified: {
         type: DataTypes.BOOLEAN,
@@ -57,6 +57,9 @@ module.exports = (sequelize, DataTypes) => {
       isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
+      },
+      loginPin: {
+        type: DataTypes.STRING,
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -72,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
       defaultScope: {
         attributes: {
-          exclude: ["password", "googleId"],
+          exclude: ["password", "googleId", "loginPin"],
         },
       },
     }
