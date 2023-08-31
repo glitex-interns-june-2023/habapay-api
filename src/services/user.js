@@ -5,7 +5,13 @@ const user = require("../models/user");
 const { hashPassword } = require("./auth");
 
 const findByGoogleId = async (googleId) => {
-  const user = await User.findOne({ where: { googleId } });
+  const user = await User.findOne({
+    where: {
+      googleId,
+    },
+    raw: true,
+  });
+  
   if (!user) return null;
 
   return user;
@@ -58,9 +64,14 @@ const saveUser = async (data) => {
 
   const hashedPassword = password ? hashPassword(password) : null;
 
-  const user = await User.create({
+  let user = await User.create({
     ...data,
     password: hashedPassword,
+  });
+
+  // query the user from database to remove hidden attributes
+  user = await User.findByPk(user.id, {
+    raw: true,
   });
 
   return user;

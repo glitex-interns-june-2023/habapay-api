@@ -21,23 +21,20 @@ const handleGoogleAuth = async (req, res, next) => {
       const username = payload.name;
       const profileUrl = payload.picture;
 
-      let data = {
+      const user = await userService.saveUser({
         googleId: payload.sub,
         email,
         firstName,
         lastName,
         username,
         profileUrl,
-      };
+      });
 
-      const newUser = await userService.saveUser(data);
-      const { password, googleId, ...userData } = newUser.get({ raw: true });
+      const accessToken = createAccessToken(user);
+      const refreshToken = createRefreshToken(user);
 
-      const accessToken = createAccessToken(userData);
-      const refreshToken = createRefreshToken(userData);
-
-      data = {
-        ...userData,
+      let data = {
+        ...user,
         accessToken,
         refreshToken,
       };
@@ -50,14 +47,12 @@ const handleGoogleAuth = async (req, res, next) => {
         data,
       });
     }
-
-    const userData = existingUser.get({ raw: true });
     // user exists
-    const accessToken = createAccessToken(userData);
-    const refreshToken = createRefreshToken(userData);
+    const accessToken = createAccessToken(existingUser);
+    const refreshToken = createRefreshToken(existingUser);
 
     const user = {
-      ...userData,
+      ...existingUser,
       accessToken,
       refreshToken,
     };

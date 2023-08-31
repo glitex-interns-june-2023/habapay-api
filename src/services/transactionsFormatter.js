@@ -1,3 +1,5 @@
+const { formatTimestamp } = require("../utils");
+
 const formatSentUserTransactions = (transactions) => {
   const formattedData = transactions.reduce((acc, transaction) => {
     const transactionDate = transaction.timestamp.toDateString();
