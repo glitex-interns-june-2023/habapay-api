@@ -25,6 +25,7 @@ Below are the avaialble endopoints and their usage.
 - [List User Transactions](#list-user-transactions)
 - [Update Login Pin](#update-login-pin)
 - [Login with Pin](#login-with-pin)
+- [List all Users](#list-all-users)
 
 ---
 
@@ -59,9 +60,9 @@ Register or login with a google token. Expects a valid google token.
     "phone": "string",
     "profile_url": "string",
     "role": "user",
-    "is_verified": false,
-    "created_at": "timestamp",
-    "is_active": true,
+    "is_verified": 0,
+    "created_at": "string(timestamp)",
+    "is_active": 1,
     "access_token": "string",
     "refresh_token": "string"
   }
@@ -308,8 +309,8 @@ List all admins registered in the system
         "role": "admin",
         "is_verified": 0,
         "is_active": 1,
-        "created_at": {},
-        "updated_at": {}
+        "created_at":"2023-08-31T12:27:24.000Z",
+        "updated_at": "2023-08-31T12:27:24.000Z"
       },
       {
         "id": 4,
@@ -322,8 +323,8 @@ List all admins registered in the system
         "role": "admin",
         "is_verified": 0,
         "is_active": 1,
-        "created_at": {},
-        "updated_at": {}
+        "created_at": "2023-08-31T12:27:24.000Z",
+        "updated_at": "2023-08-31T12:27:24.000Z"
       },
       {
         "id": 5,
@@ -336,8 +337,8 @@ List all admins registered in the system
         "role": "admin",
         "is_verified": 0,
         "is_active": 1,
-        "created_at": {},
-        "updated_at": {}
+        "created_at": "2023-08-31T12:27:24.000Z",
+        "updated_at": "2023-08-31T12:27:24.000Z"
       }
     ]
   }
@@ -380,10 +381,10 @@ Get single admin record based on admin Id
     "phone": "0114662464",
     "profile_url": null,
     "role": "admin",
-    "is_verified": false,
-    "is_active": true,
-    "created_at": {},
-    "updated_at": {}
+    "is_verified": 0,
+    "is_active": 1,
+    "created_at": "2023-08-31T12:27:24.000Z",
+    "updated_at": "2023-08-31T12:27:24.000Z"
   }
 }
 ```
@@ -421,7 +422,7 @@ Check users's account balance
     "user_id": "integer",
     "balance": "float",
     "currency": "string",
-    "last_update": "date"
+    "last_update": "string(date)"
   }
 }
 ```
@@ -482,7 +483,7 @@ Send money to recipient
 {
   "sender_phone": "string|required",
   "receiver_phone": "string|required",
-  "amount": "float:required"
+  "amount": "float|required"
 }
 ```
 
@@ -497,7 +498,7 @@ Send money to recipient
     "transaction_message": "string",
     "amount": "float",
     "currency": "string",
-    "timestamp": "date",
+    "timestamp": "string(date)",
     "balance": "float"
   }
 }
@@ -541,7 +542,7 @@ Withdraw funds fron one account
     "transaction_message": "string",
     "amount": "float",
     "currency": "string",
-    "timestamp": "date",
+    "timestamp": "string(date)",
     "balance": "float"
   }
 }
@@ -585,7 +586,7 @@ Deposit funds into an account from M-Pesa
     "transaction_message": "string",
     "amount": "float",
     "currency": "string",
-    "timestamp": "date",
+    "timestamp": "string(date)",
     "balance": "float"
   }
 }
@@ -634,7 +635,7 @@ Get all transactions info
           "currency": "Ksh",
           "amount": 184.93,
           "type": "withdraw",
-          "timestamp": " 2:26 AM"
+          "timestamp": "2:26 AM"
         }
       ]
     },
@@ -647,7 +648,7 @@ Get all transactions info
           "currency": "Ksh",
           "amount": 962.61,
           "type": "withdraw",
-          "timestamp": " 8:16 PM"
+          "timestamp": "8:16 PM"
         }
       ]
     }
@@ -813,10 +814,70 @@ Login with PIN instead of password(If you have set a login PIN)
     "role": "admin",
     "is_verified": 0,
     "is_active": 1,
-    "created_at": {},
-    "updated_at": {},
+    "created_at": "2023-08-31T12:27:24.000Z",
+    "updated_at": "2023-08-31T12:27:24.000Z",
     "access_token": "access_token_here",
     "refresh_token": "refresh_token_here"
+  }
+}
+```
+
+### List All Users
+
+**Endpoint**: `GET /api/v1/users`
+
+#### Description
+
+List all users registered in the system
+
+#### Parameters
+
+- `page` (integer, optional): start page e.g. `?page=1`
+- `per_page`(integer, optional): number of records to display e.g. `&per_page=3`
+
+#### Success Sample Response
+
+```json
+{
+  "success": true,
+  "message": "Users retrieved successfully",
+  "data": {
+    "page": 1,
+    "total": 30,
+    "per_page": 10,
+    "previous_page": null,
+    "next_page": 2,
+    "last_page": 3,
+    "data": [
+      {
+        "id": 1,
+        "email": "testuser@habapay.com",
+        "first_name": "Test",
+        "last_name": "User",
+        "username": "Test User",
+        "phone": "0712345678",
+        "profile_url": null,
+        "role": "user",
+        "is_verified": 0,
+        "is_active": 1,
+        "created_at": "2023-08-31T12:27:24.000Z",
+        "updated_at": "2023-08-31T12:27:24.000Z"
+      },
+      {
+        "id": 7,
+        "email": "Hermina.Beatty@hotmail.com",
+        "first_name": "Gust",
+        "last_name": "Pagac",
+        "username": "Hope79",
+        "phone": "811-522-7717",
+        "profile_url": null,
+        "role": "user",
+        "is_verified": 0,
+        "is_active": 1,
+        "created_at": "2023-08-31T12:27:24.000Z",
+        "updated_at": "2023-08-31T12:27:24.000Z"
+      }
+    ]
   }
 }
 ```
