@@ -6,9 +6,9 @@ const getUsers = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
+      message: "Users retrieved successfully",
       data: users,
     });
-    
   } catch (error) {
     next(error);
   }
