@@ -3,6 +3,7 @@ const PhoneNotVerifiedError = require("../errors/PhoneNotVerifiedError");
 const { User } = require("../models");
 const user = require("../models/user");
 const { hashPassword } = require("./auth");
+const paginator = require("../middlewares/paginator");
 
 const findByGoogleId = async (googleId) => {
   const user = await User.findOne({
@@ -11,7 +12,7 @@ const findByGoogleId = async (googleId) => {
     },
     raw: true,
   });
-  
+
   if (!user) return null;
 
   return user;
@@ -115,6 +116,22 @@ const setVerified = async (userId) => {
   return updatedUser;
 };
 
+const getAllUsers = async (page, perPage) => {
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+
+  const offset = (page - 1) * perPage;
+  const users = await User.scope(["defaultScope", "user"]).findAndCountAll({
+    offset,
+    limit: perPage,
+    raw: true,
+  });
+  
+  const paginatedData = paginator(users, page, perPage);
+  
+  return paginatedData;
+};
+
 module.exports = {
   findByGoogleId,
   findByEmail,
@@ -125,4 +142,5 @@ module.exports = {
   setVerified,
   ensurePhoneRegistered,
   ensurePhoneVerified,
+  getAllUsers,
 };
