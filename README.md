@@ -23,6 +23,8 @@ Below are the avaialble endopoints and their usage.
 - [List all Transactions](#list-all-transactions)
 - [Single Transaction](#single-transaction)
 - [List User Transactions](#list-user-transactions)
+- [Update Login Pin](#update-login-pin)
+- [Login with Pin](#login-with-pin)
 
 ---
 
@@ -684,7 +686,7 @@ Get a single transaction based on its transaction ID
 
 ### List User Transactions
 
-**Endpoint** `GET /api/v1/users/:userId/transactions`
+**Endpoint**: `GET /api/v1/users/:userId/transactions`
 
 #### Description
 
@@ -718,7 +720,7 @@ Transaction types in response body can either be: `sent|received|deposit|withdra
         "date": "Mon Aug 07 2023",
         "transactions": [
           {
-            "transaction_id":"20",
+            "transaction_id": "20",
             "full_name": "Admin User",
             "phone": "0114662464",
             "currency": "Ksh",
@@ -732,7 +734,7 @@ Transaction types in response body can either be: `sent|received|deposit|withdra
         "date": "Fri Jul 28 2023",
         "transactions": [
           {
-            "transaction_id":"54",
+            "transaction_id": "54",
             "full_name": "Jolie Powlowski",
             "phone": "766-227-1867",
             "currency": "Ksh",
@@ -748,4 +750,73 @@ Transaction types in response body can either be: `sent|received|deposit|withdra
 ```
 
 #### Validations
+
 - User must exist
+
+### Update Login PIN
+
+**Endpoint**: `PUT /api/v1/auth/login/pin`
+
+#### Description
+
+Create or update your login pin
+
+#### Request Body
+
+```json
+{
+  "email": "user email",
+  "pin": "string|integer"
+}
+```
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Login PIN updated successfully"
+}
+```
+
+### Login With PIN
+
+**Endpoint**: `POST /api/v1/auth/login/pin`
+
+#### Description
+
+Login with PIN instead of password(If you have set a login PIN)
+
+#### Request Body
+
+```json
+{
+  "email": "user email",
+  "pin": "string|integer| Valid login pin"
+}
+```
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "id": 32,
+    "email": "admin@habapay.com",
+    "first_name": "Admin",
+    "last_name": "User",
+    "username": "Admin User",
+    "phone": "0712345678",
+    "profile_url": null,
+    "role": "admin",
+    "is_verified": 0,
+    "is_active": 1,
+    "created_at": {},
+    "updated_at": {},
+    "access_token": "access_token_here",
+    "refresh_token": "refresh_token_here"
+  }
+}
+```
