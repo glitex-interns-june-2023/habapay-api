@@ -21,11 +21,17 @@ const snakeCaseFormatter = (req, res, next) => {
 function convertToSnakeCase(data) {
   if (Array.isArray(data)) {
     return data.map(convertToSnakeCase);
-  } else if (data !== null && typeof data === 'object') {
+  } else if (data !== null && typeof data === "object") {
     return Object.keys(data).reduce((result, key) => {
       const value = data[key];
       const formattedKey = snakeCase(key);
-      const formattedValue = convertToSnakeCase(value);
+
+      let formattedValue;
+      if (value instanceof Date) {
+        formattedValue = value.toISOString();
+      } else {
+        formattedValue = convertToSnakeCase(value);
+      }
 
       result[formattedKey] = formattedValue;
 
@@ -39,7 +45,7 @@ function convertToSnakeCase(data) {
 function convertToCamelCase(data) {
   if (Array.isArray(data)) {
     return data.map(convertToCamelCase);
-  } else if (data !== null && typeof data === 'object') {
+  } else if (data !== null && typeof data === "object") {
     return Object.keys(data).reduce((result, key) => {
       const value = data[key];
       const formattedKey = camelCase(key);
@@ -54,4 +60,4 @@ function convertToCamelCase(data) {
   }
 }
 
-module.exports = {snakeCaseFormatter};
+module.exports = { snakeCaseFormatter };
