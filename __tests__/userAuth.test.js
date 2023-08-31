@@ -38,6 +38,22 @@ describe("POST /api/v1/auth/register", () => {
     expect(response.body.success).toBe(true);
   });
 
+  it("should automatically create a wallet for a user", async () => {
+    const phone = "0712354876";
+    let response = await request.post("/api/v1/auth/register").send({
+      ...data,
+      email: "testuser2@habapay.com",
+      phone,
+    });
+    
+    response = await request.get("/api/v1/wallet/balance").query({
+      phone,
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.balance).toBe(0);
+  });
+
   it("should not register the same user twice (same email/phone) ", async () => {
     const response = await request.post("/api/v1/auth/register").send(data);
     expect(response.body.success).toBe(false);

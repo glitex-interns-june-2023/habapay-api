@@ -1,7 +1,6 @@
 const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");
 const PhoneNotVerifiedError = require("../errors/PhoneNotVerifiedError");
 const { User } = require("../models");
-const user = require("../models/user");
 const { hashPassword } = require("./auth");
 const paginator = require("../middlewares/paginator");
 
@@ -71,11 +70,13 @@ const saveUser = async (data) => {
   });
 
   // query the user from database to remove hidden attributes
-  user = await User.findByPk(user.id, {
-    raw: true,
-  });
+  user = await User.findByPk(user.id);
 
-  return user;
+  // For fist time users, register a wallet for them
+  await user.createWallet();
+
+  const userData = await user.get({ raw: true });
+  return userData;
 };
 
 const deleteUser = async (email) => {
@@ -126,9 +127,9 @@ const getAllUsers = async (page, perPage) => {
     limit: perPage,
     raw: true,
   });
-  
+
   const paginatedData = paginator(users, page, perPage);
-  
+
   return paginatedData;
 };
 
