@@ -88,7 +88,7 @@ const transferFunds = async (senderWallet, receiverWallet, amount) => {
 };
 
 const depositMoney = async (senderId, mpesaNumber, amount) => {
-  // await mpesaService.sendStkPush(mpesaNumber, amount);
+  await mpesaService.sendStkPush(mpesaNumber, amount);
   const wallet = await getWallet(senderId);
   wallet.balance += amount;
   await wallet.save();
