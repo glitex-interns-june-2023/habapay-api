@@ -72,8 +72,13 @@ const saveUser = async (data) => {
   // query the user from database to remove hidden attributes
   user = await User.findByPk(user.id);
 
-  // For fist time users, register a wallet for them
+  // Create default wallet for the user
   await user.createWallet();
+
+  // create a default business account for the user
+  await user.createBusiness({
+    name: `${user.firstName} ${user.lastName}' Business`,
+  });
 
   const userData = await user.get({ raw: true });
   return userData;
