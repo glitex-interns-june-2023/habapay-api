@@ -30,6 +30,14 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+
+      User.hasMany(models.Verification, {
+        foreignKey: "userId",
+        as: "verifications",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      
     }
 
     toJSON() {
@@ -62,6 +70,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "user",
       },
       isPhoneVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isEmailVerified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
