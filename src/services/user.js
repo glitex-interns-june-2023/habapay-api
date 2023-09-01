@@ -1,6 +1,6 @@
 const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");
 const PhoneNotVerifiedError = require("../errors/PhoneNotVerifiedError");
-const { User } = require("../models");
+const { User, Verification } = require("../models");
 const { hashPassword } = require("./auth");
 const paginator = require("../middlewares/paginator");
 
@@ -122,6 +122,19 @@ const setPhoneVerified = async (userId) => {
   return updatedUser;
 };
 
+const setEmailVerified = async (userId) => {
+  const updatedUser = await User.update(
+    { isEmailVerified: true },
+    { where: { id: userId } }
+  );
+
+  if (!updatedUser) {
+    throw new Error("Could not update user verification status");
+  }
+
+  return updatedUser;
+};
+
 const getAllUsers = async (page, perPage) => {
   page = parseInt(page);
   perPage = parseInt(perPage);
@@ -146,6 +159,7 @@ module.exports = {
   deleteUser,
   updatePhoneNumber,
   setPhoneVerified,
+  setEmailVerified,
   ensurePhoneRegistered,
   ensurePhoneVerified,
   getAllUsers,
