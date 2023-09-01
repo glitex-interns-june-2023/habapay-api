@@ -5,6 +5,7 @@ const axios = require("axios");
 const InvalidGoogleTokenError = require("../errors/InvalidGoogleTokenError");
 const InvalidLoginDetailsError = require("../errors/InvalidLoginDetailsError");
 const UserNotFoundError = require("../errors/UserNotFoundError");
+const crypto = require("crypto");
 
 const verifyGoogleToken = async (token) => {
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -119,6 +120,26 @@ const generateMpesaAccessToken = async () => {
   return response.data.access_token;
 };
 
+// generate a random PIN to
+const generateUniquePin = () => {
+  const randomBytes = crypto.randomBytes(3); // 3 bytes = 24 bits
+  const randomNumber = randomBytes.readUIntBE(0, 3); // Read a 3-byte integer
+
+  // Ensure the number is within the range of 100000 to 999999
+  const min = 100000;
+  const max = 999999;
+  const sixDigitPIN = min + (randomNumber % (max - min + 1));
+
+  return sixDigitPIN.toString();
+};
+
+// generate a unique email verification token
+const generateUniqueToken = () => {
+  const randomBytes = crypto.randomBytes(32);
+  const token = randomBytes.toString("hex");
+  return token;
+};
+
 module.exports = {
   verifyGoogleToken,
   checkLogin,
@@ -127,4 +148,6 @@ module.exports = {
   generateMpesaAccessToken,
   pinLogin,
   createOrUpdateLoginPin,
+  generateUniquePin,
+  generateUniqueToken,
 };

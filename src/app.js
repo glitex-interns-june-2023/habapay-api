@@ -25,6 +25,8 @@ const walletRouter = require("./routes/wallet");
 const mpesaRouter = require("./routes/mpesa");
 const transactionsRouter = require("./routes/transactions");
 const usersRouter = require("./routes/users");
+const verificationsRouter = require("./routes/verifications");
+
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/auth/google", googleAuth);
 app.use("/api/v1/admins", adminRouter);
@@ -33,13 +35,14 @@ app.use("/api/v1/wallet", walletRouter);
 app.use("/api/v1/mpesa", mpesaRouter);
 app.use("/api/v1/transactions", transactionsRouter);
 app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/verifications", verificationsRouter);
 // error handler
 app.use(errorHandler);
 
-sequelize.sync({ force: true }).then(() => {
-  console.log("Models synced successfully");
-}).catch(err => {
-  console.log("Error syncing models", err)
-})
+// sequelize.sync({ force: true }).then(() => {
+//   console.log("Models synced successfully");
+// }).catch(err => {
+//   console.log("Error syncing models", err)
+// })
 
 module.exports = app;

@@ -32,7 +32,17 @@ const generateUsers = (size) => {
     password: hashPassword("12345678"),
   });
 
-  for (let i = 0; i < size - 2; i++) {
+  users.push({
+    email: "kariuki.joseph121@gmail.com",
+    firstName: "Joseph",
+    lastName: "N",
+    username: "Joe",
+    phone: "0114662464",
+    role: "admin",
+    password: hashPassword("12345678"),
+  });
+
+  for (let i = 0; i < size - 3; i++) {
     const user = {
       email: faker.internet.email(),
       firstName: faker.name.firstName(),

@@ -31,7 +31,7 @@ const createSuperAdmin = async (req, res, next) => {
       password: hashedPassword,
       username: username,
       role: "superadmin",
-      isVerified: true,
+      isPhoneVerified: true,
     });
 
     if (superAdmin) {

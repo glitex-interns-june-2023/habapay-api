@@ -30,6 +30,13 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+
+      User.hasMany(models.Verification, {
+        foreignKey: "userId",
+        as: "verifications",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
       
     }
 
@@ -62,7 +69,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("superadmin", "admin", "user"),
         defaultValue: "user",
       },
-      isVerified: {
+      isPhoneVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isEmailVerified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
