@@ -129,7 +129,7 @@ const sendPin = async (email, pin) => {
 const sendVerificationEmail = async (email, verificationToken) => {
   try {
     const baseURL = process.env.BASE_URL
-    const verificationLink = `${baseURL}/api/v1/verifications/email/verify?token=${verificationToken}}`;
+    const verificationLink = `${baseURL}/api/v1/verifications/email/verify?token=${verificationToken}`;
 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
