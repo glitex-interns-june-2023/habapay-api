@@ -8,8 +8,6 @@ const {
 const {
   login,
   register,
-  sendOTP,
-  verifyOTP,
   pinLogin,
   updateLoginPin,
 } = require("../controllers/authController");
@@ -38,26 +36,6 @@ router.post(
 );
 
 router.post(
-  "/send-otp",
-  [
-    body("phoneNumber").notEmpty().withMessage("Phone number is required"),
-    body("email").notEmpty().withMessage("Email is required"),
-    validateInput,
-  ],
-  sendOTP
-);
-
-router.post(
-  "/verify-otp",
-  [
-    body("phoneNumber").notEmpty().withMessage("Phone number is required"),
-    body("otp").notEmpty().withMessage("OTP is required"),
-    validateInput,
-  ],
-  verifyOTP
-);
-
-router.post(
   "/login/pin",
   [
     body("email").notEmpty().withMessage("Email is required"),
@@ -77,4 +55,5 @@ router.put(
   ],
   updateLoginPin
 );
+
 module.exports = router;
