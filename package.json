@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --watch",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "release": "standard-version"
   },
   "keywords": [
     "habapay",
