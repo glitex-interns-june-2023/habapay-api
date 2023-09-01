@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/glitex-interns-june-2023/habapay-api/compare/v1.1.0...v1.2.0) (2023-09-01)
+
+
+### Features
+
+* Add isEmailVerified field ([5b15acb](https://github.com/glitex-interns-june-2023/habapay-api/commit/5b15acb80b1dfad73d1e2d78ca93e6c1133977f2))
+* new verifications endpoints ([d2287b9](https://github.com/glitex-interns-june-2023/habapay-api/commit/d2287b914a5f0efe3720285d05d7e9be29d87a21))
+
 ## 1.1.0 (2023-09-01)
 
 
