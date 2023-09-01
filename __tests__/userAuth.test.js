@@ -34,7 +34,7 @@ describe("POST /api/v1/auth/register", () => {
       phone: "0712354876",
     });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
     expect(response.body.success).toBe(true);
   });
 
