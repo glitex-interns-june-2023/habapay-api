@@ -1,4 +1,4 @@
-const ValidationError = require("../errors/ValidationError");
+const InvalidLoginDetailsError = require("../errors/InvalidLoginDetailsError");
 const { User, Verification } = require("../models");
 
 const verifyPin = async (userId, pin) => {
@@ -11,7 +11,7 @@ const verifyPin = async (userId, pin) => {
   });
 
   if (!verification) {
-    throw new ValidationError("Invalid pin");
+    throw new InvalidLoginDetailsError("Invalid pin");
   }
 
   const isExpired = new Date() > verification.expiryTime;
@@ -20,7 +20,7 @@ const verifyPin = async (userId, pin) => {
     // delete pin
     await verification.destroy();
 
-    throw new ValidationError("Pin has expired");
+    throw new InvalidLoginDetailsError("Pin has expired");
   }
 
   // delete verification pin
@@ -30,6 +30,7 @@ const verifyPin = async (userId, pin) => {
 };
 
 const verifyEmailVerificationToken = async (token) => {
+  console.log(token);
   const verification = await Verification.findOne({
     where: {
       token,
@@ -42,14 +43,14 @@ const verifyEmailVerificationToken = async (token) => {
   });
 
   if (!verification) {
-    throw new ValidationError("Invalid Verification token");
+    throw new InvalidLoginDetailsError("Invalid Verification token");
   }
 
   const isExpired = new Date() > verification.expiryTime;
   if (isExpired) {
     await verification.destroy();
 
-    throw new ValidationError("Token has expired");
+    throw new InvalidLoginDetailsError("Token has expired");
   }
 
   await verification.destroy();
@@ -57,7 +58,38 @@ const verifyEmailVerificationToken = async (token) => {
   return verification.user;
 };
 
+const savePin = async (userId, pin) => {
+  const minutes = 5;
+  const now = new Date();
+  const expiryTime = new Date(now.getTime() + minutes * 60 * 1000);
+
+  const verification = await Verification.create({
+    userId,
+    token: pin,
+    type: "pin",
+    expiryTime,
+  });
+
+  return verification;
+};
+
+const saveEmailVerificationToken = async (userId, token) => {
+  const minutes = 5;
+  const now = new Date();
+  const expiryTime = new Date(now.getTime() + minutes * 60 * 1000);
+
+  const verification = await Verification.create({
+    userId,
+    token,
+    type: "email",
+    expiryTime,
+  });
+  return verification;
+};
+
 module.exports = {
   verifyPin,
   verifyEmailVerificationToken,
+  savePin,
+  saveEmailVerificationToken,
 };

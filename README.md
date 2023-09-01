@@ -11,8 +11,12 @@ Below are the avaialble endopoints and their usage.
 - [Signup and Signing with Google](#signup-and-signing-with-google)
 - [User Login](#user-login)
 - [User Registraton](#user-registration)
-- [Send OTP](#send-otp)
-- [Verify OTP](#verify-otp)
+- [Verifications](#verifications)
+  - [Send OTP](#send-otp)
+  - [Verify OTP](#verify-otp)
+  - [Send PIN by Email](#send-pin-by-email)
+  - [Verify PIN](#verify-pin)
+  - [Send Email Verification Link](#send-email-verification-link)
 - [List All Admins](#list-all-admin-users)
 - [Get Single Admin Record](#get-single-admin)
 - [Check Wallet Balance](#check-wallet-balance)
@@ -211,9 +215,11 @@ Register new user
 }
 ```
 
+### Verifications
+
 ### Send OTP
 
-**Endpoint** `POST /api/v1/auth/send-otp`
+**Endpoint** `POST /api/v1/verifications/otp/send`
 
 #### Description
 
@@ -248,7 +254,7 @@ Send OTP to verify ownership of a user's phone number
 
 ### Verify OTP
 
-**Endpoint**: `POST /api/v1/auth/verify-otp`
+**Endpoint**: `POST /api/v1/verifications/otp/verify`
 
 #### Description
 
@@ -269,6 +275,82 @@ Verify the OTP that was sent to user's phone
 {
   "success": true,
   "message": "string|(Phone verified successfully)"
+}
+```
+
+### Send PIN By Email
+
+**Endpoint** `POST /api/v1/verifications/pin/send`
+
+#### Description
+
+Send verification PIN to users email to confirm identity
+
+#### Request Body
+
+```json
+{
+  "email": "string| Registered users's email"
+}
+```
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "A verification pin has been sent to your email account that you entered."
+}
+```
+
+### Verify PIN
+
+**Endpoint** `POST /api/v1/verifications/pin/verify`
+
+#### Description
+
+Verify the PIN that was sent to user's email
+
+#### Request Body
+
+```json
+{
+  "email": "string| Registered user's email",
+  "pin": "integer| Received PIN"
+}
+```
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Email verified successfully"
+}
+```
+
+### Send Email Verification Link
+
+**Endpoint** `POST /api/v1/verifications/email/send`
+
+#### Description
+
+Send a verification link to user's email.
+
+#### Request Body
+
+```json
+{
+  "email": "string| Registered users's email"
+}
+```
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "A verification email has been sent to your email account that you entered."
 }
 ```
 

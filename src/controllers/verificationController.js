@@ -62,7 +62,10 @@ const sendPin = async (req, res, next) => {
 
     const pin = authService.generateUniquePin();
 
+    
     await messageService.sendPin(email, pin);
+    
+    await verificationService.savePin(foundUser.id, pin);
 
     res.status(200).json({
       success: true,
@@ -83,7 +86,7 @@ const verifyPin = async (req, res, next) => {
       throw new UserNotFoundError("No user with this email was found");
     }
 
-    await verificationService.verifyPin(email, pin);
+    await verificationService.verifyPin(foundUser.id, pin);
 
     await userService.setEmailVerified(foundUser.id);
 
@@ -105,7 +108,11 @@ const sendVerificationEmail = async (req, res, next) => {
     }
 
     const verificationToken = authService.generateUniqueToken();
+    
     await messageService.sendVerificationEmail(email, verificationToken);
+    
+    await verificationService.saveEmailVerificationToken(foundUser.id, verificationToken);
+    
     res.status(200).json({
       success: true,
       message:
