@@ -24,6 +24,7 @@ const getBalance = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
+      message: "Wallet balance retrieved successfully",
       data: response,
     });
   } catch (error) {
@@ -157,7 +158,7 @@ const depositMoney = async (req, res, next) => {
       mpesaNumber,
       amount
     );
-    
+
     const wallet = await walletService.getWallet(userId);
     const balance = wallet.balance;
     const timestamp = formatTimestamp(transaction.timestamp);

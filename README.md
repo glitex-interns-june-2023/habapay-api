@@ -26,6 +26,7 @@ Below are the avaialble endopoints and their usage.
 - [Update Login Pin](#update-login-pin)
 - [Login with Pin](#login-with-pin)
 - [List all Users](#list-all-users)
+- [Update Business Details](#update-business-details)
 
 ---
 
@@ -109,6 +110,7 @@ Login with email and password. Expects a valid email and password.
     "username": "string",
     "phone": "string",
     "profile_url": "string",
+    "location": "string",
     "role": "string",
     "is_verified": "boolean",
     "created_at": "timestamp",
@@ -163,6 +165,7 @@ Register new user
     "username": "string",
     "phone": "string",
     "profile_url": "string",
+    "location": "string",
     "role": "string",
     "is_verified": "boolean",
     "created_at": "timestamp",
@@ -307,9 +310,10 @@ List all admins registered in the system
         "phone": "0114662464",
         "profile_url": null,
         "role": "admin",
+        "location": "Nairobi, Kenya",
         "is_verified": 0,
         "is_active": 1,
-        "created_at":"2023-08-31T12:27:24.000Z",
+        "created_at": "2023-08-31T12:27:24.000Z",
         "updated_at": "2023-08-31T12:27:24.000Z"
       },
       {
@@ -320,6 +324,7 @@ List all admins registered in the system
         "username": "Danial65",
         "phone": "582-883-6883",
         "profile_url": null,
+        "location": "Nairobi, Kenya",
         "role": "admin",
         "is_verified": 0,
         "is_active": 1,
@@ -334,6 +339,7 @@ List all admins registered in the system
         "username": "Napoleon45",
         "phone": "984-395-3010",
         "profile_url": null,
+        "location": "Nairobi, Kenya",
         "role": "admin",
         "is_verified": 0,
         "is_active": 1,
@@ -380,6 +386,7 @@ Get single admin record based on admin Id
     "username": "Admin User",
     "phone": "0114662464",
     "profile_url": null,
+    "location": "Nairobi, Kenya",
     "role": "admin",
     "is_verified": 0,
     "is_active": 1,
@@ -417,7 +424,7 @@ Check users's account balance
 ```json
 {
   "success": true,
-  "message": "",
+  "message": "Wallet information retrieved successfully",
   "data": {
     "user_id": "integer",
     "balance": "float",
@@ -878,6 +885,46 @@ List all users registered in the system
         "updated_at": "2023-08-31T12:27:24.000Z"
       }
     ]
+  }
+}
+```
+
+#### Update Business Details
+
+**Endpoint**: `PUT /api/v1/users/:userId/business`
+
+#### Description
+
+Update business details for a user. NOTE: A default business account is automatically created for a user when they register.
+
+#### Route Params
+
+- `userId` (integer, required) - Id of the user
+
+#### Request Body
+
+```json
+{
+  "name": "string|optional",
+  "category": "string|optional",
+  "location": "string|optional"
+}
+```
+
+#### Sample Success Response
+
+```json
+{
+  "success": true,
+  "message": "Business updated successfully",
+  "data": {
+    "id": 1,
+    "user_id": 1,
+    "name": "New Business Name",
+    "category": null,
+    "location": null,
+    "created_at": "2023-09-01T02:20:01.000Z",
+    "updated_at": "2023-09-01T02:20:01.224Z"
   }
 }
 ```

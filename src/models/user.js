@@ -23,6 +23,14 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+
+      User.hasOne(models.Business, {
+        foreignKey: "userId",
+        as: "business",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
+      
     }
 
     toJSON() {
@@ -46,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
       phone: DataTypes.STRING,
       profileUrl: DataTypes.STRING,
       password: DataTypes.STRING,
+      location: {
+        type: DataTypes.STRING,
+        defaultValue: "Nairobi, Kenya",
+      },
       role: {
         type: DataTypes.ENUM("superadmin", "admin", "user"),
         defaultValue: "user",
