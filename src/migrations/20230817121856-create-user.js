@@ -30,7 +30,7 @@ module.exports = {
       profileUrl: {
         type: Sequelize.STRING
       },
-      isVerified: {
+      isPhoneVerified: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },

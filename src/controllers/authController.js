@@ -112,7 +112,7 @@ const verifyOTP = async (req, res, next) => {
 
     await messageService.verifyOTP(phoneNumber, otp);
 
-    await userService.setVerified(foundUser.id);
+    await userService.setPhoneVerified(foundUser.id);
 
     res.status(200).json({
       success: true,

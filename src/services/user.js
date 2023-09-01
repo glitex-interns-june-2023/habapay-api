@@ -52,7 +52,7 @@ const ensurePhoneVerified = async (phone) => {
   if (!user) {
     throw new PhoneNotRegisteredError(phone);
   }
-  if (!user.isVerified) {
+  if (!user.isPhoneVerified) {
     throw new PhoneNotVerifiedError(phone);
   }
 
@@ -109,9 +109,9 @@ const updatePhoneNumber = async (userId, phoneNumber) => {
   return updatedUser;
 };
 
-const setVerified = async (userId) => {
+const setPhoneVerified = async (userId) => {
   const updatedUser = await User.update(
-    { isVerified: true },
+    { isPhoneVerified: true },
     { where: { id: userId } }
   );
 
@@ -145,7 +145,7 @@ module.exports = {
   saveUser,
   deleteUser,
   updatePhoneNumber,
-  setVerified,
+  setPhoneVerified,
   ensurePhoneRegistered,
   ensurePhoneVerified,
   getAllUsers,

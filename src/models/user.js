@@ -30,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      
     }
 
     toJSON() {
@@ -62,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("superadmin", "admin", "user"),
         defaultValue: "user",
       },
-      isVerified: {
+      isPhoneVerified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
