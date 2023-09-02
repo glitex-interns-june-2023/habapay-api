@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/glitex-interns-june-2023/habapay-api/compare/v1.3.0...v1.4.0) (2023-09-02)
+
+
+### Features
+
+* Approve transaction by admin ([cf1774a](https://github.com/glitex-interns-june-2023/habapay-api/commit/cf1774ad721b920cf09f4fa55d8b462103879f54))
+* View pending and approved transactions ([0ac3baf](https://github.com/glitex-interns-june-2023/habapay-api/commit/0ac3bafedb72d85d0372c3cc0efdf3f14b7c1c87))
+
 ## [1.3.0](https://github.com/glitex-interns-june-2023/habapay-api/compare/v1.2.0...v1.3.0) (2023-09-02)
 
 
