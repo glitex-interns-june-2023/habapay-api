@@ -10,7 +10,6 @@ Below are the avaialble endopoints and their usage.
 
 - [Signup and Signing with Google](#signup-and-signing-with-google)
 - [User Login](#user-login)
-- [User Registraton](#user-registration)
 - [Verifications](#verifications)
   - [Send OTP](#send-otp)
   - [Verify OTP](#verify-otp)
@@ -32,6 +31,7 @@ Below are the avaialble endopoints and their usage.
 - [List all Users](#list-all-users)
 - [Update Business Details](#update-business-details)
 - [Admin](#admin)
+  - [Register Admin: /api/v1/auth/register](#register-admin)
   - [Pending and Approved Transactions: /api/v1/admins/transactions](#pending-and-approved-transactions)
   - [Transaction Info: /api/v1/admins/transactions/{id}](#transaction-info)
   - [Approve a Transaction: /api/v1/admins/transactions/{id}/approve](#approve-a-transaction)
@@ -140,63 +140,7 @@ Login with email and password. Expects a valid email and password.
 }
 ```
 
-### User Registration
-
-**Endpoint**: `POST /api/v1/auth/register`
-
-#### Description
-
-Register new user
-
-#### Request Body
-
-```json
-{
-  "email": "string|required",
-  "first_name": "string|required",
-  "last_name": "string|required",
-  "username": "string|required",
-  "phone": "string|required",
-  "password": "string| required"
-}
-```
-
-#### Success Response
-
-```json
-{
-  "success": true,
-  "message": "string",
-  "data": {
-    "id": "integer",
-    "email": "string",
-    "first_name": "string",
-    "last_name": "string",
-    "username": "string",
-    "phone": "string",
-    "profile_url": "string",
-    "location": "string",
-    "role": "string",
-    "is_phone_verified": "boolean",
-    "is_email_verified": "boolean",
-    "created_at": "timestamp",
-    "is_active": "boolean",
-    "access_token": "string",
-    "refresh_token": "string"
-  }
-}
-```
-
-#### Failure Response
-
-```json
-{
-  "success": false,
-  "message": "string|Error message from server"
-}
-```
-
-##### Inputs Validation Failure Response
+#### Inputs Validation Failure Response
 
 ```json
 {
@@ -1024,6 +968,59 @@ Update business details for a user. NOTE: A default business account is automati
     "location": null,
     "created_at": "2023-09-01T02:20:01.000Z",
     "updated_at": "2023-09-01T02:20:01.224Z"
+  }
+}
+```
+
+## Admin
+
+### Register Admin
+
+**Endpoint** `POST /api/v1/auth/register`
+
+####
+
+Superadmin create other admin accounts
+
+#### Request Body
+
+```json
+{
+  "username": "Test Admin",
+  "phone": "0712345678",
+  "email": "test-admin@habapay.com",
+  "password": "password",
+  "secondary_hone": "",
+  "business_name": "John's Business",
+  "location": "Nairobi, Kenya",
+  "login_pin": "1234"
+}
+```
+
+### Sample success Response
+
+```json
+{
+  "success": true,
+  "message": "Admin registered successfully",
+  "data": {
+    "id": 1,
+    "email": "test-admin@habapay.com",
+    "first_name": null,
+    "last_name": null,
+    "username": "Test Admin",
+    "phone": "0712345678",
+    "secondary_phone": "",
+    "profile_url": null,
+    "location": "Nairobi, Kenya",
+    "role": "admin",
+    "is_phone_verified": false,
+    "is_email_verified": false,
+    "is_active": true,
+    "created_at": "2023-09-02T04:28:13.000Z",
+    "updated_at": "2023-09-02T04:28:13.000Z",
+    "access_token": "string",
+    "refresh_token": "string"
   }
 }
 ```
