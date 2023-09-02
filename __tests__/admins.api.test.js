@@ -106,5 +106,34 @@ describe("GET /api/v1/admins/transactions", () => {
       expect(transaction.status).toBe("approved");
     });
   });
+});
 
+describe.only("POST /api/v1/admins/approve-transaction/:transactionId", () => {
+  beforeEach(async () => {
+    await User.bulkCreate(users);
+    await Wallet.bulkCreate(wallets);
+    await Transaction.bulkCreate(transactions);
+  });
+  afterEach(async () => {
+    await sequelize.sync({ force: true });
+  });
+
+  it("should return 404 if not transaction matching the id is found", async () => {
+    const response = await request.post(
+      `/api/v1/admins/approve-transaction/${234434324}`
+    );
+    expect(response.status).toBe(404);
+    expect(response.body.success).toBe(false);
+  });
+
+  it("should return 200 if transaction is found and updated", async () => {
+    const response = await request.post(
+      `/api/v1/admins/approve-transaction/${1}`
+    );
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    // verify if transaction is updated
+    const transaction = await Transaction.findByPk(1);
+    expect(transaction.status).toBe("approved");
+  });
 });
