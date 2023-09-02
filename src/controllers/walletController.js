@@ -41,10 +41,9 @@ const sendMoney = async (req, res, next) => {
       throw new PhoneNotRegisteredError(senderPhone);
     }
     const receiver = await userService.findByPhone(receiverPhone);
-
     if (!receiver) {
       throw new UserNotFoundError(
-        `Receiver with phone: ${receiverPhone} was not found}`
+        `Receiver with phone: ${receiverPhone} was not found`
       );
     }
 
