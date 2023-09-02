@@ -5,9 +5,12 @@ const { validateRouteParams } = require("../middlewares/inputValidation");
 const {
   getAdminsWithPagination,
   getAdmin,
+  getTransactions,
 } = require("../controllers/adminsController");
 
 router.get("/", getAdminsWithPagination);
+router.get("/transactions", getTransactions);
+
 router.get(
   "/:adminId",
   [
@@ -16,5 +19,6 @@ router.get(
   ],
   getAdmin
 );
+
 
 module.exports = router;

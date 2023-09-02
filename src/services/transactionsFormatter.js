@@ -201,9 +201,32 @@ const formatAllUserTransactions = (transactions, user) => {
   return formattedData;
 };
 
+const formatAdminTransactions = (transactions) => {
+  const formattedData = transactions.reduce((acc, transaction) => {
+    const fullName = `${transaction["sender.firstName"]} ${transaction["sender.lastName"]}`;
+    const phone = transaction["sender.phone"];
+
+    const response = {
+      transactionId: transaction.id,
+      fullName,
+      phone,
+      currency: transaction.currency,
+      amount: transaction.amount,
+      type: transaction.type,
+      status: transaction.status,
+      timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+    };
+    acc.push(response);
+    return acc;
+  }, []);
+
+  return formattedData;
+};
+
 module.exports = {
   formatSentUserTransactions,
   formatReceivedUserTransactions,
   formatAllTransactions,
   formatAllUserTransactions,
+  formatAdminTransactions,
 };

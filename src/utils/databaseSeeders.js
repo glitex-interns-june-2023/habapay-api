@@ -2,6 +2,7 @@ const { hashPassword } = require("../services/auth");
 const faker = require("faker");
 const roles = ["superadmin", "admin", "user"];
 const transactionTypes = ["deposit", "withdraw", "sent"];
+const transactionStatus = ["pending", "approved"]
 const pickRandomRole = () => {
   const randomIndex = Math.floor(Math.random() * roles.length);
   return roles[randomIndex];
@@ -10,6 +11,10 @@ const pickRandomTransactionType = () => {
   const randomIndex = Math.floor(Math.random() * transactionTypes.length);
   return transactionTypes[randomIndex];
 };
+const pickRandomStatus = () => {
+  const randomIndex = Math.floor(Math.random() * transactionStatus.length);
+  return transactionStatus[randomIndex];
+}
 
 const generateUsers = (size) => {
   let users = [];
@@ -103,6 +108,7 @@ const generateTransactions = (size) => {
       amount: faker.finance.amount(),
       currency: "Ksh",
       type: "sent",
+      status: "pending",
       timestamp: faker.date.past(),
     },
     {
@@ -111,6 +117,7 @@ const generateTransactions = (size) => {
       amount: faker.finance.amount(),
       currency: "Ksh",
       type: "withdraw",
+      status: "approved",
       timestamp: faker.date.past(),
     },
     {
@@ -119,6 +126,7 @@ const generateTransactions = (size) => {
       amount: faker.finance.amount(),
       currency: "Ksh",
       type: "deposit",
+      status: "approved",
       timestamp: faker.date.past(),
     },
   ];
@@ -129,6 +137,7 @@ const generateTransactions = (size) => {
       receiverId: Math.floor(Math.random() * 20) + 1,
       amount: faker.finance.amount(),
       currency: "Ksh",
+      status: pickRandomStatus(),
       type: pickRandomTransactionType(),
       timestamp: faker.date.past(),
     };
