@@ -11,21 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      
+
       Transaction.belongsTo(models.User, {
         foreignKey: "senderId",
         as: "sender",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      
+
       Transaction.belongsTo(models.User, {
         foreignKey: "receiverId",
         as: "receiver",
         onDelete: "CASCADE",
-        onUpdate: "CASCADE"
+        onUpdate: "CASCADE",
       });
-      
     }
 
     getFormattedTimestamp() {
@@ -57,6 +56,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM,
         values: ["deposit", "withdraw", "sent"],
         allowNull: false,
+      },
+      status: {
+        type: DataTypes.ENUM,
+        values: ["pending", "approved"],
+        allowNull: false,
+        defaultValue: "pending",
       },
       currency: {
         type: DataTypes.ENUM,

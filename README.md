@@ -31,6 +31,10 @@ Below are the avaialble endopoints and their usage.
 - [Login with Pin](#login-with-pin)
 - [List all Users](#list-all-users)
 - [Update Business Details](#update-business-details)
+- [Admin](#admin)
+  - [Pending and Approved Transactions: /api/v1/admins/transactions](#pending-and-approved-transactions)
+  - [Transaction Info: /api/v1/admins/transactions/{id}](#transaction-info)
+  - [Approve a Transaction: /api/v1/admins/transactions/{id}/approve](#approve-a-transaction)
 
 ---
 
@@ -1023,3 +1027,94 @@ Update business details for a user. NOTE: A default business account is automati
   }
 }
 ```
+
+### Pending And Approved Transactions
+
+**Endpoint**: `GET /api/v1/admins/transactions`
+
+#### Description
+
+Get all pending and approved transactions
+
+#### Query Parameters
+
+- `page` (integer, optional): start page e.g. `?page=1`
+- `per_page`(integer, optional): number of records to display e.g. `&per_page=3`
+- `status` (string, optional): transaction status e.g. `?status=pending`or `?status=approved`
+
+#### Success Sample
+
+```json
+{
+  "success": true,
+  "message": "Transactions retrieved successfully",
+  "data": {
+    "page": 1,
+    "total": 105,
+    "per_page": 10,
+    "previous_page": null,
+    "next_page": 2,
+    "last_page": 11,
+    "data": [
+      {
+        "transaction_id": 158,
+        "full_name": "Odie Rolfson",
+        "phone": "868-954-6828",
+        "currency": "Ksh",
+        "amount": 535.91,
+        "type": "withdraw",
+        "status": "pending",
+        "timestamp": "6:35 PM"
+      },
+      {
+        "transaction_id": 28,
+        "full_name": "Edward Will",
+        "phone": "242-532-0149",
+        "currency": "Ksh",
+        "amount": 967.26,
+        "type": "sent",
+        "status": "pending",
+        "timestamp": "11:41 PM"
+      }
+    ]
+  }
+}
+```
+
+### Approve a Transaction
+
+**Endpoint** `POST /api/v1/admins/transactions/{id}/approve`
+
+#### Description
+
+Approve a transaction identified by transaction id
+
+#### Parameters
+
+- `id` (integer, required): Transaction id
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Transaction approved successfully"
+}
+```
+
+#### Failure Response
+
+```json
+{
+  "success": false,
+  "message": "string|Error message from server"
+}
+```
+
+### Transaction Info
+
+**Endpoint**: `GET /api/v1/admins/transactions/{id}`
+
+#### Description
+
+Get transaction information by its id. Everything [Same as here](#single-transaction)

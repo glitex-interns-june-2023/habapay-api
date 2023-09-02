@@ -5,9 +5,15 @@ const { validateRouteParams } = require("../middlewares/inputValidation");
 const {
   getAdminsWithPagination,
   getAdmin,
+  getTransactions,
+  approveTransaction,
 } = require("../controllers/adminsController");
+const { getTransaction } = require("../controllers/transactionController");
 
 router.get("/", getAdminsWithPagination);
+router.get("/transactions", getTransactions);
+router.get("/transactions/:transactionId", getTransaction);
+router.post("/transactions/:transactionId/approve", approveTransaction);
 router.get(
   "/:adminId",
   [
