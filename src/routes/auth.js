@@ -24,12 +24,13 @@ router.post(
 router.post(
   "/register",
   [
+    body("username").notEmpty().withMessage("Name is required"),
+    body("phone").notEmpty().withMessage("Primary phone number is required"),
     body("email").notEmpty().withMessage("Email is required"),
-    body("firstName").notEmpty().withMessage("First name is required"),
-    body("lastName").notEmpty().withMessage("Last name is required"),
-    body("username").notEmpty().withMessage("Username is required"),
-    body("phone").notEmpty().withMessage("Phone number is required"),
     body("password").notEmpty().withMessage("Password is required"),
+    body("businessName").notEmpty().withMessage("Business name is required"),
+    body("location").notEmpty().withMessage("Location is required"),
+    body("loginPin").notEmpty().withMessage("Login PIN is required"),
     validateInputs,
   ],
   register
