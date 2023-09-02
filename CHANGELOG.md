@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/glitex-interns-june-2023/habapay-api/compare/v1.2.0...v1.3.0) (2023-09-02)
+
+
+### Features
+
+* Add 5 minutes token expiry time ([e4e1f53](https://github.com/glitex-interns-june-2023/habapay-api/commit/e4e1f5383ad325a573ce7b9162105fcb3313372d))
+
+
+### Bug Fixes
+
+* invalid reset password link ([4bcd78f](https://github.com/glitex-interns-june-2023/habapay-api/commit/4bcd78fa27d83d4d718a87c302148986a446ed5f))
+
 ## [1.2.0](https://github.com/glitex-interns-june-2023/habapay-api/compare/v1.1.0...v1.2.0) (2023-09-01)
 
 
