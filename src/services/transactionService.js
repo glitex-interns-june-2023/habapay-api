@@ -267,7 +267,7 @@ const getAdminTransactions = async (status, { page, perPage }) => {
   page = Number(page);
   perPage = Number(perPage);
   const offset = (page - 1) * perPage;
-  
+
   const queryOptions = {
     where: {
       status,
@@ -290,6 +290,19 @@ const getAdminTransactions = async (status, { page, perPage }) => {
   return formattedData;
 };
 
+const approveTransaction = async (transactionId) => {
+  transactionId = parseInt(transactionId);
+  const transaction = await Transaction.findByPk(transactionId);
+  if (!transaction) {
+    throw new ResourceNotFoundError(
+      `No transaction with id: ${transactionId} was found`
+    );
+  }
+
+  transaction.status = "approved";
+  await transaction.save();
+};
+
 module.exports = {
   createSendTransaction,
   createWithdrawTransaction,
@@ -300,4 +313,5 @@ module.exports = {
   getSentUserTransactions,
   getReceivedUserTransactions,
   getAdminTransactions,
+  approveTransaction,
 };

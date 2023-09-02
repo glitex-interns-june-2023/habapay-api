@@ -35,7 +35,7 @@ const getAdmin = async (req, res, next) => {
 };
 
 const getTransactions = async (req, res, next) => {
-  const { status="pending", page = 1, perPage = 10 } = req.query;
+  const { status = "pending", page = 1, perPage = 10 } = req.query;
   try {
     const transactions = await transactionService.getAdminTransactions(status, {
       page,
@@ -51,8 +51,22 @@ const getTransactions = async (req, res, next) => {
   }
 };
 
+const approveTransaction = async (req, res, next) => {
+  const { transactionId } = req.params;
+  try {
+    await transactionService.approveTransaction(transactionId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Transaction approved successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
-  getTransactions
+  getTransactions,
+  approveTransaction,
 };

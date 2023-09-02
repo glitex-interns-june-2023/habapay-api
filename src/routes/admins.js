@@ -6,11 +6,12 @@ const {
   getAdminsWithPagination,
   getAdmin,
   getTransactions,
+  approveTransaction
 } = require("../controllers/adminsController");
 
 router.get("/", getAdminsWithPagination);
 router.get("/transactions", getTransactions);
-
+router.post("/approve-transaction/:transactionId", approveTransaction);
 router.get(
   "/:adminId",
   [
@@ -19,6 +20,5 @@ router.get(
   ],
   getAdmin
 );
-
 
 module.exports = router;
