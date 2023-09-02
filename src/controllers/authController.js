@@ -32,7 +32,16 @@ const login = async (req, res, next) => {
 };
 
 const register = async (req, res, next) => {
-  const { email, firstName, lastName, username, phone, password } = req.body;
+  const {
+    username,
+    phone,
+    email,
+    password,
+    secondaryPhone,
+    businessName,
+    location,
+    loginPin,
+  } = req.body;
 
   try {
     let existingUser = await userService.findByEmail(email);
@@ -49,23 +58,25 @@ const register = async (req, res, next) => {
       throw new ConflictError("This phone has alredy been registered");
     }
 
-    const savedUser = await userService.saveUser({
-      email,
-      firstName,
-      lastName,
+    const savedAdmin = await userService.createAdmin({
       username,
       phone,
+      email,
       password,
+      secondaryPhone,
+      businessName,
+      location,
+      loginPin,
     });
 
-    const accessToken = createAccessToken(savedUser);
-    const refreshToken = createRefreshToken(savedUser);
+    const accessToken = createAccessToken(savedAdmin);
+    const refreshToken = createRefreshToken(savedAdmin);
 
     return res.status(201).json({
       success: true,
-      message: "User registered successfully",
+      message: "Admin registered successfully",
       data: {
-        ...savedUser,
+        ...savedAdmin,
         accessToken,
         refreshToken,
       },

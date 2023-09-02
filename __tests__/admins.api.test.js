@@ -108,7 +108,7 @@ describe("GET /api/v1/admins/transactions", () => {
   });
 });
 
-describe.only("POST /api/v1/admins/transactions/:transactionId/approve", () => {
+describe("POST /api/v1/admins/transactions/:transactionId/approve", () => {
   beforeEach(async () => {
     await User.bulkCreate(users);
     await Wallet.bulkCreate(wallets);
@@ -135,5 +135,51 @@ describe.only("POST /api/v1/admins/transactions/:transactionId/approve", () => {
     // verify if transaction is updated
     const transaction = await Transaction.findByPk(1);
     expect(transaction.status).toBe("approved");
+  });
+});
+
+describe.only("POST /api/v1/auth/register", () => {
+  const data = {
+    username: "Test Admin",
+    phone: "0712345678",
+    email: "test-admin@habapay.com",
+    password: "password",
+    secondaryPhone: "",
+    businessName: "John's Business",
+    location: "Nairobi, Kenya",
+    loginPin: "1234",
+  };
+
+  it("should create an admin account", async () => {
+    const response = await request.post("/api/v1/auth/register").send(data);
+    expect(response.status).toBe(201);
+    expect(response.body.success).toBe(true);
+    expect(response.body.data).toBeDefined();
+
+    const user = await User.findByPk(1);
+    expect(user.email).toBe(data.email);
+    expect(user.phone).toBe(data.phone);
+  });
+
+  it("should log in with the newly created email and password", async () => {
+    const response = await request
+      .post("/api/v1/auth/login")
+      .send({ email: data.email, password: data.password });
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(response.body.data).toBeDefined();
+    expect(response.body.data).toHaveProperty("access_token");
+    expect(response.body.data).toHaveProperty("refresh_token");
+  });
+
+  it("should log in with the newly created login pin", async () => {
+    const response = await request
+      .post("/api/v1/auth/login/pin")
+      .send({ email: data.email, pin: data.loginPin });
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(response.body.data).toBeDefined();
+    expect(response.body.data).toHaveProperty("access_token");
+    expect(response.body.data).toHaveProperty("refresh_token");
   });
 });

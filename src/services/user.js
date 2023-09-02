@@ -151,6 +151,35 @@ const getAllUsers = async (page, perPage) => {
   return paginatedData;
 };
 
+const createAdmin = async (data) => {
+  const { password, loginPin, businessName, ...rest } = data;
+
+  const hashedPassword = password ? hashPassword(password) : null;
+  const hashedLoginPin = loginPin ? hashPassword(loginPin) : null;
+
+  let user = await User.create({
+    ...rest,
+    role: "admin",
+    password: hashedPassword,
+    loginPin: hashedLoginPin,
+  });
+
+  // query the user from database to remove hidden attributes
+  user = await User.findByPk(user.id);
+
+  // Create default wallet for the user
+  await user.createWallet();
+
+  // create a default business account for the user
+  await user.createBusiness({
+    name: `${businessName}`,
+    location: rest.location,
+  });
+
+  const userData = await user.get({ raw: true });
+  return userData;
+};
+
 module.exports = {
   findByGoogleId,
   findByEmail,
@@ -163,4 +192,5 @@ module.exports = {
   ensurePhoneRegistered,
   ensurePhoneVerified,
   getAllUsers,
+  createAdmin,
 };
