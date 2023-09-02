@@ -32,7 +32,9 @@ Below are the avaialble endopoints and their usage.
 - [List all Users](#list-all-users)
 - [Update Business Details](#update-business-details)
 - [Admin](#admin)
-- [Pending and Approved Transactions: /api/v1/admins/transactions](#pending-and-approved-transactions)
+  - [Pending and Approved Transactions: /api/v1/admins/transactions](#pending-and-approved-transactions)
+  - [Transaction Info: /api/v1/admins/transactions/{id}](#transaction-info)
+  - [Approve a Transaction: /api/v1/admins/transactions/{id}/approve](#approve-a-transaction)
 
 ---
 
@@ -1028,7 +1030,7 @@ Update business details for a user. NOTE: A default business account is automati
 
 ### Pending And Approved Transactions
 
-**Endpoint** `GET /api/v1/admins/transactions`
+**Endpoint**: `GET /api/v1/admins/transactions`
 
 #### Description
 
@@ -1078,3 +1080,41 @@ Get all pending and approved transactions
   }
 }
 ```
+
+### Approve a Transaction
+
+**Endpoint** `POST /api/v1/admins/transactions/{id}/approve`
+
+#### Description
+
+Approve a transaction identified by transaction id
+
+#### Parameters
+
+- `id` (integer, required): Transaction id
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Transaction approved successfully"
+}
+```
+
+#### Failure Response
+
+```json
+{
+  "success": false,
+  "message": "string|Error message from server"
+}
+```
+
+### Transaction Info
+
+**Endpoint**: `GET /api/v1/admins/transactions/{id}`
+
+#### Description
+
+Get transaction information by its id. Everything [Same as here](#single-transaction)
