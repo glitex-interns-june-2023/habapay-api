@@ -35,6 +35,7 @@ Below are the avaialble endopoints and their usage.
   - [Pending and Approved Transactions: /api/v1/admins/transactions](#pending-and-approved-transactions)
   - [Transaction Info: /api/v1/admins/transactions/{id}](#transaction-info)
   - [Approve a Transaction: /api/v1/admins/transactions/{id}/approve](#approve-a-transaction)
+  - [List Users: /api/v1/admins/users](#list-users-admin)
 
 ---
 
@@ -1115,3 +1116,62 @@ Approve a transaction identified by transaction id
 #### Description
 
 Get transaction information by its id. Everything [Same as here](#single-transaction)
+
+### List Users Admin
+
+**Endpoint** `GET /api/v1/admins/users`
+
+#### Description
+
+List users data formatted to match the admin UI
+
+#### Query Parameters
+
+- `page` (integer, optional): start page e.g. `?page=1`
+- `per_page`(integer, optional): number of records to display e.g. `&per_page=3`
+
+#### Success Sample Respone
+
+```json
+{
+  "success": true,
+  "message": "All users",
+  "data": {
+    "page": 1,
+    "total": 19,
+    "per_page": 10,
+    "previous_page": null,
+    "next_page": 2,
+    "last_page": 2,
+    "data": [
+      {
+        "id": 2,
+        "username": "Test User",
+        "phone": "0712345678",
+        "email": "testuser@habapay.com",
+        "status": "Active",
+        "currency": "Ksh",
+        "balance": 1000
+      },
+      {
+        "id": 7,
+        "username": "Devin_Kuhic",
+        "phone": "677-567-1413",
+        "email": "Kevin66@yahoo.com",
+        "status": "Active",
+        "currency": "Ksh",
+        "balance": 644.42
+      },
+      {
+        "id": 10,
+        "username": "Ewald.Schumm68",
+        "phone": "719-235-9727",
+        "email": "Liliane.Muller@hotmail.com",
+        "status": "Active",
+        "currency": "Ksh",
+        "balance": 646.01
+      }
+    ]
+  }
+}
+```
