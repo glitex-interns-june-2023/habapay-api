@@ -8,8 +8,8 @@ const {
   generateTransactions,
 } = require("../src/utils/databaseSeeders");
 
-const users = generateUsers(30);
-const wallets = generateWallets(30);
+const users = generateUsers(50);
+const wallets = generateWallets(50);
 const transactions = generateTransactions(200);
 
 beforeAll(async () => {
@@ -181,5 +181,31 @@ describe.only("POST /api/v1/auth/register", () => {
     expect(response.body.data).toBeDefined();
     expect(response.body.data).toHaveProperty("access_token");
     expect(response.body.data).toHaveProperty("refresh_token");
+  });
+});
+
+describe.only("GET /api/v1/admins/users", () => {
+  beforeEach(async () => {
+    await User.bulkCreate(users);
+    await Wallet.bulkCreate(wallets);
+  });
+  afterEach(async () => {
+    await sequelize.sync({ force: true });
+  });
+
+  it("should return all users with pagination", async () => {
+    const response = await request.get("/api/v1/admins/users");
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    const users = response.body.data.data;
+
+    expect(users.length).toBeGreaterThan(1);
+    // verify correct response structure
+    expect(users[0]).toHaveProperty("id");
+    expect(users[0]).toHaveProperty("username");
+    expect(users[0]).toHaveProperty("phone");
+    expect(users[0]).toHaveProperty("email");
+    expect(users[0]).toHaveProperty("status");
+    expect(users[0]).toHaveProperty("balance");
   });
 });
