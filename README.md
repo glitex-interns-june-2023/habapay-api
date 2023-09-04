@@ -1177,7 +1177,7 @@ List users data formatted to match the admin UI
 }
 ```
 
-### Recent User Activity
+### User Recent Activity
 
 **Endpoint** `GET /api/v1/admins/users/{id}/activity`
 
