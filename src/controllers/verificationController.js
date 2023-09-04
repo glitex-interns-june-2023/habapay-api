@@ -14,7 +14,7 @@ const sendOTP = async (req, res, next) => {
       throw error;
     }
 
-    await messageService.sendOTP(phoneNumber);
+    // await messageService.sendOTP(phoneNumber);
 
     await userService.updatePhoneNumber(foundUser.id, phoneNumber);
 

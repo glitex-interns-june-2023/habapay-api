@@ -3,13 +3,14 @@ const nodemailer = require("nodemailer");
 
 const sendOTP = async (phoneNumber) => {
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
+  const verifyServiceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   phoneNumber = `+254${phoneNumber.substring(phoneNumber.length - 9)}`;
 
   try {
     // send OTP using twilio verify
     const URL =
-      "https://verify.twilio.com/v2/Services/VAaad951ebd0d8efdeec90fed1aeccc411/Verifications";
+      `https://verify.twilio.com/v2/Services/${verifyServiceSid}/Verifications`;
     const auth = `Basic ${Buffer.from(`${accountSid}: ${authToken}`).toString(
       "base64"
     )}`;

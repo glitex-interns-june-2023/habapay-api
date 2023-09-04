@@ -40,7 +40,7 @@ app.use("/api/v1/verifications", verificationsRouter);
 app.use(errorHandler);
 
 sequelize
-  .sync({ force: true })
+  .sync({ alter: true })
   .then(() => {
     console.log("Models synced successfully");
   })
