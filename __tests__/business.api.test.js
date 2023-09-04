@@ -18,18 +18,19 @@ afterAll(async () => {
 
 describe("Business API", () => {
   describe("GET /api/v1/users/:userId/business", () => {
-    it("should automatically create a business for a user on successful registration", async () => {
-      // register a new user
-      const userData = {
-        email: "admin@habapay.com",
-        firstName: "Admin",
-        lastName: "User",
-        username: "Admin User",
-        phone: "0114662464",
-        role: "admin",
-        password: 12345678,
-      };
+    // register a new user
+    const userData = {
+      email: "admin@habapay.com",
+      phone: "0114662464",
+      username: "Admin User",
+      businessName: "Admins Business",
+      location: "Nakuru, Kenya",
+      username: "Admin",
+      password: 12345678,
+      loginPin: "1234",
+    };
 
+    it("should automatically create a business for a user on successful registration", async () => {
       let response = await request.post("/api/v1/auth/register").send(userData);
       expect(response.status).toBe(201);
 
@@ -43,17 +44,6 @@ describe("Business API", () => {
     });
 
     it("Should update user's business information ", async () => {
-      // register a new user
-      const userData = {
-        email: "admin@habapay.com",
-        firstName: "Admin",
-        lastName: "User",
-        username: "Admin User",
-        phone: "0114662464",
-        role: "admin",
-        password: 12345678,
-      };
-
       let response = await request.post("/api/v1/auth/register").send(userData);
       expect(response.status).toBe(201);
 
@@ -62,7 +52,6 @@ describe("Business API", () => {
       };
       response = await request.put("/api/v1/users/1/business").send(data);
 
-      console.log(response.body);
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("data");

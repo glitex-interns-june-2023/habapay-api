@@ -1,5 +1,6 @@
-const { User } = require("../models");
+const { User, Wallet } = require("../models");
 const paginator = require("../middlewares/paginator");
+const { formatAllUsers } = require("../services/adminFormatter");
 
 const getAdminsWithPagination = async (page, perPage) => {
   page = parseInt(page);
@@ -10,7 +11,7 @@ const getAdminsWithPagination = async (page, perPage) => {
     const admins = await User.scope(["defaultScope", "admin"]).findAndCountAll({
       offset,
       limit: perPage,
-      raw: true
+      raw: true,
     });
 
     if (!admins) {
@@ -43,7 +44,32 @@ const getAdmin = async (adminId) => {
   }
 };
 
+const getAllUsers = async (page, perPage) => {
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+  const offset = (page - 1) * perPage;
+
+  const users = await User.scope("user").findAndCountAll({
+    offset,
+    limit: perPage,
+    attributes: ["id", "username", "phone", "email", "isActive"],
+    include: {
+      model: Wallet,
+      as: "wallet",
+      attributes: ["balance", "currency"],
+    },
+    raw: true
+  });
+
+  const { data, ...paginationInfo } = paginator(users, page, perPage);
+
+  const formattedData = formatAllUsers(data);
+
+  return { ...paginationInfo, data: formattedData };
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
+  getAllUsers,
 };

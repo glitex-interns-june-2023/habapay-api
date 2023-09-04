@@ -64,9 +64,27 @@ const approveTransaction = async (req, res, next) => {
     next(error);
   }
 };
+
+const getAllUsers = async (req, res, next) => {
+  const { page = 1, perPage = 10 } = req.query;
+
+  try {
+    const users = await adminService.getAllUsers(page, perPage);
+
+    return res.status(200).json({
+      success: true,
+      message: "All users",
+      data: users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
   getTransactions,
   approveTransaction,
+  getAllUsers,
 };
