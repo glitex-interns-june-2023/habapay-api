@@ -1,7 +1,7 @@
 const { Wallet } = require("../models");
-const userService = require("../services/user");
 const transactionService = require("../services/transactionService");
 const mpesaService = require("../services/mpesaService");
+const loggingService = require("../services/loggingService");
 
 const getBalance = async (userId) => {
   const wallet = await getWallet(userId);
@@ -22,6 +22,9 @@ const sendMoney = async (senderId, receiverId, amount) => {
     receiverWallet,
     amount
   );
+
+  // Log transaction
+  await loggingService.createSendMoneyLog(senderWallet, receiverWallet);
 
   return transaction;
 };
@@ -76,6 +79,9 @@ const withdrawMoney = async (senderId, receiverId, amount) => {
     receiverWallet,
     amount
   );
+
+  await loggingService.createWithdrawCashLog(senderWallet, amount);
+
   return transaction;
 };
 
@@ -92,7 +98,13 @@ const depositMoney = async (senderId, mpesaNumber, amount) => {
   const wallet = await getWallet(senderId);
   wallet.balance += amount;
   await wallet.save();
-  const transaction = await transactionService.createDepositTransaction(wallet,amount);
+
+  const transaction = await transactionService.createDepositTransaction(
+    wallet,
+    amount
+  );
+
+  await loggingService.createDepositCashLog(wallet, amount);
 
   return transaction;
 };

@@ -81,10 +81,33 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
+const getUserActivity = async (req, res, next) => {
+  const { userId } = req.params;
+
+  const { page = 1, perPage = 10, type } = req.query;
+  try {
+    const activity = await adminService.getUserActivity(
+      userId,
+      type,
+      page,
+      perPage
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "User activity",
+      data: activity,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
   getTransactions,
   approveTransaction,
   getAllUsers,
+  getUserActivity,
 };
