@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, useInflection } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -37,7 +37,13 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
-      
+
+      User.hasMany(models.Log, {
+        foreignKey: "userId",
+        as: "logs",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
 
     toJSON() {

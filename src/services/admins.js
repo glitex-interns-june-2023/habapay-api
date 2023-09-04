@@ -1,6 +1,9 @@
-const { User, Wallet } = require("../models");
+const { User, Wallet, Log } = require("../models");
 const paginator = require("../middlewares/paginator");
-const { formatAllUsers } = require("../services/adminFormatter");
+const {
+  formatAllUsers,
+  formatUserActivity,
+} = require("../services/adminFormatter");
 
 const getAdminsWithPagination = async (page, perPage) => {
   page = parseInt(page);
@@ -58,7 +61,7 @@ const getAllUsers = async (page, perPage) => {
       as: "wallet",
       attributes: ["balance", "currency"],
     },
-    raw: true
+    raw: true,
   });
 
   const { data, ...paginationInfo } = paginator(users, page, perPage);
@@ -68,8 +71,43 @@ const getAllUsers = async (page, perPage) => {
   return { ...paginationInfo, data: formattedData };
 };
 
+const getUserActivity = async (userId, type, page, perPage) => {
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+  const offset = (page - 1) * perPage;
+
+  const queryOptions = {
+    offset,
+    limit: perPage,
+    where: {
+      userId,
+    },
+    attributes: ["id", "message", "type", "createdAt"],
+    include: {
+      model: User,
+      as: "user",
+      attributes: [["id", "userId"]],
+    },
+    order: [["createdAt", "DESC"]],
+    raw: true,
+  };
+
+  if (type) {
+    queryOptions.where.type = type;
+  }
+
+  const activity = await Log.findAndCountAll(queryOptions);
+
+  const { data, ...paginationInfo } = paginator(activity, page, perPage);
+
+  const formattedData = formatUserActivity(data);
+
+  return { ...paginationInfo, data: formattedData };
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
   getAllUsers,
+  getUserActivity,
 };

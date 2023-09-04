@@ -36,6 +36,7 @@ Below are the avaialble endopoints and their usage.
   - [Transaction Info: /api/v1/admins/transactions/{id}](#transaction-info)
   - [Approve a Transaction: /api/v1/admins/transactions/{id}/approve](#approve-a-transaction)
   - [List Users: /api/v1/admins/users](#list-users-admin)
+  - [User Recent Activity: /api/v1/admins/users/{id}/activity](#user-recent-activity)
 
 ---
 
@@ -1170,6 +1171,50 @@ List users data formatted to match the admin UI
         "status": "Active",
         "currency": "Ksh",
         "balance": 646.01
+      }
+    ]
+  }
+}
+```
+
+### Recent User Activity
+
+**Endpoint** `GET /api/v1/admins/users/{id}/activity`
+
+#### Description
+
+Get recent user activity
+
+#### Route Parameters
+
+- `id` (integer, required): User id
+
+#### Query Parameters
+
+- `page` (integer, optional): start page e.g. `?page=1`
+- `per_page`(integer, optional): number of records to display e.g. `&per_page=3`
+- `type` (string, optional) - filter by activity type (`create_account|send|deposit|withdraw`)
+
+#### Success Sample Response
+
+```json
+{
+  "success": true,
+  "message": "User activity",
+  "data": {
+    "page": 1,
+    "total": 1,
+    "per_page": 10,
+    "previous_page": null,
+    "next_page": null,
+    "last_page": 1,
+    "data": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "message": "<b>Test User</b> created a HabaPay account",
+        "type": "create_account",
+        "timestamp": "4 September 2023, 7:07 AM"
       }
     ]
   }

@@ -3,6 +3,7 @@ const PhoneNotVerifiedError = require("../errors/PhoneNotVerifiedError");
 const { User, Verification } = require("../models");
 const { hashPassword } = require("./auth");
 const paginator = require("../middlewares/paginator");
+const { createAccountCreationLog } = require("../services/loggingService");
 
 const findByGoogleId = async (googleId) => {
   const user = await User.findOne({
@@ -79,6 +80,9 @@ const saveUser = async (data) => {
   await user.createBusiness({
     name: `${user.firstName} ${user.lastName}' Business`,
   });
+
+  // save log
+  createAccountCreationLog(user);
 
   const userData = await user.get({ raw: true });
   return userData;

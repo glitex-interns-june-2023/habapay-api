@@ -1,3 +1,5 @@
+const { formatTimestamp } = require("../utils");
+
 const formatAllUsers = (users) => {
   const formattedUsers = users.map((user) => {
     const {
@@ -24,6 +26,23 @@ const formatAllUsers = (users) => {
   return formattedUsers;
 };
 
+const formatUserActivity = (activity) => {
+  const formattedActivity = activity.map((log) => {
+    const { id, route, message, type, createdAt, "user.userId": userId } = log;
+
+    return {
+      id,
+      userId,
+      message,
+      type,
+      timestamp: formatTimestamp(createdAt),
+    };
+  });
+
+  return formattedActivity;
+};
+
 module.exports = {
   formatAllUsers,
+  formatUserActivity,
 };

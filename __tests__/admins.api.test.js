@@ -2,6 +2,7 @@ const app = require("../src/app");
 const supertest = require("supertest");
 const request = supertest(app);
 const { sequelize, User, Wallet, Transaction } = require("../src/models");
+const { saveUser } = require("../src/services/user");
 const {
   generateUsers,
   generateWallets,
@@ -138,7 +139,7 @@ describe("POST /api/v1/admins/transactions/:transactionId/approve", () => {
   });
 });
 
-describe.only("POST /api/v1/auth/register", () => {
+describe("POST /api/v1/auth/register", () => {
   const data = {
     username: "Test Admin",
     phone: "0712345678",
@@ -184,7 +185,7 @@ describe.only("POST /api/v1/auth/register", () => {
   });
 });
 
-describe.only("GET /api/v1/admins/users", () => {
+describe("GET /api/v1/admins/users", () => {
   beforeEach(async () => {
     await User.bulkCreate(users);
     await Wallet.bulkCreate(wallets);
@@ -207,5 +208,28 @@ describe.only("GET /api/v1/admins/users", () => {
     expect(users[0]).toHaveProperty("email");
     expect(users[0]).toHaveProperty("status");
     expect(users[0]).toHaveProperty("balance");
+  });
+});
+
+describe.only("Logging User Activity", () => {
+  beforeEach(async () => {
+    await sequelize.sync({ force: true });
+  });
+
+  it("should log that a user has created account", async () => {
+    // create test data
+    const users = generateUsers(2);
+
+    await saveUser(users[0]);
+    const response = await request.get("/api/v1/admins/users/1/activity");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("data");
+    // test response structure
+    const data = response.body.data.data;
+
+    expect(data[0]).toHaveProperty("id");
+    expect(data[0]).toHaveProperty("user_id");
+    expect(data[0]).toHaveProperty("message");
+    expect(data[0]).toHaveProperty("timestamp");
   });
 });
