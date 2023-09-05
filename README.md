@@ -43,6 +43,7 @@ Below are the avaialble endopoints and their usage.
   - [Suspend User Account: /api/v1/admins/users/{id}/suspend](#suspend-user-account)
   - [UnSuspend User Account: /api/v1/admins/users/{id}/unsuspend](#unsuspend-user-account)
   - [Delete User Account: /api/v1/admins/users/{id}](#delete-user-account)
+  - [Update User Account: /api/v1/admins/uses/{id}](#update-user-account)
 
 - [Analytics](#analytics)
   - [Overview: /api/v1/analytics/overview](#analytics-overview)
@@ -1382,6 +1383,27 @@ Delete user account and all associated user data.
 {
   "success": true,
   "message": "User account deleted successfully"
+}
+```
+### Update User Account
+
+**Endpoint**: `PUT /api/v1/admins/users/{id}`
+
+#### Description
+Update user account information
+
+#### Route Params
+
+- `id` (integer, required):- User id to delete account for
+#### Request body
+[Same as the one provided here](#register-admin)
+
+#### Success Sample Response
+
+```json
+{
+  "success": true,
+  "message": "User account updated successfully"
 }
 ```
 
