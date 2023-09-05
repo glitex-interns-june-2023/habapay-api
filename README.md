@@ -39,6 +39,8 @@ Below are the avaialble endopoints and their usage.
   - [List New Users: /api/v1/admins/users/new](#list-new-users)
   - [List User Info: /api/v1/admins/users/{id}](#list-user-info)
   - [User Recent Activity: /api/v1/admins/users/{id}/activity](#user-recent-activity)
+  - [Suspend User Account: /api/v1/admins/users/{id}/suspend](#suspend-user-account)
+  - [UnSuspend User Account: /api/v1/admins/users/{id}/unsuspend](#unsuspend-user-account)
 
 ---
 
@@ -1313,3 +1315,30 @@ Get recent user activity
   }
 }
 ```
+
+### Suspend User Account
+**Endpoint**: `POST /api/v1/admins/users/{id}/suspend`
+#### Description
+Suspend user account with the given user id
+#### Route Parameters
+- `id` (integer, required):- UserId of the account to suspend
+#### Success Sample Response
+```json 
+{
+  "success": true,
+  "message": "User account suspended successfully"
+}
+```
+
+### Unsuspend User Account
+**Endpoint**: `POST /api/v1/admins/users/{id}/unsuspend`
+#### Description
+Unsuspend user account associated with the given id
+#### Route Parameters
+- `id` (integer, require):- User id of the account to unsuspend
+#### Success Sample Response
+```json
+{
+  "success": true,
+  "message": "User account re-activated successfully."
+}

@@ -162,6 +162,36 @@ const getNewUsers = async (page, perPage) => {
   return { ...paginationInfo, data: formattedData };
 };
 
+const suspendUser = async (userId) => {
+  const suspend = await User.update(
+    {
+      isActive: false,
+    },
+    {
+      where: {
+        id: userId,
+      },
+    }
+  );
+
+  return suspend;
+};
+
+const unSuspendUser = async (userId) => {
+  const unSuspend = await User.update(
+    {
+      isActive: true,
+    },
+    {
+      where: {
+        id: userId,
+      },
+    }
+  );
+
+  return unSuspend;
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
@@ -169,4 +199,6 @@ module.exports = {
   getUser,
   getNewUsers,
   getUserActivity,
+  suspendUser,
+  unSuspendUser,
 };

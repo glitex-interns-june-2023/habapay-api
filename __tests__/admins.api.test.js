@@ -211,7 +211,7 @@ describe("GET /api/v1/admins/users", () => {
   });
 });
 
-describe.only("Logging User Activity", () => {
+describe("Logging User Activity", () => {
   beforeEach(async () => {
     await sequelize.sync({ force: true });
   });
@@ -231,5 +231,42 @@ describe.only("Logging User Activity", () => {
     expect(data[0]).toHaveProperty("user_id");
     expect(data[0]).toHaveProperty("message");
     expect(data[0]).toHaveProperty("timestamp");
+  });
+});
+
+describe.only("Suspend and Unsuspend User accounts", () => {
+  beforeEach(async () => {
+    // create new test user to test with
+    const user = {
+      username: "Test User",
+      email: "test-user@habapay.com",
+      phone: "0712345678",
+      password: "1234",
+    };
+
+    await request.post("/api/v1/auth/register/bypass").send(user);
+  });
+
+  afterEach(async () => {
+    await sequelize.sync({ force: true });
+  });
+
+  it("should suspend a user account", async () => {
+    const response = await request.post("/api/v1/admins/users/1/suspend");
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    const user = await User.findByPk(1);
+    expect(user.isActive).toBe(false);
+  });
+
+  it("should unsuspend a suspended accont", async () => {
+    await request.post("/api/v1/admins/users/1/suspend");
+    let user = await User.findByPk(1);
+    expect(user.isActive).toBe(false);
+    const response = await request.post("/api/v1/admins/users/1/unsuspend");
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    user = await User.findByPk(1);
+    expect(user.isActive).toBe(true);
   });
 });

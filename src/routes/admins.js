@@ -10,7 +10,9 @@ const {
   getAllUsers,
   getUserActivity,
   getUser,
-  getNewUsers
+  getNewUsers,
+  suspendUser,
+  unSuspendUser
 } = require("../controllers/adminsController");
 const { getTransaction } = require("../controllers/transactionController");
 
@@ -22,6 +24,8 @@ router.get("/users", getAllUsers);
 router.get("/users/new", getNewUsers);
 router.get("/users/:userId", getUser);
 router.get("/users/:userId/activity", getUserActivity);
+router.post("/users/:userId/suspend", suspendUser);
+router.post("/users/:userId/unsuspend", unSuspendUser)
 
 router.get(
   "/:adminId",
