@@ -1,5 +1,9 @@
-const { Transaction, User } = require("../models");
+const { Transaction, User, Analytic, Wallet, sequelize } = require("../models");
 const { Op } = require("sequelize");
+const { formatAnalytics } = require("../services/analyticsFormatter");
+
+const paginator = require("../middlewares/paginator");
+
 const getOverview = async () => {
   const weeklyTransactions = await getWeeklyTransactions();
   const weeklySignups = await getWeklySignups();
@@ -112,8 +116,38 @@ const getReachByCounties = async () => {
   return count;
 };
 
-const getRecentActivity = () => {};
+const getRecentActivity = async (page, perPage) => {
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+  const offset = (page - 1) * perPage;
+
+  const analytics = await Analytic.findAndCountAll({
+    offset,
+    limit: perPage,
+    attributes: ["id", "userId", "appLaunches"],
+    include: {
+      model: User,
+      as: "user",
+      attributes: ["username", "isActive"],
+      include: [
+        {
+          model: Wallet,
+          as: "wallet",
+          attributes: ["balance"],
+        },
+      ],
+    },
+
+    raw: true,
+  });
+
+  const { data, ...paginationInfo } = paginator(analytics, page, perPage);
+
+  const formattedData = formatAnalytics(data);
+  return { ...paginationInfo, data: formattedData };
+};
 
 module.exports = {
   getOverview,
+  getRecentActivity,
 };

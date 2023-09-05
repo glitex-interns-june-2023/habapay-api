@@ -6,6 +6,7 @@ const {
   formatAdminUser,
   formatNewUsers,
 } = require("../services/adminFormatter");
+const UserNotFoundError = require("../errors/UserNotFoundError");
 
 const getAdminsWithPagination = async (page, perPage) => {
   page = parseInt(page);
@@ -194,7 +195,12 @@ const unSuspendUser = async (userId) => {
 
 const deleteUser = async (userId) => {
   const user = await User.findByPk(userId);
+  if (!user) {
+    throw new UserNotFoundError(`No user with id: ${userId} was found`);
+  }
+
   await user.destroy();
+
   return true;
 };
 

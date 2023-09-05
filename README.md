@@ -46,6 +46,7 @@ Below are the avaialble endopoints and their usage.
 
 - [Analytics](#analytics)
   - [Overview: /api/v1/analytics/overview](#analytics-overview)
+  - [Overview (Recent Activity): /api/v1/analytics/activity](#analytics-recent-activity)
 
 ---
 
@@ -1417,6 +1418,62 @@ Get an overview of the system analytics including total transactions, registered
       "total_users": 4,
       "total_counties": 1
     }
+  }
+}
+```
+
+### Analytics Recent Activity
+
+**Endpoint**: `GET /api/v1/analytics/activity`
+
+#### Description
+
+Get an overview of recent activity e.g. total app launches, user balance etc.
+
+### Query Parameters
+
+- `page` (integer, optional): start page e.g. `?page=1`
+- `per_page`(integer, optional): number of records to display e.g. `&per_page=3`
+
+#### Success Sample Response
+
+```json
+{
+  "success": true,
+  "message": "Recent activity retrieved successfully",
+  "data": {
+    "page": 1,
+    "total": 3,
+    "per_page": 10,
+    "previous_page": null,
+    "next_page": null,
+    "last_page": 1,
+    "data": [
+      {
+        "user_id": 1,
+        "username": "Angel3",
+        "balance": 0,
+        "total_transactions": 0,
+        "app_launches": 0,
+        "status": "Active"
+      },
+      {
+        "user_id": 2,
+        "username": "Test User",
+        "balance": 121,
+        "total_transactions": 1,
+        "app_launches": 0,
+        "status": "Active"
+      },
+      {
+        "user_id": 3,
+        "username": "Dev",
+        "balance": 379,
+        "total_transactions": 8,
+        "app_launches": 0,
+        "status": "Active"
+      }
+    ]
   }
 }
 ```
