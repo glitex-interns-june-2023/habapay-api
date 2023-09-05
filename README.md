@@ -2,9 +2,9 @@
 
 Welcome to HabaPay API documentation.  
 HabaPay API is a RESTful API that uses JSON for serialization and JWT for authentication.  
-All request and response keys follow a snake_case naming convention.
+All request and response keys follow a `snake_case` naming convention.
 
-Below are the avaialble endopoints and their usage.
+Below are the available endpoints and their usage.
 
 ## Table of Contents
 
