@@ -36,6 +36,7 @@ Below are the avaialble endopoints and their usage.
   - [Transaction Info: /api/v1/admins/transactions/{id}](#transaction-info)
   - [Approve a Transaction: /api/v1/admins/transactions/{id}/approve](#approve-a-transaction)
   - [List Users: /api/v1/admins/users](#list-users-admin)
+  - [List New Users: /api/v1/admins/users/new](#list-new-users)
   - [List User Info: /api/v1/admins/users/{id}](#list-user-info)
   - [User Recent Activity: /api/v1/admins/users/{id}/activity](#user-recent-activity)
 
@@ -1172,6 +1173,53 @@ List users data formatted to match the admin UI
         "status": "Active",
         "currency": "Ksh",
         "balance": 646.01
+      }
+    ]
+  }
+}
+```
+
+### List New Users
+
+**Endpoint** `/api/v1/admins/users/new`
+
+#### Description
+
+Get an overview of users and their registration dates
+
+#### Query Parameters
+
+- `page` (integer, optional): start page e.g. `?page=1`
+- `per_page`(integer, optional): number of records to display e.g. `&per_page=3`
+
+#### Success Sample Response
+
+```json
+{
+  "success": true,
+  "message": "New users",
+  "data": {
+    "page": 1,
+    "total": 4,
+    "per_page": 2,
+    "previous_page": null,
+    "next_page": 2,
+    "last_page": 2,
+    "data": [
+      {
+        "date": "Tue Sep 05 2023",
+        "users": [
+          {
+            "id": 5,
+            "username": "Angel",
+            "email": "angel@habapay.com"
+          },
+          {
+            "id": 4,
+            "username": "Dev",
+            "email": "dev@habapay.com"
+          }
+        ]
       }
     ]
   }
