@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: "CASCADE",
       });
 
-      User.hasMany(models.Analytics, {
+      User.hasMany(models.Analytic, {
         foreignKey: "userId",
         as: "analytics",
         onDelete: "CASCADE",

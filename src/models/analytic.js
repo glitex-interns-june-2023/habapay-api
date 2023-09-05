@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Analytics extends Model {
+  class Analytic extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      Analytics.belongsTo(models.User, {
+      Analytic.belongsTo(models.User, {
         foreignKey: "userId",
         as: "user",
         onDelete: "CASCADE",
@@ -18,20 +18,27 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  Analytics.init(
+  Analytic.init(
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      userId: DataTypes.INTEGER,
-      appLaunches: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      appLaunches: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,
-      modelName: "Analytics",
+      modelName: "Analytic",
     }
   );
-  return Analytics;
+  return Analytic;
 };

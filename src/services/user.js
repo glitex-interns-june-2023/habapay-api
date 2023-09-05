@@ -81,6 +81,9 @@ const saveUser = async (data) => {
     name: `${user.firstName} ${user.lastName}' Business`,
   });
 
+  // initialize user analytics model
+  await user.createAnalytic();
+
   // save log
   createAccountCreationLog(user);
 
