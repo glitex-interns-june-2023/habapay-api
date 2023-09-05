@@ -1,8 +1,9 @@
-const { User, Wallet, Log } = require("../models");
+const { User, Wallet, Business, Log } = require("../models");
 const paginator = require("../middlewares/paginator");
 const {
   formatAllUsers,
   formatUserActivity,
+  formatAdminUser,
 } = require("../services/adminFormatter");
 
 const getAdminsWithPagination = async (page, perPage) => {
@@ -71,6 +72,41 @@ const getAllUsers = async (page, perPage) => {
   return { ...paginationInfo, data: formattedData };
 };
 
+const getUser = async (userId) => {
+  // get user information along with their activity
+  const user = await User.scope(["defaultScope", "user"]).findByPk(userId, {
+    attributes: [
+      "id",
+      "username",
+      "email",
+      "phone",
+      "secondaryPhone",
+      "location",
+      "isActive",
+      "isPhoneVerified",
+      "isEmailVerified",
+      "createdAt",
+    ],
+    include: [
+      {
+        model: Wallet,
+        as: "wallet",
+        attributes: ["balance", "currency"],
+      },
+      {
+        model: Business,
+        as: "business",
+        attributes: ["name", "location", "category", "createdAt"],
+      },
+    ],
+    raw: true,
+    nest: true,
+  });
+
+  const formattedData = formatAdminUser(user);
+  return formattedData;
+};
+
 const getUserActivity = async (userId, type, page, perPage) => {
   page = parseInt(page);
   perPage = parseInt(perPage);
@@ -109,5 +145,6 @@ module.exports = {
   getAdminsWithPagination,
   getAdmin,
   getAllUsers,
+  getUser,
   getUserActivity,
 };

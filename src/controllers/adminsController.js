@@ -81,6 +81,22 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
+const getUser = async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await adminService.getUser(userId);
+
+    return res.status(200).json({
+      success: true,
+      message: "User",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getUserActivity = async (req, res, next) => {
   const { userId } = req.params;
 
@@ -109,5 +125,6 @@ module.exports = {
   getTransactions,
   approveTransaction,
   getAllUsers,
+  getUser,
   getUserActivity,
 };

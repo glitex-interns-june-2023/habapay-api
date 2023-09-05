@@ -9,6 +9,7 @@ const {
   approveTransaction,
   getAllUsers,
   getUserActivity,
+  getUser
 } = require("../controllers/adminsController");
 const { getTransaction } = require("../controllers/transactionController");
 
@@ -17,6 +18,7 @@ router.get("/transactions", getTransactions);
 router.get("/transactions/:transactionId", getTransaction);
 router.post("/transactions/:transactionId/approve", approveTransaction);
 router.get("/users", getAllUsers);
+router.get("/users/:userId", getUser);
 router.get("/users/:userId/activity", getUserActivity);
 
 router.get(
