@@ -44,6 +44,13 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+
+      User.hasMany(models.Analytics, {
+        foreignKey: "userId",
+        as: "analytics",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
 
     toJSON() {
