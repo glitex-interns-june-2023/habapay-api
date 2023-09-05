@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
       Log.belongsTo(models.User, {
         foreignKey: "userId",
         as: "user",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
       });
     }
   }
