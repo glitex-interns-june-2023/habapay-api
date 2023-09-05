@@ -192,6 +192,12 @@ const unSuspendUser = async (userId) => {
   return unSuspend;
 };
 
+const deleteUser = async (userId) => {
+  const user = await User.findByPk(userId);
+  await user.destroy();
+  return true;
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
@@ -201,4 +207,5 @@ module.exports = {
   getUserActivity,
   suspendUser,
   unSuspendUser,
+  deleteUser,
 };
