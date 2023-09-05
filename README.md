@@ -1181,11 +1181,12 @@ List users data formatted to match the admin UI
 
 ### List New Users
 
-**Endpoint** `/api/v1/admins/users/new`
+**Endpoint**: `GET /api/v1/admins/users/new`
 
 #### Description
 
-Get an overview of users and their registration dates
+Get an overview of users and their registration dates.  
+Users are grouped in terms of their registration dates, with those registered in the same day in their single array.
 
 #### Query Parameters
 
