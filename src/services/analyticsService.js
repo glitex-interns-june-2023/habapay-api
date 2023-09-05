@@ -124,7 +124,7 @@ const getRecentActivity = async (page, perPage) => {
   const analytics = await Analytic.findAndCountAll({
     offset,
     limit: perPage,
-    attributes: ["id", "appLaunches"],
+    attributes: ["id", "userId", "appLaunches"],
     include: {
       model: User,
       as: "user",
