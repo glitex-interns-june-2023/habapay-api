@@ -158,6 +158,18 @@ const unSuspendUser = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    await adminService.deleteUser(userId);
+    return res.status(200).json({
+      success: true,
+      message: "Use account deleted successfully"
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
@@ -169,4 +181,5 @@ module.exports = {
   getNewUsers,
   suspendUser,
   unSuspendUser,
+  deleteUser
 };

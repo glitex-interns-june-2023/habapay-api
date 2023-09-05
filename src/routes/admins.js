@@ -12,7 +12,8 @@ const {
   getUser,
   getNewUsers,
   suspendUser,
-  unSuspendUser
+  unSuspendUser,
+  deleteUser
 } = require("../controllers/adminsController");
 const { getTransaction } = require("../controllers/transactionController");
 
@@ -23,6 +24,7 @@ router.post("/transactions/:transactionId/approve", approveTransaction);
 router.get("/users", getAllUsers);
 router.get("/users/new", getNewUsers);
 router.get("/users/:userId", getUser);
+router.delete("/users/:userId", deleteUser)
 router.get("/users/:userId/activity", getUserActivity);
 router.post("/users/:userId/suspend", suspendUser);
 router.post("/users/:userId/unsuspend", unSuspendUser)

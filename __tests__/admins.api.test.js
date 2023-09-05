@@ -234,7 +234,7 @@ describe("Logging User Activity", () => {
   });
 });
 
-describe.only("Suspend and Unsuspend User accounts", () => {
+describe("Suspend and Unsuspend User accounts", () => {
   beforeEach(async () => {
     // create new test user to test with
     const user = {
@@ -268,5 +268,31 @@ describe.only("Suspend and Unsuspend User accounts", () => {
     expect(response.body.success).toBe(true);
     user = await User.findByPk(1);
     expect(user.isActive).toBe(true);
+  });
+});
+
+describe.only("Deleting User account", () => {
+  beforeEach(async () => {
+    // create a demo account
+    const user = {
+      username: "Test User",
+      email: "test-user@habapay.com",
+      phone: "0712345678",
+      password: "1234",
+    };
+
+    await request.post("/api/v1/auth/register/bypass").send(user);
+  });
+
+  afterEach(async () => {
+    await sequelize.sync({ force: true });
+  });
+
+  it("should delete a user account", async () => {
+    const response = await request.delete("/api/v1/admins/users/1");
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    const user = await User.findByPk(1);
+    expect(user).toBeNull();
   });
 });

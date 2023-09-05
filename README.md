@@ -41,6 +41,7 @@ Below are the avaialble endopoints and their usage.
   - [User Recent Activity: /api/v1/admins/users/{id}/activity](#user-recent-activity)
   - [Suspend User Account: /api/v1/admins/users/{id}/suspend](#suspend-user-account)
   - [UnSuspend User Account: /api/v1/admins/users/{id}/unsuspend](#unsuspend-user-account)
+  - [Delete User Account: /api/v1/admins/users/{id}](#delete-user-account)
 
 ---
 
@@ -1342,3 +1343,18 @@ Unsuspend user account associated with the given id
   "success": true,
   "message": "User account re-activated successfully."
 }
+```
+
+### Delete User Account
+**Endpoint**: `DELETE /api/v1/admins/users/{id}`
+#### Description
+Delete user account and all associated user data.
+#### Route Params
+- `id` (integer, required):- User id to delete account for
+#### Success Sample Response
+```json
+{
+  "success": true,
+  "message": "User account deleted successfully"
+}
+```
