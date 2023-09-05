@@ -133,6 +133,31 @@ const getNewUsers = async (req, res, next) => {
   }
 };
 
+const suspendUser = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    await adminService.suspendUser(userId);
+    return res.status(200).json({
+      success: true,
+      message: "User account suspended successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const unSuspendUser = async (req, res, next) => {
+  const { userId } = req.params;
+  try {
+    await adminService.unSuspendUser(userId);
+    return res.status(200).json({
+      success: true,
+      message: "User account re-activated successfully.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
@@ -142,4 +167,6 @@ module.exports = {
   getUser,
   getUserActivity,
   getNewUsers,
+  suspendUser,
+  unSuspendUser,
 };
