@@ -28,7 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       userId: DataTypes.INTEGER,
       name: DataTypes.STRING,
       category: DataTypes.STRING,
-      location: DataTypes.STRING,
+      location: {
+        type: DataTypes.STRING,
+        defaultValue: "Machakos, Kenya",
+      },
     },
     {
       sequelize,

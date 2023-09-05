@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
 
       User.hasMany(models.Log, {
         foreignKey: "userId",
-        as: "logs",
+        as: "activity",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });

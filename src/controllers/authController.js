@@ -124,9 +124,36 @@ const updateLoginPin = async (req, res, next) => {
   }
 };
 
+const createTestUserAccount = async (req, res, next) => {
+  const {username, email, phone, password } = req.body;
+
+  const user = await userService.saveUser({
+    username,
+    email,
+    phone,
+    password
+  });
+
+  const accessToken = createAccessToken(user);
+  const refreshToken = createRefreshToken(user);
+
+  let data = {
+    ...user,
+    accessToken,
+    refreshToken,
+  };
+
+  return res.status(201).json({
+    sucess: true,
+    message: "Account created successfully",
+    data: data,
+  });
+};
+
 module.exports = {
   login,
   register,
   pinLogin,
   updateLoginPin,
+  createTestUserAccount
 };

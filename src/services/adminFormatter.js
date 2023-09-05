@@ -28,7 +28,7 @@ const formatAllUsers = (users) => {
 
 const formatUserActivity = (activity) => {
   const formattedActivity = activity.map((log) => {
-    const { id, route, message, type, createdAt, "user.userId": userId } = log;
+    const { id, message, type, createdAt, "user.userId": userId } = log;
 
     return {
       id,
@@ -42,7 +42,44 @@ const formatUserActivity = (activity) => {
   return formattedActivity;
 };
 
+const formatAdminUser = (user) => {
+  if (!user) return null;
+  // format timestamp fields
+  const userCreatedAt = user.createdAt ? formatTimestamp(user.createdAt) : null;
+  const businessCreatedAt = user.business.createdAt
+    ? formatTimestamp(user.business.createdAt)
+    : null;
+
+  user.createdAt = userCreatedAt;
+  user.business.createdAt = businessCreatedAt;
+  return user;
+};
+
+const formatNewUsers = (users) => {
+  const formattedData = users.reduce((acc, user) => {
+    const registrationDate = user.createdAt.toDateString();
+    const existingEntry = acc.find((entry) => entry.date === registrationDate);
+
+    const { id, username, email } = user;
+    // create new entry if none exists
+    if (!existingEntry) {
+      acc.push({
+        date: registrationDate,
+        users: [{ id, username, email }],
+      });
+    } else {
+      existingEntry.users.push({ id, username, email });
+    }
+
+    return acc;
+  }, []);
+
+  return formattedData;
+};
+
 module.exports = {
   formatAllUsers,
   formatUserActivity,
+  formatAdminUser,
+  formatNewUsers,
 };

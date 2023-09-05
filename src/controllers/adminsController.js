@@ -81,6 +81,22 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
+const getUser = async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await adminService.getUser(userId);
+
+    return res.status(200).json({
+      success: true,
+      message: "User",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getUserActivity = async (req, res, next) => {
   const { userId } = req.params;
 
@@ -103,11 +119,27 @@ const getUserActivity = async (req, res, next) => {
   }
 };
 
+const getNewUsers = async (req, res, next) => {
+  const { page = 1, perPage = 10 } = req.query;
+  try {
+    const newUsers = await adminService.getNewUsers(page, perPage);
+    return res.status(200).json({
+      success: true,
+      message: "New users",
+      data: newUsers,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
   getTransactions,
   approveTransaction,
   getAllUsers,
+  getUser,
   getUserActivity,
+  getNewUsers,
 };

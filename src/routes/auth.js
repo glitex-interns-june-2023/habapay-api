@@ -10,6 +10,7 @@ const {
   register,
   pinLogin,
   updateLoginPin,
+  createTestUserAccount,
 } = require("../controllers/authController");
 router.post(
   "/login",
@@ -55,6 +56,18 @@ router.put(
     validateInput,
   ],
   updateLoginPin
+);
+
+// testing route to create normal users from localhost
+router.post(
+  "/register/bypass",
+  [
+    body("username").notEmpty(),
+    body("email").notEmpty(),
+    body("phone").notEmpty(),
+    body("password").notEmpty(),
+  ],
+  createTestUserAccount
 );
 
 module.exports = router;

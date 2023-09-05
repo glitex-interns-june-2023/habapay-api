@@ -36,6 +36,8 @@ Below are the avaialble endopoints and their usage.
   - [Transaction Info: /api/v1/admins/transactions/{id}](#transaction-info)
   - [Approve a Transaction: /api/v1/admins/transactions/{id}/approve](#approve-a-transaction)
   - [List Users: /api/v1/admins/users](#list-users-admin)
+  - [List New Users: /api/v1/admins/users/new](#list-new-users)
+  - [List User Info: /api/v1/admins/users/{id}](#list-user-info)
   - [User Recent Activity: /api/v1/admins/users/{id}/activity](#user-recent-activity)
 
 ---
@@ -1173,6 +1175,97 @@ List users data formatted to match the admin UI
         "balance": 646.01
       }
     ]
+  }
+}
+```
+
+### List New Users
+
+**Endpoint**: `GET /api/v1/admins/users/new`
+
+#### Description
+
+Get an overview of users and their registration dates.  
+Users are grouped in terms of their registration dates, with those registered in the same day in their single array.
+
+#### Query Parameters
+
+- `page` (integer, optional): start page e.g. `?page=1`
+- `per_page`(integer, optional): number of records to display e.g. `&per_page=3`
+
+#### Success Sample Response
+
+```json
+{
+  "success": true,
+  "message": "New users",
+  "data": {
+    "page": 1,
+    "total": 4,
+    "per_page": 2,
+    "previous_page": null,
+    "next_page": 2,
+    "last_page": 2,
+    "data": [
+      {
+        "date": "Tue Sep 05 2023",
+        "users": [
+          {
+            "id": 5,
+            "username": "Angel",
+            "email": "angel@habapay.com"
+          },
+          {
+            "id": 4,
+            "username": "Dev",
+            "email": "dev@habapay.com"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### List User Info
+
+**Endpoint** `GET /api/v1/admins/users/{id}`
+
+#### Description
+
+Get user information by id. More information about the user is available here since it is an admin viewing it.
+
+#### Route Parameters
+
+- `id` (integer, required)- User id
+
+#### Success Sample Response
+
+```json
+{
+  "success": true,
+  "message": "User",
+  "data": {
+    "id": 4,
+    "username": "Dev",
+    "email": "dev@habapay.com",
+    "phone": "0758826552",
+    "secondary_phone": null,
+    "location": "Nairobi, Kenya",
+    "is_active": 1,
+    "is_phone_verified": 0,
+    "is_email_verified": 0,
+    "created_at": "5 September 2023, 4:34 AM",
+    "wallet": {
+      "balance": 59,
+      "currency": "Ksh"
+    },
+    "business": {
+      "name": "Dev's Business",
+      "location": "Machakos, Kenya",
+      "category": null,
+      "created_at": "5 September 2023, 4:34 AM"
+    }
   }
 }
 ```

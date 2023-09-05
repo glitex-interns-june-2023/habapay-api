@@ -24,7 +24,7 @@ const sendMoney = async (senderId, receiverId, amount) => {
   );
 
   // Log transaction
-  await loggingService.createSendMoneyLog(senderWallet, receiverWallet);
+  await loggingService.createSendMoneyLog(senderWallet, receiverWallet, amount);
 
   return transaction;
 };
