@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { body, query, param } = require("express-validator");
+const { param } = require("express-validator");
 const { validateRouteParams } = require("../middlewares/inputValidation");
 const {
   getAdminsWithPagination,
@@ -13,7 +13,8 @@ const {
   getNewUsers,
   suspendUser,
   unSuspendUser,
-  deleteUser
+  deleteUser,
+  updateUser,
 } = require("../controllers/adminsController");
 const { getTransaction } = require("../controllers/transactionController");
 
@@ -24,10 +25,11 @@ router.post("/transactions/:transactionId/approve", approveTransaction);
 router.get("/users", getAllUsers);
 router.get("/users/new", getNewUsers);
 router.get("/users/:userId", getUser);
-router.delete("/users/:userId", deleteUser)
+router.put("/users/:userId", updateUser);
+router.delete("/users/:userId", deleteUser);
 router.get("/users/:userId/activity", getUserActivity);
 router.post("/users/:userId/suspend", suspendUser);
-router.post("/users/:userId/unsuspend", unSuspendUser)
+router.post("/users/:userId/unsuspend", unSuspendUser);
 
 router.get(
   "/:adminId",
