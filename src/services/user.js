@@ -1,6 +1,6 @@
 const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");
 const PhoneNotVerifiedError = require("../errors/PhoneNotVerifiedError");
-const { User, Verification } = require("../models");
+const { User, Business } = require("../models");
 const { hashPassword } = require("./auth");
 const paginator = require("../middlewares/paginator");
 const { createAccountCreationLog } = require("../services/loggingService");
@@ -186,7 +186,31 @@ const createAdmin = async (data) => {
   const userData = await user.get({ raw: true });
   return userData;
 };
+const updateUser = async (userId, data) => {
+  if (data.password) {
+    data.password = hashPassword(data.password);
+  }
 
+  if (data.loginPin) {
+    data.loginPin = hashPassword(data.loginPin);
+  }
+
+  // upodate business information too
+  if (data.businessName) {
+    await Business.update({ name: data.businessName }, { where: { userId } });
+  }
+  if (data.location) {
+    await Business.update({ location: data.location }, { where: { userId } });
+  }
+
+  let user = await User.update(data, {
+    where: {
+      id: userId,
+    },
+  });
+
+  return user;
+};
 module.exports = {
   findByGoogleId,
   findByEmail,
@@ -200,4 +224,5 @@ module.exports = {
   ensurePhoneVerified,
   getAllUsers,
   createAdmin,
+  updateUser,
 };

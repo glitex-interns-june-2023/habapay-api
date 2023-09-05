@@ -63,6 +63,11 @@ const pinLogin = async (email, pin) => {
   }
 
   const { loginPin, ...userData } = user;
+  if (loginPin == null) {
+    throw new InvalidLoginDetailsError(
+      "Cannot login. Please set login pin first"
+    );
+  }
 
   const pinMatch = comparePassword(pin, loginPin);
 

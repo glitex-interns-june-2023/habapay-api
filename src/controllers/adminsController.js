@@ -1,5 +1,6 @@
 const adminService = require("../services/admins");
 const transactionService = require("../services/transactionService");
+const userService = require("../services/user");
 
 const getAdminsWithPagination = async (req, res, next) => {
   const { page = 1, perPage = 10 } = req.query;
@@ -164,12 +165,28 @@ const deleteUser = async (req, res, next) => {
     await adminService.deleteUser(userId);
     return res.status(200).json({
       success: true,
-      message: "Use account deleted successfully"
+      message: "Use account deleted successfully",
     });
   } catch (error) {
     next(error);
   }
 };
+
+const updateUser = async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    await userService.updateUser(userId, req.body);
+
+    return res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
@@ -181,5 +198,6 @@ module.exports = {
   getNewUsers,
   suspendUser,
   unSuspendUser,
-  deleteUser
+  deleteUser,
+  updateUser,
 };
