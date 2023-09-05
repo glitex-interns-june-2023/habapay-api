@@ -31,6 +31,7 @@ Below are the avaialble endopoints and their usage.
 - [List all Users](#list-all-users)
 - [Update Business Details](#update-business-details)
 - [Admin](#admin)
+
   - [Register Admin: /api/v1/auth/register](#register-admin)
   - [Pending and Approved Transactions: /api/v1/admins/transactions](#pending-and-approved-transactions)
   - [Transaction Info: /api/v1/admins/transactions/{id}](#transaction-info)
@@ -42,6 +43,9 @@ Below are the avaialble endopoints and their usage.
   - [Suspend User Account: /api/v1/admins/users/{id}/suspend](#suspend-user-account)
   - [UnSuspend User Account: /api/v1/admins/users/{id}/unsuspend](#unsuspend-user-account)
   - [Delete User Account: /api/v1/admins/users/{id}](#delete-user-account)
+
+- [Analytics](#analytics)
+  - [Overview: /api/v1/analytics/overview](#analytics-overview)
 
 ---
 
@@ -997,7 +1001,7 @@ Superadmin create other admin accounts
   "phone": "0712345678",
   "email": "test-admin@habapay.com",
   "password": "password",
-  "secondary_hone": "",
+  "secondary_phone": "",
   "business_name": "John's Business",
   "location": "Nairobi, Kenya",
   "login_pin": "1234"
@@ -1318,13 +1322,20 @@ Get recent user activity
 ```
 
 ### Suspend User Account
+
 **Endpoint**: `POST /api/v1/admins/users/{id}/suspend`
+
 #### Description
+
 Suspend user account with the given user id
+
 #### Route Parameters
+
 - `id` (integer, required):- UserId of the account to suspend
+
 #### Success Sample Response
-```json 
+
+```json
 {
   "success": true,
   "message": "User account suspended successfully"
@@ -1332,12 +1343,19 @@ Suspend user account with the given user id
 ```
 
 ### Unsuspend User Account
+
 **Endpoint**: `POST /api/v1/admins/users/{id}/unsuspend`
+
 #### Description
+
 Unsuspend user account associated with the given id
+
 #### Route Parameters
+
 - `id` (integer, require):- User id of the account to unsuspend
+
 #### Success Sample Response
+
 ```json
 {
   "success": true,
@@ -1346,15 +1364,59 @@ Unsuspend user account associated with the given id
 ```
 
 ### Delete User Account
+
 **Endpoint**: `DELETE /api/v1/admins/users/{id}`
+
 #### Description
+
 Delete user account and all associated user data.
+
 #### Route Params
+
 - `id` (integer, required):- User id to delete account for
+
 #### Success Sample Response
+
 ```json
 {
   "success": true,
   "message": "User account deleted successfully"
+}
+```
+
+## Analytics
+
+### Analytics Overview
+
+**Endpoint**: `GET /api/v1/analytics/overview`
+
+#### Description
+
+Get an overview of the system analytics including total transactions, registered users and total transactions.
+
+#### Success Sample Response
+
+```json
+{
+  "success": true,
+  "message": "Analytics retrieved successfully",
+  "data": {
+    "weekly_transactions": {
+      "total": 7,
+      "percentage": 5
+    },
+    "weekly_signups": {
+      "total": 5,
+      "percentage": 3
+    },
+    "weekly_exchanges": {
+      "total": 3,
+      "percentage": 2
+    },
+    "national_reach": {
+      "total_users": 4,
+      "total_counties": 1
+    }
+  }
 }
 ```

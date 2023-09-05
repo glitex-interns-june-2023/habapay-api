@@ -26,6 +26,7 @@ const mpesaRouter = require("./routes/mpesa");
 const transactionsRouter = require("./routes/transactions");
 const usersRouter = require("./routes/users");
 const verificationsRouter = require("./routes/verifications");
+const analyticsRouter = require("./routes/analytics");
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/auth/google", googleAuth);
@@ -36,6 +37,7 @@ app.use("/api/v1/mpesa", mpesaRouter);
 app.use("/api/v1/transactions", transactionsRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/verifications", verificationsRouter);
+app.use("/api/v1/analytics", analyticsRouter);
 // error handler
 app.use(errorHandler);
 
