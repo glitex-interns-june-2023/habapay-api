@@ -4,6 +4,7 @@ const {
   formatAllUsers,
   formatUserActivity,
   formatAdminUser,
+  formatNewUsers,
 } = require("../services/adminFormatter");
 
 const getAdminsWithPagination = async (page, perPage) => {
@@ -141,10 +142,31 @@ const getUserActivity = async (userId, type, page, perPage) => {
   return { ...paginationInfo, data: formattedData };
 };
 
+const getNewUsers = async (page, perPage) => {
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+  const offset = (page - 1) * perPage;
+
+  const users = await User.scope("user").findAndCountAll({
+    offset,
+    limit: perPage,
+    attributes: ["id", "username", "email", "createdAt"],
+    order: [["createdAt", "DESC"]],
+    raw: true,
+  });
+
+  const { data, ...paginationInfo } = paginator(users, page, perPage);
+
+  const formattedData = formatNewUsers(data);
+
+  return { ...paginationInfo, data: formattedData };
+};
+
 module.exports = {
   getAdminsWithPagination,
   getAdmin,
   getAllUsers,
   getUser,
+  getNewUsers,
   getUserActivity,
 };

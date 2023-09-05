@@ -49,14 +49,37 @@ const formatAdminUser = (user) => {
   const businessCreatedAt = user.business.createdAt
     ? formatTimestamp(user.business.createdAt)
     : null;
-    
+
   user.createdAt = userCreatedAt;
   user.business.createdAt = businessCreatedAt;
   return user;
+};
+
+const formatNewUsers = (users) => {
+  const formattedData = users.reduce((acc, user) => {
+    const registrationDate = user.createdAt.toDateString();
+    const existingEntry = acc.find((entry) => entry.date === registrationDate);
+
+    const { id, username, email } = user;
+    // create new entry if none exists
+    if (!existingEntry) {
+      acc.push({
+        date: registrationDate,
+        users: [{ id, username, email }],
+      });
+    } else {
+      existingEntry.users.push({ id, username, email });
+    }
+
+    return acc;
+  }, []);
+
+  return formattedData;
 };
 
 module.exports = {
   formatAllUsers,
   formatUserActivity,
   formatAdminUser,
+  formatNewUsers,
 };
