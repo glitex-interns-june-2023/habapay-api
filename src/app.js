@@ -41,13 +41,13 @@ app.use("/api/v1/analytics", analyticsRouter);
 // error handler
 app.use(errorHandler);
 
-// sequelize
-//   .sync({ alter: true })
-//   .then(() => {
-//     console.log("Models synced successfully");
-//   })
-//   .catch((err) => {
-//     console.log("Error syncing models", err);
-//   });
+sequelize
+  .sync({ alter: true })
+  .then(() => {
+    console.log("Models synced successfully");
+  })
+  .catch((err) => {
+    console.log("Error syncing models", err);
+  });
 
 module.exports = app;
