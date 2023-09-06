@@ -47,6 +47,7 @@ Below are the available endpoints and their usage.
   - [List Users: /api/v1/admins/users](#list-users-admin)
   - [List New Users: /api/v1/admins/users/new](#list-new-users)
   - [List User Info: /api/v1/admins/users/{id}](#list-user-info)
+  - [Users Recent Activity: /api/v1/admins/users/activity](#users-recent-activity)
   - [User Recent Activity: /api/v1/admins/users/{id}/activity](#user-recent-activity)
   - [Suspend User Account: /api/v1/admins/users/{id}/suspend](#suspend-user-account)
   - [UnSuspend User Account: /api/v1/admins/users/{id}/unsuspend](#unsuspend-user-account)
@@ -1388,6 +1389,66 @@ Get recent user activity
       }
     ]
   }
+}
+```
+
+### Users Recent Activity
+
+**Endpoint** `GET /api/v1/admins/users/activity`
+
+#### Description
+
+Get recent activity overview for all users
+
+#### Query Parameters
+
+- `page` (integer, optional): start page e.g. `?page=1`
+- `per_page`(integer, optional): number of records to display e.g. `&per_page=3`
+
+#### Success Sample Response
+
+```json
+{
+    "success": true,
+    "message": "Users Recent Activity",
+    "data": {
+        "page": 1,
+        "total": 9,
+        "per_page": 10,
+        "previous_page": null,
+        "next_page": null,
+        "last_page": 1,
+        "data": [
+            {
+                "id": 9,
+                "user_id": 3,
+                "message": "<b>Dev</b> sent Ksh 25 to </b>Test User</b>",
+                "type": "send",
+                "timestamp": "5 September 2023, 3:40 PM"
+            },
+            {
+                "id": 7,
+                "user_id": 3,
+                "message": "<b>Dev</b> sent Ksh 30 to </b>Test User</b>",
+                "type": "send",
+                "timestamp": "5 September 2023, 1:31 PM"
+            },
+            {
+                "id": 5,
+                "user_id": 3,
+                "message": "<b>Dev</b> sent Ksh 20.4 to </b>Test User</b>",
+                "type": "send",
+                "timestamp": "5 September 2023, 1:31 PM"
+            },
+            {
+                "id": 4,
+                "user_id": 3,
+                "message": "<b/>Dev</b> deposited Ksh 500 to wallet",
+                "type": "deposit",
+                "timestamp": "5 September 2023, 1:30 PM"
+            },
+        ]
+    }
 }
 ```
 
