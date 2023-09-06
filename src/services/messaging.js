@@ -157,9 +157,29 @@ const sendVerificationEmail = async (email, verificationToken) => {
   }
 };
 
+const sendEmail = async (mailOptions) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const info = await transporter.sendMail(mailOptions);
+    return info;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   sendOTP,
   verifyOTP,
   sendPin,
   sendVerificationEmail,
+  sendEmail,
 };

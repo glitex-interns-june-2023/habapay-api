@@ -150,10 +150,40 @@ const createTestUserAccount = async (req, res, next) => {
   });
 };
 
+const updatePassword = async (req, res, next) => {
+  const { email, password, token } = req.body;
+  try {
+    await authService.updatePassword(email, password, token);
+
+    return res.status(200).json({
+      success: true,
+      message: "Password updated successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    await authService.sendResetPasswordLink(email);
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset link sent successfully. Please check your email",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   login,
   register,
   pinLogin,
   updateLoginPin,
-  createTestUserAccount
+  createTestUserAccount,
+  updatePassword,
+  resetPassword,
 };

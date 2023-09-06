@@ -8,31 +8,39 @@ Below are the available endpoints and their usage.
 
 ## Table of Contents
 
-- [Signup and Signing with Google](#signup-and-signing-with-google)
-- [User Login](#user-login)
+- [Authentication](#authentication)
+
+  - [Signup and Signin with Google](#signup-and-signing-with-google)
+  - [User Login](#user-login)
+  - [Login with Pin](#login-with-pin)
+  - [Update Login Pin](#update-login-pin)
+  - [Reset Password](#reset-password)
+  - [Update Password](#update-password)
+
 - [Verifications](#verifications)
   - [Send OTP](#send-otp)
   - [Verify OTP](#verify-otp)
   - [Send PIN by Email](#send-pin-by-email)
   - [Verify PIN](#verify-pin)
   - [Send Email Verification Link](#send-email-verification-link)
-- [List All Admins](#list-all-admin-users)
-- [Get Single Admin Record](#get-single-admin)
-- [Check Wallet Balance](#check-wallet-balance)
-- [Confirm Recipient Details](#confirm-recipient-details)
-- [Send Money](#send-money)
-- [Withdraw Cash](#withdraw-cash)
-- [Deposit Cash](#deposit-cash)
-- [List all Transactions](#list-all-transactions)
-- [Single Transaction](#single-transaction)
-- [List User Transactions](#list-user-transactions)
-- [Update Login Pin](#update-login-pin)
-- [Login with Pin](#login-with-pin)
-- [List all Users](#list-all-users)
-- [Update Business Details](#update-business-details)
+- [Wallet](#wallet)
+  - [Check Wallet Balance](#check-wallet-balance)
+  - [Deposit Cash](#deposit-cash)
+  - [Send Money](#send-money)
+  - [Confirm Recipient Details](#confirm-recipient-details)
+  - [Withdraw Cash](#withdraw-cash)
+- [Transactions](#transactions)
+  - [List all Transactions](#list-all-transactions)
+  - [Single Transaction](#single-transaction)
+  - [List User Transactions](#list-user-transactions)
+- [Users](#users)
+  - [List all Users](#list-all-users)
+  - [Update User Business Details](#update-business-details)
 - [Admin](#admin)
 
   - [Register Admin: /api/v1/auth/register](#register-admin)
+  - [List All Admins](#list-all-admin-users)
+  - [Get Single Admin Record](#get-single-admin)
   - [Pending and Approved Transactions: /api/v1/admins/transactions](#pending-and-approved-transactions)
   - [Transaction Info: /api/v1/admins/transactions/{id}](#transaction-info)
   - [Approve a Transaction: /api/v1/admins/transactions/{id}/approve](#approve-a-transaction)
@@ -50,6 +58,8 @@ Below are the available endpoints and their usage.
   - [Overview (Recent Activity): /api/v1/analytics/activity](#analytics-recent-activity)
 
 ---
+
+## Authentication
 
 ### Signup and Signing with Google
 
@@ -248,7 +258,8 @@ Verify the OTP that was sent to user's phone
 
 #### Description
 
-Send verification PIN to users email to confirm identity
+Send verification PIN to users email to confirm identity.  
+Default PIN expiry time is `5 minutes`
 
 #### Request Body
 
@@ -658,6 +669,8 @@ Deposit funds into an account from M-Pesa
 }
 ```
 
+## Transactions
+
 ### List All Transactions
 
 **Endpoint** `GET /api/v1/transactions`
@@ -837,6 +850,59 @@ Create or update your login pin
 }
 ```
 
+### Reset Password
+
+**Endpoint**: `POST /api/v1/auth/reset-password`
+
+#### Description
+
+Send a reset password link to user's email
+
+#### Request Body
+
+```json
+{
+  "email": "user email"
+}
+```
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Password reset link sent successfully. Please check your email"
+}
+```
+
+### Update Password
+
+**Endpoint**: `PUT /api/v1/auth/password`
+
+#### Description
+
+Update login password. You must have sent a reset-password request and provided a valid reset password token.  
+Reset password token expiry time is `10 minutes` by default.
+
+#### Request Body
+
+```json
+{
+  "email": "user email",
+  "password": "string|new password",
+  "token": "string|reset password token"
+}
+```
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Password updated successfully"
+}
+```
+
 ### Login With PIN
 
 **Endpoint**: `POST /api/v1/auth/login/pin`
@@ -880,6 +946,8 @@ Login with PIN instead of password(If you have set a login PIN)
   }
 }
 ```
+
+## Users
 
 ### List All Users
 
@@ -1385,17 +1453,21 @@ Delete user account and all associated user data.
   "message": "User account deleted successfully"
 }
 ```
+
 ### Update User Account
 
 **Endpoint**: `PUT /api/v1/admins/users/{id}`
 
 #### Description
+
 Update user account information
 
 #### Route Params
 
 - `id` (integer, required):- User id to delete account for
+
 #### Request body
+
 [Same as the one provided here](#register-admin)
 
 #### Success Sample Response

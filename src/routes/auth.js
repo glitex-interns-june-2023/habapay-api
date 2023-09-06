@@ -11,6 +11,8 @@ const {
   pinLogin,
   updateLoginPin,
   createTestUserAccount,
+  updatePassword,
+  resetPassword,
 } = require("../controllers/authController");
 router.post(
   "/login",
@@ -56,6 +58,28 @@ router.put(
     validateInput,
   ],
   updateLoginPin
+);
+
+// reset password
+router.put(
+  "/password",
+  [
+    body("email").notEmpty().withMessage("Email is required"),
+    body("password").notEmpty().withMessage("Password is required"),
+    body("token").notEmpty().withMessage("Reset password token is required"),
+    validateInput,
+  ],
+  updatePassword
+);
+
+// send reset password link
+router.post(
+  "/reset-password",
+  [
+    body("email").notEmpty().withMessage("Email is required"),
+    validateInput,
+  ],
+  resetPassword
 );
 
 // testing route to create normal users from localhost

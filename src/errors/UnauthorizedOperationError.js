@@ -2,7 +2,7 @@ const CustomError = require("./CustomError");
 
 class UnauthorizedOperationError extends CustomError {
   constructor(operation = "") {
-    super((message = `Unauthorized operation: ${operation}`), 401);
+    super((`Unauthorized operation: ${operation}`), 401);
   }
 }
 
