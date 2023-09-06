@@ -1,11 +1,13 @@
 const { OAuth2Client } = require("google-auth-library");
-const { User } = require("../models");
+const { User, Verification } = require("../models");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const InvalidGoogleTokenError = require("../errors/InvalidGoogleTokenError");
 const InvalidLoginDetailsError = require("../errors/InvalidLoginDetailsError");
 const UserNotFoundError = require("../errors/UserNotFoundError");
+const UnauthorizedOperationError = require("../errors/UnauthorizedOperationError");
 const crypto = require("crypto");
+const { sendEmail } = require("../services/messaging");
 
 const verifyGoogleToken = async (token) => {
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -145,6 +147,80 @@ const generateUniqueToken = () => {
   return token;
 };
 
+const updatePassword = async (email, password, token) => {
+  const user = await User.findOne({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    throw new UserNotFoundError();
+  }
+
+  // check password verification token, and if expired
+  const verification = await Verification.findOne({
+    where: {
+      userId: user.id,
+      type: "password",
+    },
+  });
+
+  if(!verification){
+    throw new UnauthorizedOperationError("Reset Password. No reset password request found")
+  }
+  if(verification.token != token){
+    throw new UnauthorizedOperationError("Reset Password. Invalid reset password token")
+  }
+
+  const isExpired = new Date() > verification.expiryTime;
+  if(isExpired){
+    throw new UnauthorizedOperationError("Reset Password. Reset password token has expired")
+  }
+
+  user.password = hashPassword(password);
+  await user.save();
+  return true;
+};
+
+const sendResetPasswordLink = async (email) => {
+  const user = await User.findOne({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    throw new UserNotFoundError();
+  }
+
+  const token = generateUniqueToken();
+  const minutes = 10;
+  const now = new Date();
+  const expiryTime = new Date(now.getTime() + minutes * 60 * 1000);
+
+  await Verification.create({
+    userId: user.id,
+    token,
+    type: "password",
+    expiryTime,
+  });
+
+  // send email
+  const mailOptions = {
+    from: process.env.EMAIL_USERNAME,
+    to: user.email,
+    subject: "Reset your password on HabaPay",
+    text: `You are receiving this email because you (or someone else) have requested to reset your password on HabaPay.\n\n
+    Please click on the following link, or paste this into your browser to complete the process:\n\n
+    ${process.env.RESET_PASSWORD_CLIENT_URL}?token=${token}\n\n
+    If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+  };
+
+  await sendEmail(mailOptions);
+  return true;
+};
+
 module.exports = {
   verifyGoogleToken,
   checkLogin,
@@ -155,4 +231,6 @@ module.exports = {
   createOrUpdateLoginPin,
   generateUniquePin,
   generateUniqueToken,
+  sendResetPasswordLink,
+  updatePassword,
 };
