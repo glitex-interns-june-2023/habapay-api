@@ -120,6 +120,25 @@ const getUserActivity = async (req, res, next) => {
   }
 };
 
+const getUsersActivity = async (req, res, next) => {
+  const { page = 1, perPage = 10, type } = req.query;
+  try {
+    const activity = await adminService.getUsersActivity(
+      type,
+      page,
+      perPage
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Users Recent Activity",
+      data: activity,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getNewUsers = async (req, res, next) => {
   const { page = 1, perPage = 10 } = req.query;
   try {
@@ -195,6 +214,7 @@ module.exports = {
   getAllUsers,
   getUser,
   getUserActivity,
+  getUsersActivity,
   getNewUsers,
   suspendUser,
   unSuspendUser,

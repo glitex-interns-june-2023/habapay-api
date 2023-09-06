@@ -143,6 +143,39 @@ const getUserActivity = async (userId, type, page, perPage) => {
   return { ...paginationInfo, data: formattedData };
 };
 
+const getUsersActivity = async (type, page, perPage) => {
+  page = parseInt(page);
+  perPage = parseInt(perPage);
+  const offset = (page - 1) * perPage;
+
+  const queryOptions = {
+    offset,
+    limit: perPage,
+    attributes: ["id", "message", "type", "createdAt"],
+    include: {
+      model: User,
+      as: "user",
+      attributes: [["id", "userId"]],
+    },
+    order: [["createdAt", "DESC"]],
+    raw: true,
+  };
+
+  if (type) {
+    queryOptions.where.type = type;
+  }
+
+  const activity = await Log.findAndCountAll(queryOptions);
+
+  const { data, ...paginationInfo } = paginator(activity, page, perPage);
+
+  const formattedData = formatUserActivity(data);
+
+  return { ...paginationInfo, data: formattedData };
+};
+
+
+
 const getNewUsers = async (page, perPage) => {
   page = parseInt(page);
   perPage = parseInt(perPage);
@@ -211,6 +244,7 @@ module.exports = {
   getUser,
   getNewUsers,
   getUserActivity,
+  getUsersActivity,
   suspendUser,
   unSuspendUser,
   deleteUser,

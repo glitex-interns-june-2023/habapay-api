@@ -9,6 +9,7 @@ const {
   approveTransaction,
   getAllUsers,
   getUserActivity,
+  getUsersActivity,
   getUser,
   getNewUsers,
   suspendUser,
@@ -24,6 +25,7 @@ router.get("/transactions/:transactionId", getTransaction);
 router.post("/transactions/:transactionId/approve", approveTransaction);
 router.get("/users", getAllUsers);
 router.get("/users/new", getNewUsers);
+router.get("/users/activity", getUsersActivity)
 router.get("/users/:userId", getUser);
 router.put("/users/:userId", updateUser);
 router.delete("/users/:userId", deleteUser);
