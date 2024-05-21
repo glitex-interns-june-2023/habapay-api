@@ -1,5 +1,5 @@
 const UserNotFoundError = require("../errors/UserNotFoundError");
-const messageService = require("../services/messaging");
+const messageService = require("../services/messagingService");
 const userService = require("../services/user");
 const authService = require("../services/auth");
 const verificationService = require("../services/verificationService");

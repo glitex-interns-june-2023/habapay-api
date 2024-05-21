@@ -1,10 +1,10 @@
 const axios = require("axios");
 const { getTimestamp } = require("../utils");
-const { generateMpesaAccessToken } = require("../services/auth");
+const { generateMpesaAccessToken } = require("./authService");
 
 const sendStkPush = async (phone, amount) => {
   phone = `254${phone.substring(phone.length - 9)}`;
-  const url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
+  const url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
   const accessToken = await generateMpesaAccessToken();
   const auth = `Bearer ${accessToken}`;
   const timestamp = getTimestamp();

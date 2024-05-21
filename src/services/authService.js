@@ -7,7 +7,7 @@ const InvalidLoginDetailsError = require("../errors/InvalidLoginDetailsError");
 const UserNotFoundError = require("../errors/UserNotFoundError");
 const UnauthorizedOperationError = require("../errors/UnauthorizedOperationError");
 const crypto = require("crypto");
-const { sendEmail } = require("../services/messaging");
+const { sendEmail } = require("./messagingService");
 
 const verifyGoogleToken = async (token) => {
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);

@@ -10,7 +10,7 @@ const {
   formatSentUserTransactions,
   formatReceivedUserTransactions,
   formatAdminTransactions,
-} = require("../services/transactionsFormatter");
+} = require("./transactionsFormatterService");
 
 const createTransaction = (senderWallet, receiverWallet, amount, type) => {
   return {

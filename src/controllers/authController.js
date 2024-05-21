@@ -1,5 +1,5 @@
-const authService = require("../services/auth");
-const userService = require("../services/user");
+const authService = require("../services/authService");
+const userService = require("../services/userService");
 const ConflictError = require("../errors/ConflictError");
 
 const {

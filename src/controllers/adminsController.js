@@ -1,6 +1,6 @@
-const adminService = require("../services/admins");
+const adminService = require("../services/adminService");
 const transactionService = require("../services/transactionService");
-const userService = require("../services/user");
+const userService = require("../services/userService");
 
 const getAdminsWithPagination = async (req, res, next) => {
   const { page = 1, perPage = 10 } = req.query;
