@@ -15,8 +15,9 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER
       },
-      loginType: {
-        type: Sequelize.ENUM
+      type: {
+        type: Sequelize.ENUM,
+        values: ["pin", "email","password"],
       },
       token: {
         type: Sequelize.STRING
