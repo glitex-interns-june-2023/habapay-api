@@ -15,6 +15,9 @@ app.use(snakeCaseFormatter);
 app.get("/", (req, res, next) => {
   res.send("Welcome to Habapay API v1.0.0");
 });
+app.get("/test", (req, res, next) => {
+  res.send("It Works!");
+});
 
 // import routes
 const auth = require("./routes/auth");
