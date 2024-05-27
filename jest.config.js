@@ -1,3 +1,4 @@
 module.exports = {
-verbose: true,
-}
+  verbose: true,
+  modulePathIgnorePatterns: ['<rootDir>/db/'],
+};
