@@ -14,12 +14,13 @@ const sendOTP = async (req, res, next) => {
       throw error;
     }
 
-    // await messageService.sendOTP(phoneNumber);
+    const otpResponse = await messageService.sendOTP(phoneNumber);
+    
     await userService.updatePhoneNumber(foundUser.id, phoneNumber);
 
     res.status(200).json({
       success: true,
-      message: "OTP sent successfully",
+      message: "OTP sent successfully"
     });
   } catch (error) {
     next(error);
@@ -29,17 +30,11 @@ const sendOTP = async (req, res, next) => {
 const verifyOTP = async (req, res, next) => {
   const { phoneNumber, otp } = req.body;
   try {
-    const foundUser = await userService.findByPhone(phoneNumber);
+    const user = await userService.findByPhone(phoneNumber);
 
-    if (!foundUser) {
-      let error = new Error("No user with this phone number was found");
-      error.statusCode = 404;
-      throw error;
-    }
+    await verificationService.verifyOTP(user.id, otp);
 
-    // await messageService.verifyOTP(phoneNumber, otp);
-
-    await userService.setPhoneVerified(foundUser.id);
+    await userService.setPhoneVerified(user.id);
 
     res.status(200).json({
       success: true,

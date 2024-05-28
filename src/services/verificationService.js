@@ -1,5 +1,8 @@
+const { TokenExpiredError } = require("jsonwebtoken");
 const InvalidLoginDetailsError = require("../errors/InvalidLoginDetailsError");
+const InvalidTokenError = require("../errors/InvalidTokenError");
 const { User, Verification } = require("../models");
+const userService = require("./userService");
 
 const verifyPin = async (userId, pin) => {
   const verification = await Verification.findOne({
@@ -73,6 +76,56 @@ const savePin = async (userId, pin) => {
   return verification;
 };
 
+const saveOtp = async (phoneNumber, otp) => {
+  const { id } = await userService.findByPhone(phoneNumber);
+
+  const minutes = 5;
+  const now = new Date();
+  const expiryTime = new Date(now.getTime() + minutes * 60 * 1000);
+
+  const verification = await Verification.create({
+    userId: id,
+    token: otp,
+    type: "otp",
+    expiryTime,
+  });
+
+  return verification;
+};
+
+const verifyOTP = async (userId, otp) => {
+  const verification = await Verification.findOne({
+    where: {
+      userId,
+      type: "otp",
+      token: otp,
+    },
+  });
+
+  // check if token is valid
+  if (!verification) {
+    throw new InvalidTokenError("Invalid OTP. Please check and try again");
+  }
+
+  // check if token has expired
+  const isExpired = new Date() > verification.expiryTime;
+
+  if (isExpired) {
+    await verification.destroy();
+    throw new TokenExpiredError();
+  }
+
+  // destroy all otps for user
+  await Verification.destroy({
+    where: {
+      userId,
+      type: "otp",
+    },
+  });
+
+  return true;
+};
+
 const saveEmailVerificationToken = async (userId, token) => {
   const minutes = 5;
   const now = new Date();
@@ -84,6 +137,7 @@ const saveEmailVerificationToken = async (userId, token) => {
     type: "email",
     expiryTime,
   });
+
   return verification;
 };
 
@@ -91,5 +145,7 @@ module.exports = {
   verifyPin,
   verifyEmailVerificationToken,
   savePin,
+  saveOtp,
+  verifyOTP,
   saveEmailVerificationToken,
 };
