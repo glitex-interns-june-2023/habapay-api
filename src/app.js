@@ -13,7 +13,10 @@ app.use(snakeCaseFormatter);
 
 // api routes
 app.get("/", (req, res, next) => {
-  res.send("Welcome to habapay api");
+  res.send("Welcome to Habapay API v1.0.0");
+});
+app.get("/test", (req, res, next) => {
+  res.send("It Works!");
 });
 
 // import routes

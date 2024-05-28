@@ -1,34 +1,43 @@
 const app = require("../src/app");
 const supertest = require("supertest");
-const request = supertest(app);
 const { sequelize, User, Wallet, Transaction } = require("../src/models");
-const { saveUser } = require("../src/services/user");
+
+const request = supertest(app);
 const {
   generateUsers,
   generateWallets,
   generateTransactions,
 } = require("../src/utils/databaseSeeders");
 
-const users = generateUsers(50);
-const wallets = generateWallets(50);
-const transactions = generateTransactions(200);
-
+let transaction;
+// Before running tests, sync the database
 beforeAll(async () => {
+  console.log("beforeall")
   await sequelize.sync({ force: true });
 });
 
+// After running tests, close the connection
 afterAll(async () => {
-  await sequelize.close();
+  console.log("afterall")
+  // await sequelize.close();
+});
+
+beforeEach(async () => {
+  console.log("beforeeach")
+  // start a transaction
+  transaction = await sequelize.transaction();
+});
+
+
+afterEach(async () => {
+  console.log("aftereach")
+  // rollback the transaction
+  await transaction.rollback();
 });
 
 describe("GET /api/v1/admins", () => {
   beforeEach(async () => {
-    // run database seeders
-    await User.bulkCreate(users);
-  });
-
-  afterEach(async () => {
-    await sequelize.sync({ force: true });
+    await User.bulkCreate(generateUsers(50), { transaction });
   });
 
   it("should return all admins", async () => {
@@ -39,7 +48,7 @@ describe("GET /api/v1/admins", () => {
   });
 
   it("should return 404 if no admin is found", async () => {
-    await User.destroy({ where: { id: 2 } });
+    await User.destroy({ where: { id: 2 }, transaction });
     const response = await request.get("/api/v1/admins/2");
     expect(response.status).toBe(404);
     expect(response.body.success).toBe(false);
@@ -54,14 +63,9 @@ describe("GET /api/v1/admins", () => {
 
 describe("GET /api/v1/admins/transactions", () => {
   beforeEach(async () => {
-    // run database seeders
-    await User.bulkCreate(users);
-    await Wallet.bulkCreate(wallets);
-    await Transaction.bulkCreate(transactions);
-  });
-
-  afterEach(async () => {
-    await sequelize.sync({ force: true });
+    await User.bulkCreate(generateUsers(50), { transaction });
+    await Wallet.bulkCreate(generateWallets(50), { transaction });
+    await Transaction.bulkCreate(generateTransactions(200), { transaction });
   });
 
   it("should return all transactions with correct structure", async () => {
@@ -111,14 +115,11 @@ describe("GET /api/v1/admins/transactions", () => {
 
 describe("POST /api/v1/admins/transactions/:transactionId/approve", () => {
   beforeEach(async () => {
-    await User.bulkCreate(users);
-    await Wallet.bulkCreate(wallets);
-    await Transaction.bulkCreate(transactions);
+    await User.bulkCreate(generateUsers(50), { transaction });
+    await Wallet.bulkCreate(generateWallets(50), { transaction });
+    await Transaction.bulkCreate(generateTransactions(200), { transaction });
   });
-  afterEach(async () => {
-    await sequelize.sync({ force: true });
-  });
-
+ 
   it("should return 404 if not transaction matching the id is found", async () => {
     const response = await request.post(
       `/api/v1/admins/transactions/${234434324}/approve`
@@ -187,12 +188,10 @@ describe("POST /api/v1/auth/register", () => {
 
 describe("GET /api/v1/admins/users", () => {
   beforeEach(async () => {
-    await User.bulkCreate(users);
-    await Wallet.bulkCreate(wallets);
+    await User.bulkCreate(generateUsers(50), { transaction });
+    await Wallet.bulkCreate(generateWallets(50), { transaction });
   });
-  afterEach(async () => {
-    await sequelize.sync({ force: true });
-  });
+ 
 
   it("should return all users with pagination", async () => {
     const response = await request.get("/api/v1/admins/users");
@@ -213,18 +212,14 @@ describe("GET /api/v1/admins/users", () => {
 
 describe("Logging User Activity", () => {
   beforeEach(async () => {
-    await sequelize.sync({ force: true });
+    await User.bulkCreate(generateUsers(2), { transaction });
   });
 
-  it("should log that a user has created account", async () => {
-    // create test data
-    const users = generateUsers(2);
 
-    await saveUser(users[0]);
+  it("should log that a user has created account", async () => {
     const response = await request.get("/api/v1/admins/users/1/activity");
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
-    // test response structure
     const data = response.body.data.data;
 
     expect(data[0]).toHaveProperty("id");
@@ -247,10 +242,6 @@ describe("Suspend and Unsuspend User accounts", () => {
     await request.post("/api/v1/auth/register/bypass").send(user);
   });
 
-  afterEach(async () => {
-    await sequelize.sync({ force: true });
-  });
-
   it("should suspend a user account", async () => {
     const response = await request.post("/api/v1/admins/users/1/suspend");
     expect(response.status).toBe(200);
@@ -259,7 +250,7 @@ describe("Suspend and Unsuspend User accounts", () => {
     expect(user.isActive).toBe(false);
   });
 
-  it("should unsuspend a suspended accont", async () => {
+  it("should unsuspend a suspended account", async () => {
     await request.post("/api/v1/admins/users/1/suspend");
     let user = await User.findByPk(1);
     expect(user.isActive).toBe(false);
@@ -282,10 +273,6 @@ describe.only("Deleting User account", () => {
     };
 
     await request.post("/api/v1/auth/register/bypass").send(user);
-  });
-
-  afterEach(async () => {
-    await sequelize.sync({ force: true });
   });
 
   it("should delete a user account", async () => {
