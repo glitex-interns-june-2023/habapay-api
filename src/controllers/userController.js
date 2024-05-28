@@ -1,4 +1,4 @@
-const userService = require("../services/user");
+const userService = require("../services/userService");
 const getUsers = async (req, res, next) => {
   try {
     const { page = 1, perPage = 10 } = req.query;

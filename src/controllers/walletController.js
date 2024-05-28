@@ -1,5 +1,5 @@
 const walletService = require("../services/walletService");
-const userService = require("../services/user");
+const userService = require("../services/userService");
 const UserNotFoundError = require("../errors/UserNotFoundError");
 const { formatTimestamp } = require("../utils");
 const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");

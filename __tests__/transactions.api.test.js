@@ -8,23 +8,25 @@ const {
   generateTransactions,
 } = require("../src/utils/databaseSeeders");
 
-const userData = generateUsers(20);
-const walletData = generateWallets(20);
-const transactions = generateTransactions(200);
+let userData, walletData, transactions;
 
 beforeAll(async () => {
   await sequelize.sync({ force: true });
-});
+}, 30000);
 
 beforeEach(async () => {
+  userData = generateUsers(20);
+  walletData = generateWallets(20);
+  transactions = generateTransactions(200);
+
   await User.bulkCreate(userData);
   await Wallet.bulkCreate(walletData);
   await Transaction.bulkCreate(transactions);
-});
+}, 30000);
 
 afterEach(async () => {
-  await sequelize.sync({ force: true });
-});
+  await sequelize.sync({ alter: true });
+}, 30000);
 
 afterAll(async () => {
   await sequelize.close();
@@ -65,33 +67,38 @@ describe("GET /api/v1/transactions", () => {
   });
 });
 
-describe("GET /api/v1/transactions/:id", () => {
-  it("Should return 404 if not transaction with the given transaction id was found", async () => {
-    const response = await request.get("/api/v1/transactions/30001");
+describe.only("GET /api/v1/transactions/:id", () => {
+  it("Should return 404 if no transaction with the given transaction id was found", async () => {
+    const response = await request.get(
+      `/api/v1/transactions/${transactions.length + 1}`
+    );
     expect(response.status).toBe(404);
     expect(response.body.success).toBe(false);
-    expect(response.body).toHaveProperty("message");
   });
 
-  it("should return the transaction matching the transaction id if found ", async () => {
-    const response = await request.get("/api/v1/transactions/12");
+  it("should return the transaction matching the transaction id", async () => {
+    const transactionId = 1;
+    const response = await request.get(
+      `/api/v1/transactions/${transactionId}`
+    );
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.data).toBeDefined();
+    expect(response.body.data.transaction_id).toBe(transactionId);
   });
 });
 
-describe("GET /api/v1/user/:id/transactions", () => {
+describe("GET /api/v1/users/:id/transactions", () => {
   it("Should return 404 if no user with the given id is found", async () => {
-    const userId = 1236;
+    const userId = userData[0].id;
     const response = await request.get(`/api/v1/users/${userId}/transactions`);
     expect(response.status).toBe(404);
     expect(response.body.success).toBe(false);
-    expect(response.body.message).toBeDefined();
+    expect(response.body.message).toBe("User not found");
   });
 
   it("Should get user transactions", async () => {
-    const userId = 2;
+    const userId = userData[0].id;
     const response = await request.get(`/api/v1/users/${userId}/transactions`);
     expect(response.status).toBe(200);
     expect(response.body.data).toBeDefined();
@@ -100,7 +107,7 @@ describe("GET /api/v1/user/:id/transactions", () => {
   });
 
   it("should allow pagination of response data", async () => {
-    const userId = 2;
+    const userId = userData[0].id;
     const response = await request
       .get(`/api/v1/users/${userId}/transactions`)
       .query({
@@ -114,7 +121,7 @@ describe("GET /api/v1/user/:id/transactions", () => {
   });
 
   it("should also filter results based on transaction type (ie. ?type=sent,received,withdraw or deposit)", async () => {
-    const userId = 2;
+    const userId = userData[0].id;
     let transactions;
 
     let response = await request

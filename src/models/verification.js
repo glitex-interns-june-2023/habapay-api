@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       type: {
         type: DataTypes.ENUM,
-        values: ["pin", "email","password"],
+        values: ["otp", "pin", "email", "password"],
         allowNull: false,
       },
       token: {

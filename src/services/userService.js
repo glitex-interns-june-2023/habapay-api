@@ -1,9 +1,9 @@
 const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");
 const PhoneNotVerifiedError = require("../errors/PhoneNotVerifiedError");
 const { User, Business } = require("../models");
-const { hashPassword } = require("./auth");
+const { hashPassword } = require("./authService");
 const paginator = require("../middlewares/paginator");
-const { createAccountCreationLog } = require("../services/loggingService");
+const { createAccountCreationLog } = require("./loggingService");
 
 const findByGoogleId = async (googleId) => {
   const user = await User.findOne({
@@ -35,7 +35,8 @@ const findByPhone = async (phone) => {
       phone,
     },
   });
-  if (!user) return null;
+  
+  if (!user) throw new PhoneNotRegisteredError(phone);
 
   return user;
 };

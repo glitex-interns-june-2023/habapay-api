@@ -1,6 +1,6 @@
 const axios = require("axios");
 const { getTimestamp } = require("../utils");
-const { generateMpesaAccessToken } = require("../services/auth");
+const { generateMpesaAccessToken } = require("./authService");
 
 const sendStkPush = async (phone, amount) => {
   phone = `254${phone.substring(phone.length - 9)}`;

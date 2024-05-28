@@ -10,7 +10,7 @@ const {
   formatSentUserTransactions,
   formatReceivedUserTransactions,
   formatAdminTransactions,
-} = require("../services/transactionsFormatter");
+} = require("./transactionsFormatterService");
 
 const createTransaction = (senderWallet, receiverWallet, amount, type) => {
   return {
@@ -142,7 +142,7 @@ const getTransaction = async (transactionId) => {
   return response;
 };
 
-const getUserTransactions = async (userId, { page, perPage, type }) => {
+const getUserTransactions = async (userId, { page, perPage, type, startDate, endDate }) => {
   page = parseInt(page);
   perPage = parseInt(perPage);
   userId = parseInt(userId);
@@ -182,6 +182,20 @@ const getUserTransactions = async (userId, { page, perPage, type }) => {
     }
 
     queryOptions.where.type = type;
+  }
+
+  if (startDate && endDate) {
+    queryOptions.where.timestamp = {
+      [Op.between]: [new Date(startDate), new Date(endDate)],
+    };
+  } else if (startDate) {
+    queryOptions.where.timestamp = {
+      [Op.gte]: new Date(startDate),
+    };
+  } else if (endDate) {
+    queryOptions.where.timestamp = {
+      [Op.lte]: new Date(endDate),
+    };
   }
 
   const transactions = await Transaction.findAndCountAll(queryOptions);

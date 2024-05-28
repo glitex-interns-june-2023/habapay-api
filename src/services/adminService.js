@@ -5,7 +5,7 @@ const {
   formatUserActivity,
   formatAdminUser,
   formatNewUsers,
-} = require("../services/adminFormatter");
+} = require("./adminFormatterService");
 const UserNotFoundError = require("../errors/UserNotFoundError");
 
 const getAdminsWithPagination = async (page, perPage) => {

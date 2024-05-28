@@ -1,6 +1,6 @@
 const { Transaction, User, Analytic, Wallet, sequelize } = require("../models");
 const { Op } = require("sequelize");
-const { formatAnalytics } = require("../services/analyticsFormatter");
+const { formatAnalytics } = require("./analyticsFormatterService");
 
 const paginator = require("../middlewares/paginator");
 
