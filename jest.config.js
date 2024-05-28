@@ -1,3 +1,4 @@
 module.exports = {
-verbose: true,
-}
+  verbose: false,
+  testPathIgnorePatterns: ['/var/www/html/habapay-api/db/.*'],
+};

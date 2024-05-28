@@ -1,7 +1,7 @@
 const UserNotFoundError = require("../errors/UserNotFoundError");
 const messageService = require("../services/messagingService");
-const userService = require("../services/user");
-const authService = require("../services/auth");
+const userService = require("../services/userService");
+const authService = require("../services/authService");
 const verificationService = require("../services/verificationService");
 
 const sendOTP = async (req, res, next) => {
@@ -14,7 +14,7 @@ const sendOTP = async (req, res, next) => {
       throw error;
     }
 
-    await messageService.sendOTP(phoneNumber);
+    const response = await messageService.sendOTP(phoneNumber);
 
     await userService.updatePhoneNumber(foundUser.id, phoneNumber);
 
@@ -62,9 +62,8 @@ const sendPin = async (req, res, next) => {
 
     const pin = authService.generateUniquePin();
 
-    
     await messageService.sendPin(email, pin);
-    
+
     await verificationService.savePin(foundUser.id, pin);
 
     res.status(200).json({
@@ -108,11 +107,14 @@ const sendVerificationEmail = async (req, res, next) => {
     }
 
     const verificationToken = authService.generateUniqueToken();
-    
+
     await messageService.sendVerificationEmail(email, verificationToken);
-    
-    await verificationService.saveEmailVerificationToken(foundUser.id, verificationToken);
-    
+
+    await verificationService.saveEmailVerificationToken(
+      foundUser.id,
+      verificationToken
+    );
+
     res.status(200).json({
       success: true,
       message:

@@ -9,7 +9,7 @@ const {
   verifyPin,
   sendVerificationEmail,
   verifyEmailVerificationToken,
-} = require("../controllers/verificationController");
+} = require("../controllers/verificationController").default;
 
 // OTP vefification sent to phone number
 router.post(

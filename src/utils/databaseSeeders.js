@@ -1,4 +1,4 @@
-const { hashPassword } = require("../services/auth");
+const { hashPassword } = require("../services/authService");
 const faker = require("faker");
 const roles = ["superadmin", "admin", "user"];
 const transactionTypes = ["deposit", "withdraw", "sent"];

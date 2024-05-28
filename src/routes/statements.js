@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
-const { body, validateInput } = require("../middlewares/inputValidation");
+const { validateInput } = require("../middlewares/inputValidation");
 const { downloadStatement } = require("../controllers/statementController");
 
 router.post("/download", [
