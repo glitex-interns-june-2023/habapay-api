@@ -35,7 +35,8 @@ const findByPhone = async (phone) => {
       phone,
     },
   });
-  if (!user) return null;
+  
+  if (!user) throw new PhoneNotRegisteredError(phone);
 
   return user;
 };
