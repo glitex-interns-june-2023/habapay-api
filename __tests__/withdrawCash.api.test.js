@@ -100,5 +100,5 @@ describe("POST /api/v1/wallet/withdraw", () => {
 
     expect(initialBalance - amount).toBe(newBalance);
   });
-  
+
 });
