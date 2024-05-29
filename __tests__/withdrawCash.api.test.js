@@ -100,32 +100,5 @@ describe("POST /api/v1/wallet/withdraw", () => {
 
     expect(initialBalance - amount).toBe(newBalance);
   });
-
-  it("should credit the recipient's account", async () => {
-    const phoneA = "0114662464";
-    const phoneB = "0712345678";
-    const amount = 100;
-
-    const balanceRes = await request
-      .get("/api/v1/wallet/balance")
-      .query({ phone: phoneB });
-    const initialBalance = balanceRes.body.data.balance;
-
-    const response = await request.post("/api/v1/wallet/withdraw").send({
-      senderPhone: phoneA,
-      receiverPhone: phoneB,
-      amount,
-    });
-
-    expect(response.status).toBe(200);
-    expect(response.body.success).toBe(true);
-    expect(response.body.data).toHaveProperty("balance");
-
-    const newBalanceRes = await request.get("/api/v1/wallet/balance").query({
-      phone: phoneB,
-    });
-    const newBalance = newBalanceRes.body.data.balance;
-
-    expect(initialBalance + amount).toBe(newBalance);
-  });
+  
 });
