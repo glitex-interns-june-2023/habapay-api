@@ -71,9 +71,11 @@ const verifyCanWithdraw = (wallet, amount) => {
 const withdrawMoney = async (senderId, receiverId, amount) => {
   const senderWallet = await getWallet(senderId);
   const receiverWallet = await getWallet(receiverId);
+
   verifyCanWithdraw(senderWallet, amount);
 
-  await transferFunds(senderWallet, receiverWallet, amount);
+  await updateWalletBalance(senderWallet, senderWallet.balance - amount);
+
   const transaction = await transactionService.createWithdrawTransaction(
     senderWallet,
     receiverWallet,
@@ -85,12 +87,19 @@ const withdrawMoney = async (senderId, receiverId, amount) => {
   return transaction;
 };
 
+// transfer funds from one account to the next
 const transferFunds = async (senderWallet, receiverWallet, amount) => {
   senderWallet.balance -= amount;
   await senderWallet.save();
 
   receiverWallet.balance += amount;
   await receiverWallet.save();
+};
+
+// update the balance of a user wallet
+const updateWalletBalance = async (wallet, amount) => {
+  wallet.balance = amount;
+  await wallet.save();
 };
 
 const depositMoney = async (senderId, mpesaNumber, amount) => {
