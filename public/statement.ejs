@@ -33,30 +33,44 @@
         <h1 class="mt-3 text-center text-2xl font-bold text-primary">
           HABAPAY STATEMENT
         </h1>
+        <%
+          const formatCurrency = (amount) => {
+            return amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          };
+          const { transactionType } = data;
+          const { customerName, phone, email, date, statementPeriod } = data.customerDetails;
+          const { sent, received, deposit, withdrawal } = data.summary;
+          const totalReceived = received + deposit;
+          const totalSent = sent + withdrawal;
+        %>
 
         <section class="mt-5">
           <table>
             <tr>
               <td class="pr-2 text-primary font-bold">Customer Name:</td>
-              <td>Faith Ouma</td>
+              <td><%= customerName %></td>
             </tr>
             <tr>
               <td class="pr-5 text-primary font-bold">Mobile Number:</td>
-              <td>0758826552</td>
+              <td><%= phone %></td>
             </tr>
             <tr>
               <td class="pr-5 text-primary font-bold">Email Address:</td>
               <td>
-                <a href="mailto:faith@gmail.com">faith@gmail.com</a>
+                <a href="mailto:faith@gmail.com"><%= email %></a>
               </td>
             </tr>
             <tr>
               <td class="pr-5 text-primary font-bold">Date of Statement:</td>
-              <td>29 Oct 2024</td>
+              <td><%= date %></td>
             </tr>
             <tr>
               <td class="pr-5 text-primary font-bold">Statement Period:</td>
-              <td>01 Jan 2024 - 29 Mar 2024</td>
+              <td><%= statementPeriod %></td>
+            </tr>
+            <tr>
+              <td class="pr-5 text-primary font-bold">Transaction Type:</td>
+              <td><%= transactionType.charAt(0).toUpperCase()+transactionType.slice(1) %></td>
             </tr>
           </table>
         </section>
@@ -79,31 +93,32 @@
             <tbody class="text-sm">
               <tr>
                 <td>SEND MONEY</td>
-                <td>Ksh. 100,000</td>
-                <td>Ksh. 0</td>
+                <td>0.00</td>
+                <td><%= formatCurrency(sent) %></td>
               </tr>
               <tr>
                 <td>RECEIVED MONEY</td>
-                <td>Ksh. 0</td>
-                <td>Ksh. 20,000</td>
+                <td><%= formatCurrency(received) %></td>
+                <td>0.00</td>
               </tr>
 
               <tr>
                 <td>DEPOSITS</td>
-                <td>Ksh. 0</td>
-                <td>Ksh. 0</td>
+                <td><%= formatCurrency(deposit) %></td>
+                <td>0.00</td>
               </tr>
 
               <tr>
                 <td>WITHDRAWALS</td>
-                <td>Ksh. 0</td>
-                <td>Ksh. 0</td>
+                <td>0.00</td>
+                <td><%= formatCurrency(withdrawal) %></td>
               </tr>
 
-              <tr class="text-md">
+                <tr class="text-md"></tr>
                 <td class="font-bold">TOTAL</td>
-                <td class="font-bold">Ksh. 0</td>
-                <td class="font-bold">Ksh. 0</td>
+                <td class="font-bold">Ksh. <%= formatCurrency(totalReceived) %></td>
+                <td class="font-bold">Ksh. <%= formatCurrency(totalSent) %></td>
+                </tr>
               </tr>
             </tbody>
           </table>
@@ -132,38 +147,16 @@
               </tr>
             </thead>
             <tbody>
+              <% data.transactions.forEach((transaction) => { %>
               <tr>
-                <td>29 Oct 2024</td>
-                <td>SEND</td>
-                <td>Payment to John Doe</td>
-                <td>Completed</td>
-                <td>Ksh. 100,000</td>
-                <td>Ksh. 0</td>
+                <td><%= transaction.date %></td>
+                <td><%= transaction.type.toUpperCase() %></td>
+                <td><%= transaction.description %></td>
+                <td><%= transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1) %></td>
+                <td><%= formatCurrency(transaction.amount) %></td>
+                <td><%= formatCurrency(transaction.newBalance) %></td>
               </tr>
-              <tr>
-                <td>29 Oct 2024</td>
-                <td>RECEIVE</td>
-                <td>Payment from Jane Doe</td>
-                <td>Completed</td>
-                <td>Ksh. 20,000</td>
-                <td>Ksh. 20,000</td>
-              </tr>
-              <tr>
-                <td>29 Oct 2024</td>
-                <td>DEPOSIT</td>
-                <td>Payment to John Doe</td>
-                <td>Completed</td>
-                <td>Ksh. 100,000</td>
-                <td>Ksh. 0</td>
-              </tr>
-              <tr>
-                <td>29 Oct 2024</td>
-                <td>WITHDRAW</td>
-                <td>Payment from Jane Doe</td>
-                <td>Completed</td>
-                <td>Ksh. 20,000</td>
-                <td>Ksh. 20,000</td>
-              </tr>
+              <% }); %>
             </tbody>
           </table>
         </section>
@@ -184,7 +177,7 @@
             >
           </div>
           <img
-            src="https://www.glitexsolutions.co.ke/images/general/bg-logo.png"
+            src="<%= logo %>"
             style="width: 50px; height: 50px"
             class="object-contain"
             alt="Company Logo"
