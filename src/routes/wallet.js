@@ -3,7 +3,6 @@ const router = express.Router();
 const { body, query } = require("express-validator");
 const {
   validateInput,
-  validateInputs,
   validateQueryParam,
 } = require("../middlewares/inputValidation");
 
@@ -72,7 +71,7 @@ router.post(
       .isNumeric()
       .withMessage("Amount should be numeric")
       .toFloat(),
-    validateInputs,
+    validateInput,
   ],
   sendMoney
 );
@@ -132,7 +131,7 @@ router.post(
       .isNumeric()
       .withMessage("Amount should be numeric")
       .toFloat(),
-    validateInputs,
+    validateInput,
   ],
   withdrawMoney
 );
