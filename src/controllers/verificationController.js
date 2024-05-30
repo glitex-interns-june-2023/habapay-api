@@ -14,13 +14,13 @@ const sendOTP = async (req, res, next) => {
       throw error;
     }
 
-    const otpResponse = await messageService.sendOTP(phoneNumber);
-    
+    const otpResponse =  await messageService.sendOTP(phoneNumber);
+
     await userService.updatePhoneNumber(foundUser.id, phoneNumber);
 
     res.status(200).json({
       success: true,
-      message: "OTP sent successfully"
+      message: "OTP sent successfully",
     });
   } catch (error) {
     next(error);

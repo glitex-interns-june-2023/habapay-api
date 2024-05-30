@@ -22,17 +22,24 @@ const sendOTP = async (phoneNumber) => {
   // Use the service
   let options = {
     to: formattedPhoneNumber,
-    message: `Your HabaPay Verification OTP is:  ${otp}`,
+    message: `Your HabaPay Verification OTP is: ${otp}`,
+    from: "Glitex",
   };
 
   // Send message and capture the response or error
   try {
-    // const response = await sms.send(options);
+    console.log(process.env.AFRICASTALKING_USERNAME, process.env.AFRICASTALKING_API_KEY);
+    const response = await sms.send(options);
     // save OTP to database
     await verificationService.saveOtp(phoneNumber, otp);
+    // check if response is successful
+    const isSuccessful = response.SMSMessageData.Recipients.length > 0;
     
-    // return response;
-    return true;
+    if (!isSuccessful) {
+      throw new Error(message);
+    }
+
+    return response;
   } catch (error) {
     console.log(error);
     throw error;

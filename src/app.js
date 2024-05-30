@@ -54,5 +54,4 @@ sequelize
   .catch((err) => {
     console.log("Error syncing models", err);
   });
-
 module.exports = app;
