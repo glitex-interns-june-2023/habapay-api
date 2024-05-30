@@ -223,10 +223,48 @@ const formatAdminTransactions = (transactions) => {
   return formattedData;
 };
 
+const formatCurrency = (amount) => {
+  const formatted = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+  return formatted;
+}
+const generateSendMoneyDescription = (transaction) => {
+  return `Sent ${transaction.currency}. ${formatCurrency(transaction.amount)} to ${transaction["receiver.firstName"]} ${transaction["receiver.lastName"]}`;
+}
+const generateReceivedMoneyDescription = (transaction) => {
+  return `Received ${transaction.currency}. ${formatCurrency(transaction.amount)} from ${transaction["sender.firstName"]} ${transaction["sender.lastName"]}`;
+}
+const generateDepositMoneyDescription = (transaction) => {
+  return `Deposited ${transaction.currency}. ${formatCurrency(transaction.amount)}`;
+}
+
+const generateWithdrawMoneyDescription = (transaction) => {
+  return `Withdrew ${transaction.currency}. ${formatCurrency(transaction.amount)}`;
+}
+
+// generate transaction description
+const generateDescription = (transaction, userId) => {
+  const {type} = transaction;
+  // format transaction amount to currency
+  if(type == 'sent' && transaction.receiverId == userId) {
+    return generateReceivedMoneyDescription(transaction);
+  }
+  if(type == 'sent') {
+    return generateSendMoneyDescription(transaction);
+  }
+  if(type == 'withdraw') {
+    return generateWithdrawMoneyDescription(transaction);
+  }
+  if(type == 'deposit') {
+    return generateDepositMoneyDescription(transaction);
+  }
+  return 'Unknown transaction type';
+};
+
 module.exports = {
   formatSentUserTransactions,
   formatReceivedUserTransactions,
   formatAllTransactions,
   formatAllUserTransactions,
   formatAdminTransactions,
+  generateDescription,
 };

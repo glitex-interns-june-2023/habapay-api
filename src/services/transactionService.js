@@ -10,13 +10,29 @@ const {
   formatSentUserTransactions,
   formatReceivedUserTransactions,
   formatAdminTransactions,
+  generateDescription,
 } = require("./transactionsFormatterService");
 
+// base transaction creator function
 const createTransaction = (senderWallet, receiverWallet, amount, type) => {
+  let senderNewBal = senderWallet.balance;
+  let receiverNewBal = receiverWallet.balance;
+
+  if (type === "sent") {
+    senderNewBal -= amount;
+    receiverNewBal += amount;
+  } else if (type === "withdraw") {
+    senderNewBal -= amount;
+  } else if (type === "deposit") {
+    senderNewBal += amount;
+  }
+
   return {
     senderId: senderWallet.userId,
     receiverId: receiverWallet.userId,
     currency: senderWallet.currency,
+    senderNewBal,
+    receiverNewBal,
     amount,
     type,
     timestamp: new Date(),
@@ -142,7 +158,10 @@ const getTransaction = async (transactionId) => {
   return response;
 };
 
-const getUserTransactions = async (userId, { page, perPage, type, startDate, endDate }) => {
+const getUserTransactions = async (
+  userId,
+  { page, perPage, type, startDate, endDate }
+) => {
   page = parseInt(page);
   perPage = parseInt(perPage);
   userId = parseInt(userId);
@@ -212,6 +231,132 @@ const getUserTransactions = async (userId, { page, perPage, type, startDate, end
   const groupedTransactions = formatAllUserTransactions(data, user);
   const formattedData = { ...paginationInfo, data: groupedTransactions };
   return formattedData;
+};
+
+// get all transactions of a user for a ceratain type (To facilitate the generation of the pdf statement)
+const getAllUserTransactions = async (user, { type, startDate, endDate }) => {
+  const userId = user.id;
+
+  const queryOptions = {
+    where: {
+      [Op.or]: {
+        senderId: userId,
+        receiverId: userId,
+      },
+    },
+    order: [["timestamp", "DESC"]],
+    include: [
+      {
+        model: User,
+        as: "sender",
+        attributes: ["firstName", "lastName", "phone"],
+      },
+      {
+        model: User,
+        as: "receiver",
+        attributes: ["firstName", "lastName", "phone"],
+      },
+    ],
+    raw: true,
+  };
+
+  if (type && type !== "all") {
+    queryOptions.where.type = type;
+  }
+
+  if (startDate && endDate) {
+    queryOptions.where.timestamp = {
+      [Op.between]: [
+        new Date(startDate),
+        new Date(endDate).setUTCHours(23, 59, 59),
+      ],
+    };
+  } else if (startDate) {
+    queryOptions.where.timestamp = {
+      [Op.gte]: new Date(startDate),
+    };
+  } else if (endDate) {
+    queryOptions.where.timestamp = {
+      [Op.lte]: new Date(endDate).setUTCHours(23, 59, 59),
+    };
+  }
+
+  const transactions = await Transaction.findAll(queryOptions);
+
+  const options = { day: "2-digit", month: "short", year: "numeric" };
+
+  // calculate summary report of sent, received, deposited and withdrawals
+  const sendMoneyTotal = transactions.reduce((acc, transaction) => {
+    if (transaction.type === "sent") {
+      acc += transaction.amount;
+    }
+    return acc;
+  }, 0);
+
+  const receivedMoneyTotal = transactions.reduce((acc, transaction) => {
+    if (transaction.type === "sent" && transaction.receiverId === userId) {
+      acc += transaction.amount;
+    }
+    return acc;
+  }, 0);
+
+  const depositTotal = transactions.reduce((acc, transaction) => {
+    if (transaction.type === "deposit") {
+      acc += transaction.amount;
+    }
+    return acc;
+  }, 0);
+
+  const withdrawalTotal = transactions.reduce((acc, transaction) => {
+    if (transaction.type === "withdraw") {
+      acc += transaction.amount;
+    }
+    return acc;
+  }, 0);
+
+  const customerDetails = {
+    customerName: `${user.firstName} ${user.lastName}`,
+    phone: user.phone,
+    email: user.email,
+    date: new Date().toLocaleDateString("en-GB", options),
+    statementPeriod:
+      new Date(startDate).toLocaleDateString("en-GB", options) +
+      " - " +
+      new Date(endDate).toLocaleDateString("en-GB", options),
+  };
+
+  const summary = {
+    sent: sendMoneyTotal,
+    received: receivedMoneyTotal,
+    deposit: depositTotal,
+    withdrawal: withdrawalTotal,
+  };
+
+  const formattedTransactions = transactions.map((transaction) => ({
+    date: new Date(transaction.timestamp).toLocaleDateString("en-GB", {
+      ...options,
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+    type:
+      transaction.type === "sent" && transaction.receiverId === userId
+        ? "receive"
+        : transaction.type,
+    description: generateDescription(transaction, userId),
+    status: transaction.status,
+    amount: transaction.amount,
+    newBalance:
+      transaction.receiverId === userId
+        ? transaction.receiverNewBal
+        : transaction.senderNewBal,
+  }));
+  
+
+  return {
+    customerDetails,
+    summary,
+    transactions: formattedTransactions,
+  };
 };
 
 const getSentUserTransactions = async (userId, { page, perPage }) => {
@@ -324,6 +469,7 @@ module.exports = {
   getTransactions,
   getTransaction,
   getUserTransactions,
+  getAllUserTransactions,
   getSentUserTransactions,
   getReceivedUserTransactions,
   getAdminTransactions,

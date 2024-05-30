@@ -4,6 +4,7 @@ const { User, Business } = require("../models");
 const { hashPassword } = require("./authService");
 const paginator = require("../middlewares/paginator");
 const { createAccountCreationLog } = require("./loggingService");
+const UserNotFoundError = require("../errors/UserNotFoundError");
 
 const findByGoogleId = async (googleId) => {
   const user = await User.findOne({
@@ -24,7 +25,10 @@ const findByEmail = async (email) => {
       email: email,
     },
   });
-  if (!foundUser) return null;
+
+  if (!foundUser) {
+    throw new UserNotFoundError(`No user with email: ${email} was found`);
+  }
 
   return foundUser;
 };
@@ -35,7 +39,7 @@ const findByPhone = async (phone) => {
       phone,
     },
   });
-  
+
   if (!user) throw new PhoneNotRegisteredError(phone);
 
   return user;
