@@ -3,8 +3,6 @@ const os = require("os");
 const path = require("path");
 const ejs = require("ejs");
 const uuid = require("uuid");
-const { Transaction } = require("../models");
-const { Op } = require("sequelize");
 const puppeteer = require("puppeteer");
 
 // Precompile the EJS template and load the CSS outside of the generateStatement function
@@ -16,6 +14,12 @@ const css = fs.readFileSync(
   path.resolve(__dirname, "../../public/tailwind.css"),
   "utf8"
 );
+
+let logo = fs.readFileSync(
+  path.resolve(__dirname, "../../public/logo.png"),
+  "base64"
+);
+logo = `data:image/png;base64,${logo}`;
 
 // Start the Puppeteer browser outside of the generateStatement function
 let browser;
@@ -43,15 +47,16 @@ const resetTimeout = () => {
   timeoutId = setTimeout(closeBrowser, 2 * 60 * 1000); // 2 minutes
 };
 
+
+
 // get statements by a certain user id
-const generateStatement = async (transactions) => {
+const generateStatement = async (data) => {
   if (!browser) {
     await startBrowser();
   }
 
   resetTimeout();
-
-  const htmlContent = template({ transactions, css });
+  const htmlContent = template({ data, css, logo });
 
   await page.setContent(htmlContent, { waitUntil: "domcontentloaded" });
 
@@ -61,6 +66,8 @@ const generateStatement = async (transactions) => {
     printBackground: true,
     format: "A4",
   });
+
+  console.log("PDF generated:", pdfPath);
 
   return pdfPath;
 };
