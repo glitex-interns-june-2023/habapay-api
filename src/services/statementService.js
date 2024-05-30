@@ -66,13 +66,21 @@ const generateStatement = async (data) => {
     printBackground: true,
     format: "A4",
   });
-
-  console.log("PDF generated:", pdfPath);
-
+  
   return pdfPath;
 };
 
+// delete the pdf file after sending
+const deletePdf = (pdfPath) => {
+  fs.unlink(pdfPath, (err) => {
+    if (err) {
+      console.error(err);
+      throw err;
+    }
+  });
+}
+
 module.exports = {
   generateStatement,
-  closeBrowser,
+  deletePdf,
 };
