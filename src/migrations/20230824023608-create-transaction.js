@@ -21,6 +21,12 @@ module.exports = {
       amount: {
         type: Sequelize.FLOAT
       },
+      senderNewBal: {
+        type: Sequelize.FLOAT
+      },
+      receiverNewBal: {
+        type: Sequelize.FLOAT
+      },
       type: {
         type: Sequelize.STRING
       },

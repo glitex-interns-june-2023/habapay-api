@@ -52,6 +52,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 0.0,
       },
+      senderNewBal: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        defaultValue: 0.0,
+      },
+      receiverNewBal: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        defaultValue: 0.0,
+      },
       type: {
         type: DataTypes.ENUM,
         values: ["deposit", "withdraw", "sent"],
