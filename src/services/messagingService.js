@@ -28,7 +28,6 @@ const sendOTP = async (phoneNumber) => {
 
   // Send message and capture the response or error
   try {
-    console.log(process.env.AFRICASTALKING_USERNAME, process.env.AFRICASTALKING_API_KEY);
     const response = await sms.send(options);
     // save OTP to database
     await verificationService.saveOtp(phoneNumber, otp);

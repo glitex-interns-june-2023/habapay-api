@@ -10,12 +10,12 @@ const { downloadStatement } = require("../controllers/statementController");
 router.post(
   "/download",
   [
-    body("transactionType")
-      .notEmpty()
-      .withMessage("Transaction type is required"),
+    body("email").isEmail().withMessage("Email is required"),
     body("startDate").notEmpty().withMessage("Start date is required").isDate(),
     body("endDate").notEmpty().withMessage("End date is required").isDate(),
-    body("email").isEmail().withMessage("Email is required"),
+    body("transactionType")
+    .notEmpty()
+    .withMessage("Transaction type is required"),
     validateInput,
   ],
   downloadStatement
