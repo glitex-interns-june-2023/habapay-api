@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HabaPay Statement</title>
+    <style>
+      <%= css %>
+      
+      body {
+        font-family: "Times New Roman", serif;
+      }
+      .text-primary {
+        color: #fdac15;
+      }
+      .bg-primary {
+        background-color: #fdac15;
+      }
+      .table-bordered,
+      .table-bordered th,
+      .table-bordered td {
+        border-collapse: collapse;
+        border-spacing: 0;
+        border: 1px solid #fdac15;
+      }
+    </style>
+ </head>
+
+  <body>
+    <div class="container mx-auto p-8 flex flex-col min-h-screen">
+      <main class="flex-grow">
+        <hr class="border-t-4 border-gray-500" />
+        <h1 class="mt-3 text-center text-2xl font-bold text-primary">
+          HABAPAY STATEMENT
+        </h1>
+
+        <section class="mt-5">
+          <table>
+            <tr>
+              <td class="pr-2 text-primary font-bold">Customer Name:</td>
+              <td>Faith Ouma</td>
+            </tr>
+            <tr>
+              <td class="pr-5 text-primary font-bold">Mobile Number:</td>
+              <td>0758826552</td>
+            </tr>
+            <tr>
+              <td class="pr-5 text-primary font-bold">Email Address:</td>
+              <td>
+                <a href="mailto:faith@gmail.com">faith@gmail.com</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="pr-5 text-primary font-bold">Date of Statement:</td>
+              <td>29 Oct 2024</td>
+            </tr>
+            <tr>
+              <td class="pr-5 text-primary font-bold">Statement Period:</td>
+              <td>01 Jan 2024 - 29 Mar 2024</td>
+            </tr>
+          </table>
+        </section>
+
+        <section class="mt-6">
+          <h3 class="text-center text-primary font-bold text-lg">SUMMARY</h3>
+          <table class="w-full table-bordered">
+            <thead>
+              <tr class="text-left">
+                <th class="text-white font-bold text-sm bg-primary">
+                  TRANSACTION TYPE
+                </th>
+                <th class="text-white font-bold text-sm bg-primary">PAID IN</th>
+                <th class="text-white font-bold text-sm bg-primary">
+                  PAID OUT
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="text-sm">
+              <tr>
+                <td>SEND MONEY</td>
+                <td>Ksh. 100,000</td>
+                <td>Ksh. 0</td>
+              </tr>
+              <tr>
+                <td>RECEIVED MONEY</td>
+                <td>Ksh. 0</td>
+                <td>Ksh. 20,000</td>
+              </tr>
+
+              <tr>
+                <td>DEPOSITS</td>
+                <td>Ksh. 0</td>
+                <td>Ksh. 0</td>
+              </tr>
+
+              <tr>
+                <td>WITHDRAWALS</td>
+                <td>Ksh. 0</td>
+                <td>Ksh. 0</td>
+              </tr>
+
+              <tr class="text-md">
+                <td class="font-bold">TOTAL</td>
+                <td class="font-bold">Ksh. 0</td>
+                <td class="font-bold">Ksh. 0</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="mt-5">
+          <h3 class="text-center text-primary font-bold text-lg">
+            DETAILED STATMENT
+          </h3>
+
+          <table class="w-full table-bordered">
+            <thead>
+              <tr class="text-left">
+                <th class="text-white font-bold text-sm bg-primary">Date</th>
+                <th class="text-white font-bold text-sm bg-primary">
+                  Transaction Type
+                </th>
+                <th class="text-white font-bold text-sm bg-primary">
+                  Description
+                </th>
+                <th class="text-white font-bold text-sm bg-primary">
+                  Transaction Status
+                </th>
+                <th class="text-white font-bold text-sm bg-primary">Amount</th>
+                <th class="text-white font-bold text-sm bg-primary">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>29 Oct 2024</td>
+                <td>SEND</td>
+                <td>Payment to John Doe</td>
+                <td>Completed</td>
+                <td>Ksh. 100,000</td>
+                <td>Ksh. 0</td>
+              </tr>
+              <tr>
+                <td>29 Oct 2024</td>
+                <td>RECEIVE</td>
+                <td>Payment from Jane Doe</td>
+                <td>Completed</td>
+                <td>Ksh. 20,000</td>
+                <td>Ksh. 20,000</td>
+              </tr>
+              <tr>
+                <td>29 Oct 2024</td>
+                <td>DEPOSIT</td>
+                <td>Payment to John Doe</td>
+                <td>Completed</td>
+                <td>Ksh. 100,000</td>
+                <td>Ksh. 0</td>
+              </tr>
+              <tr>
+                <td>29 Oct 2024</td>
+                <td>WITHDRAW</td>
+                <td>Payment from Jane Doe</td>
+                <td>Completed</td>
+                <td>Ksh. 20,000</td>
+                <td>Ksh. 20,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+
+      <footer class="text-center mt-10">
+        <hr class="border-t-2 border-gray-500 mt-2" />
+        <div class="flex justify-between items-start mt-2">
+          <div
+            class="bg-primary w-full mr-5 rounded-bl-xl flex flex-col justify-center"
+            style="height: 50px"
+          >
+            <span class="text-center text-white text-lg"
+              >HabaPay -
+              <small class="font-normal"
+                >Small Savings, Big Future
+              </small></span
+            >
+          </div>
+          <img
+            src="https://www.glitexsolutions.co.ke/images/general/bg-logo.png"
+            style="width: 50px; height: 50px"
+            class="object-contain"
+            alt="Company Logo"
+          />
+        </div>
+        <small class="text-gray-500 text-xs"
+          >HabaPay |
+          <a href="https://glitexsolutions.co.ke" target="_blank"
+            >Web: www.glitexsolutions.co.ke</a
+          >
+          | Terms and conditions apply</small
+        >
+      </footer>
+    </div>
+  </body>
+</html>
