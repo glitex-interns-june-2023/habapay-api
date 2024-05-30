@@ -76,6 +76,36 @@ router.post(
 );
 
 router.post(
+  "/deposit",
+  [
+    body("senderPhone")
+      .notEmpty()
+      .withMessage("Phone to deposit from is required")
+      .isLength({
+        min: 10,
+        max: 13,
+      })
+      .withMessage("Phone must be between 10 and 13 characters"),
+    body("mpesaNumber")
+      .notEmpty()
+      .withMessage("M-Pesa number is required")
+      .isLength({
+        min: 10,
+        max: 13,
+      })
+      .withMessage("M-Pesa number must be between 10 and 13 characters"),
+    body("amount")
+      .notEmpty()
+      .withMessage("Amount to deposit is required")
+      .isNumeric()
+      .withMessage("Amount should be numeric")
+      .toFloat(),
+    validateInput,
+  ],
+  sendMoney
+);
+
+router.post(
   "/withdraw",
   [
     body("senderPhone")
