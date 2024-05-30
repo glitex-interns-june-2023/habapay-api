@@ -42,7 +42,7 @@ app.use("/api/v1/transactions", transactionsRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/verifications", verificationsRouter);
 app.use("/api/v1/analytics", analyticsRouter);
-// app.use("/api/v1/statement", statementRouter);
+app.use("/api/v1/statement", statementRouter);
 // error handler
 app.use(errorHandler);
 /*
