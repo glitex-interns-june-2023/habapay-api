@@ -24,12 +24,8 @@ jobs:
                   script: |
                       export NVM_DIR="$HOME/.nvm"
                       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-                      echo whoami
                       nvm use 20
                       cd /apps/habapay/habapay-api
                       git pull
-                      which npm
-                      which node
-                      node -v
-                      npm install --omit=dev
+                      npm ci
                       pm2 restart habapay-api
