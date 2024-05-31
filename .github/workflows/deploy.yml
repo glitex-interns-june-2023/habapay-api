@@ -27,5 +27,5 @@ jobs:
                       nvm use 20
                       cd /apps/habapay/habapay-api
                       git pull
-                      npm ci
+                      npm ci --omit=dev
                       pm2 restart habapay-api
