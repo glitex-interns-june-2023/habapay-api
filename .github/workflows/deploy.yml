@@ -22,6 +22,7 @@ jobs:
                   username: ${{ secrets.USERNAME }}
                   key: ${{ secrets.SSH_KEY }}
                   script: |
+                      source ~/.bashrc
                       cd /apps/habapay/habapay-api
                       git pull
                       which npm
