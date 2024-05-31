@@ -36,7 +36,6 @@ Below are the available endpoints and their usage.
   - [List User Transactions](#list-user-transactions)
 
 - [Statements](#statements)
-
   - [Download Statement](#download-statement)
 
 - [Users](#users)
