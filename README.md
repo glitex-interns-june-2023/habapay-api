@@ -30,9 +30,15 @@ Below are the available endpoints and their usage.
   - [Confirm Recipient Details](#confirm-recipient-details)
   - [Withdraw Cash](#withdraw-cash)
 - [Transactions](#transactions)
+
   - [List all Transactions](#list-all-transactions)
   - [Single Transaction](#single-transaction)
   - [List User Transactions](#list-user-transactions)
+
+- [Statements](#statments)
+
+  - [Download Statement](#download-statement)
+
 - [Users](#users)
   - [List all Users](#list-all-users)
   - [Update User Business Details](#update-business-details)
@@ -948,6 +954,47 @@ Login with PIN instead of password(If you have set a login PIN)
 }
 ```
 
+## Statements
+
+### Download Statement
+
+**Endpoint** `POST /api/v1/statement/download`
+
+#### Description
+
+Generate and send a statement to user's email for a certain period and transaction type
+
+#### Request Body
+
+NOTE: Date Format is `YYYY/MM/DD`
+
+```json
+{
+  "email": "string|required|User's email",
+  "start_date": "date|required|Start date of the statement",
+  "end_date": "date|required|End date of the statement",
+  "transaction_type": "string|required|Transaction type (allowed values: all, sent, deposit, withdraw)"
+}
+```
+
+#### Success Response
+
+```json
+{
+  "success": true,
+  "message": "Statement has been generated and sent to your email. Please check your email inbox."
+}
+```
+
+### Failure Response
+
+```json
+{
+  "success": false,
+  "message": "string|Error message from server"
+}
+```
+
 ## Users
 
 ### List All Users
@@ -1409,46 +1456,46 @@ Get recent activity overview for all users
 
 ```json
 {
-    "success": true,
-    "message": "Users Recent Activity",
-    "data": {
-        "page": 1,
-        "total": 9,
-        "per_page": 10,
-        "previous_page": null,
-        "next_page": null,
-        "last_page": 1,
-        "data": [
-            {
-                "id": 9,
-                "user_id": 3,
-                "message": "<b>Dev</b> sent Ksh 25 to </b>Test User</b>",
-                "type": "send",
-                "timestamp": "5 September 2023, 3:40 PM"
-            },
-            {
-                "id": 7,
-                "user_id": 3,
-                "message": "<b>Dev</b> sent Ksh 30 to </b>Test User</b>",
-                "type": "send",
-                "timestamp": "5 September 2023, 1:31 PM"
-            },
-            {
-                "id": 5,
-                "user_id": 3,
-                "message": "<b>Dev</b> sent Ksh 20.4 to </b>Test User</b>",
-                "type": "send",
-                "timestamp": "5 September 2023, 1:31 PM"
-            },
-            {
-                "id": 4,
-                "user_id": 3,
-                "message": "<b/>Dev</b> deposited Ksh 500 to wallet",
-                "type": "deposit",
-                "timestamp": "5 September 2023, 1:30 PM"
-            },
-        ]
-    }
+  "success": true,
+  "message": "Users Recent Activity",
+  "data": {
+    "page": 1,
+    "total": 9,
+    "per_page": 10,
+    "previous_page": null,
+    "next_page": null,
+    "last_page": 1,
+    "data": [
+      {
+        "id": 9,
+        "user_id": 3,
+        "message": "<b>Dev</b> sent Ksh 25 to </b>Test User</b>",
+        "type": "send",
+        "timestamp": "5 September 2023, 3:40 PM"
+      },
+      {
+        "id": 7,
+        "user_id": 3,
+        "message": "<b>Dev</b> sent Ksh 30 to </b>Test User</b>",
+        "type": "send",
+        "timestamp": "5 September 2023, 1:31 PM"
+      },
+      {
+        "id": 5,
+        "user_id": 3,
+        "message": "<b>Dev</b> sent Ksh 20.4 to </b>Test User</b>",
+        "type": "send",
+        "timestamp": "5 September 2023, 1:31 PM"
+      },
+      {
+        "id": 4,
+        "user_id": 3,
+        "message": "<b/>Dev</b> deposited Ksh 500 to wallet",
+        "type": "deposit",
+        "timestamp": "5 September 2023, 1:30 PM"
+      }
+    ]
+  }
 }
 ```
 
