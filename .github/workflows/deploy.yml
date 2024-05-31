@@ -24,5 +24,6 @@ jobs:
                   script: |
                       cd /apps/habapay/habapay-api
                       git pull
+                      nvm use 20
                       npm ci
                       pm2 restart habapay-api
