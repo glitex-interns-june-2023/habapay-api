@@ -22,7 +22,10 @@ jobs:
                   username: ${{ secrets.USERNAME }}
                   key: ${{ secrets.SSH_KEY }}
                   script: |
-                      source ~/.bashrc
+                      export NVM_DIR="$HOME/.nvm"
+                      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                      echo whoami
+                      nvm use 20
                       cd /apps/habapay/habapay-api
                       git pull
                       which npm
