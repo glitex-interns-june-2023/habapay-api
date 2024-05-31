@@ -8,12 +8,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup Node.js environment
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
-                  node-version: 20
+                  node-version: 14
 
             - name: Deploy to VPS
               uses: appleboy/ssh-action@master
@@ -24,6 +24,8 @@ jobs:
                   script: |
                       cd /apps/habapay/habapay-api
                       git pull
-                      nvm use 20
-                      npm ci
+                      which npm
+                      which node
+                      node -v
+                      npm install --omit=dev
                       pm2 restart habapay-api
