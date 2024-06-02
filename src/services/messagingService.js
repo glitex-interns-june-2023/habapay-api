@@ -29,8 +29,6 @@ const sendOTP = async (phoneNumber) => {
   // Send message and capture the response or error
   try {
     const response = await sms.send(options);
-    // save OTP to database
-    await verificationService.saveOtp(phoneNumber, otp);
     // check if response is successful
     const isSuccessful = response.SMSMessageData.Recipients.length > 0;
     
@@ -38,7 +36,7 @@ const sendOTP = async (phoneNumber) => {
       throw new Error(message);
     }
 
-    return response;
+    return otp;
   } catch (error) {
     console.log(error);
     throw error;
