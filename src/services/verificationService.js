@@ -76,8 +76,8 @@ const savePin = async (userId, pin) => {
   return verification;
 };
 
-const saveOtp = async (phoneNumber, otp) => {
-  const { id } = await userService.findByPhone(phoneNumber);
+const saveOtp = async (user, otp) => {
+  const { id } = user;
 
   const minutes = 5;
   const now = new Date();
