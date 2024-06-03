@@ -20,7 +20,7 @@ const formatSentUserTransactions = (transactions) => {
             currency: transaction.currency,
             amount: transaction.amount,
             type: transaction.type,
-            timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+            timestamp: transaction.timestamp,
           },
         ],
       });
@@ -32,7 +32,7 @@ const formatSentUserTransactions = (transactions) => {
         currency: transaction.currency,
         amount: transaction.amount,
         type: transaction.type,
-        timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+        timestamp: transaction.timestamp
       });
     }
     return acc;
@@ -61,7 +61,7 @@ const formatReceivedUserTransactions = (transactions) => {
             currency: transaction.currency,
             amount: transaction.amount,
             type,
-            timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+            timestamp: transaction.timestamp
           },
         ],
       });
@@ -73,7 +73,7 @@ const formatReceivedUserTransactions = (transactions) => {
         currency: transaction.currency,
         amount: transaction.amount,
         type,
-        timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+        timestamp: transaction.timestamp
       });
     }
     return acc;
@@ -108,7 +108,7 @@ const formatAllTransactions = (transactions) => {
             currency: transaction.currency,
             amount: transaction.amount,
             type: transaction.type,
-            timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+            timestamp: transaction.timestamp
           },
         ],
       });
@@ -120,7 +120,7 @@ const formatAllTransactions = (transactions) => {
         currency: transaction.currency,
         amount: transaction.amount,
         type: transaction.type,
-        timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+        timestamp: transaction.timestamp
       });
     }
     return acc;
@@ -181,7 +181,7 @@ const formatAllUserTransactions = (transactions, user) => {
             currency: transaction.currency,
             amount: transaction.amount,
             type: getType(transaction), // for formatting received transactions
-            timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+            timestamp: transaction.timestamp
           },
         ],
       });
@@ -193,7 +193,7 @@ const formatAllUserTransactions = (transactions, user) => {
         currency: transaction.currency,
         amount: transaction.amount,
         type: getType(transaction), // for formatting received transactions
-        timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+        timestamp: transaction.timestamp
       });
     }
     return acc;
@@ -214,7 +214,7 @@ const formatAdminTransactions = (transactions) => {
       amount: transaction.amount,
       type: transaction.type,
       status: transaction.status,
-      timestamp: formatTimestamp(transaction.timestamp).split(", ")[1],
+      timestamp: transaction.timestamp
     };
     acc.push(response);
     return acc;
