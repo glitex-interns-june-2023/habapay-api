@@ -3,6 +3,7 @@ const userService = require("../services/userService");
 const UserNotFoundError = require("../errors/UserNotFoundError");
 const { formatTimestamp } = require("../utils");
 const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");
+const UnauthorizedOperationError = require("../errors/UnauthorizedOperationError");
 
 const getBalance = async (req, res, next) => {
   try {
@@ -35,18 +36,12 @@ const getBalance = async (req, res, next) => {
 const sendMoney = async (req, res, next) => {
   try {
     const { senderPhone, receiverPhone, amount } = req.body;
-
+    if(senderPhone === receiverPhone) {
+      throw new UnauthorizedOperationError("You cannot send money to yourself");
+    }
+    
     const sender = await userService.findByPhone(senderPhone);
-    if (!sender) {
-      throw new PhoneNotRegisteredError(senderPhone);
-    }
     const receiver = await userService.findByPhone(receiverPhone);
-    if (!receiver) {
-      throw new UserNotFoundError(
-        `Receiver with phone: ${receiverPhone} was not found`
-      );
-    }
-
     const transaction = await walletService.sendMoney(
       sender.id,
       receiver.id,
