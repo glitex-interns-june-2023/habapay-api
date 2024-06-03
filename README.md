@@ -711,7 +711,7 @@ Get all transactions info
           "currency": "Ksh",
           "amount": 184.93,
           "type": "withdraw",
-          "timestamp": "2:26 AM"
+          "timestamp": "2024-05-30T14:55:45.000Z"
         }
       ]
     },
@@ -724,7 +724,7 @@ Get all transactions info
           "currency": "Ksh",
           "amount": 962.61,
           "type": "withdraw",
-          "timestamp": "8:16 PM"
+          "timestamp": "2024-05-30T14:55:45.000Z"
         }
       ]
     }
@@ -803,7 +803,7 @@ Transaction types in response body can either be: `sent|received|deposit|withdra
             "currency": "Ksh",
             "amount": 53.29,
             "type": "sent",
-            "timestamp": "3:38 PM"
+            "timestamp": "2024-05-28T14:10:45.000Z"
           }
         ]
       },
@@ -817,7 +817,7 @@ Transaction types in response body can either be: `sent|received|deposit|withdra
             "currency": "Ksh",
             "amount": 142.88,
             "type": "received",
-            "timestamp": "7:04 AM"
+            "timestamp": "2023-05-29T14:50:49.000Z"
           }
         ]
       }
@@ -1189,7 +1189,7 @@ Get all pending and approved transactions
         "amount": 535.91,
         "type": "withdraw",
         "status": "pending",
-        "timestamp": "6:35 PM"
+        "timestamp": "2023-09-02T18:35:45.000Z"
       },
       {
         "transaction_id": 28,
@@ -1199,7 +1199,7 @@ Get all pending and approved transactions
         "amount": 967.26,
         "type": "sent",
         "status": "pending",
-        "timestamp": "11:41 PM"
+        "timestamp": "2023-09-02T11:41:45.000Z"
       }
     ]
   }
