@@ -81,7 +81,11 @@ const createWithdrawTransaction = async (
   return savedTransaction;
 };
 
-const createDepositTransaction = async (senderWallet, amount) => {
+const createDepositTransaction = async (
+  senderWallet,
+  amount,
+  checkoutRequestId
+) => {
   const transaction = createTransaction(
     senderWallet,
     senderWallet,
@@ -89,7 +93,10 @@ const createDepositTransaction = async (senderWallet, amount) => {
     "deposit"
   );
 
-  const savedTransaction = await Transaction.create(transaction);
+  const savedTransaction = await Transaction.create({
+    ...transaction,
+    checkoutRequestId,
+  });
 
   if (!savedTransaction) {
     const error = new Error(`Failed to save transaction to database`);
@@ -233,7 +240,7 @@ const getUserTransactions = async (
   return formattedData;
 };
 
-// get all transactions of a user for a ceratain type (To facilitate the generation of the pdf statement)
+// get all transactions of a user for a certain type (To facilitate the generation of the pdf statement)
 const getAllUserTransactions = async (user, { type, startDate, endDate }) => {
   const userId = user.id;
 
@@ -350,7 +357,6 @@ const getAllUserTransactions = async (user, { type, startDate, endDate }) => {
         ? transaction.receiverNewBal
         : transaction.senderNewBal,
   }));
-  
 
   return {
     customerDetails,
@@ -462,6 +468,63 @@ const approveTransaction = async (transactionId) => {
   await transaction.save();
 };
 
+const updateCheckedTransactions = async (transactionIds) => {
+  await Transaction.update(
+    { checked: true },
+    {
+      where: {
+        id: {
+          [Op.in]: transactionIds,
+        },
+      },
+    }
+  );
+};
+
+const updatePaidDepositTransactions = async (transactionIds) => {
+  await Transaction.update(
+    { status: "approved" },
+    {
+      where: {
+        id: {
+          [Op.in]: transactionIds,
+        },
+      },
+    }
+  );
+};
+
+const updateUnPaidDepositTransactions = async (transactionIds) => {
+  await Transaction.update(
+    { status: "declined" },
+    {
+      where: {
+        id: {
+          [Op.in]: transactionIds,
+        },
+      },
+    }
+  );
+};
+
+// get unchecked deposit transactions
+const getUnCheckedDepositTransactions = async (user) => {
+  const userId = user.id;
+  const transactions = await Transaction.findAll({
+    where: {
+      receiverId: userId,
+      type: "deposit",
+      checked: false,
+      checkoutRequestId: {
+        [Op.not]: null,
+      },
+    },
+    raw: true,
+  });
+
+  return transactions;
+};
+
 module.exports = {
   createSendTransaction,
   createWithdrawTransaction,
@@ -474,4 +537,8 @@ module.exports = {
   getReceivedUserTransactions,
   getAdminTransactions,
   approveTransaction,
+  updateCheckedTransactions,
+  getUnCheckedDepositTransactions,
+  updatePaidDepositTransactions,
+  updateUnPaidDepositTransactions,
 };
