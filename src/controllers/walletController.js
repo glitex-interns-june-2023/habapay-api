@@ -13,6 +13,9 @@ const getBalance = async (req, res, next) => {
       throw new PhoneNotRegisteredError(phone);
     }
 
+    // verify deposit transactions of each user
+    await walletService.verifyDepositTransactions(user);
+
     const wallet = await walletService.getWallet(user.id);
     const balance = await walletService.getBalance(user.id);
 
@@ -36,10 +39,10 @@ const getBalance = async (req, res, next) => {
 const sendMoney = async (req, res, next) => {
   try {
     const { senderPhone, receiverPhone, amount } = req.body;
-    if(senderPhone === receiverPhone) {
+    if (senderPhone === receiverPhone) {
       throw new UnauthorizedOperationError("You cannot send money to yourself");
     }
-    
+
     const sender = await userService.findByPhone(senderPhone);
     const receiver = await userService.findByPhone(receiverPhone);
     const transaction = await walletService.sendMoney(
