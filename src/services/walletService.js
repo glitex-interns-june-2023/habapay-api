@@ -103,19 +103,51 @@ const updateWalletBalance = async (wallet, amount) => {
 };
 
 const depositMoney = async (senderId, mpesaNumber, amount) => {
-  await mpesaService.sendStkPush(mpesaNumber, amount);
+  const stkRes = await mpesaService.sendStkPush(mpesaNumber, amount);
+  const { CheckoutRequestID } = stkRes;
+
   const wallet = await getWallet(senderId);
   wallet.balance += amount;
   await wallet.save();
 
   const transaction = await transactionService.createDepositTransaction(
     wallet,
-    amount
+    amount,
+    CheckoutRequestID
   );
 
   await loggingService.createDepositCashLog(wallet, amount);
 
   return transaction;
+};
+
+const verifyDepositTransactions = async (user) => {
+  const unCheckedTransactions =
+    await transactionService.getUnCheckedDepositTransactions(user);
+
+  if (unCheckedTransactions.length === 0) return;
+
+  const checkedTransactionIds = [];
+  const paidTransactionIds = [];
+  const unPaidTransactionIds = [];
+  for (const transaction of unCheckedTransactions) {
+    const payment = await mpesaService.checkPaymentStatus(
+      transaction.checkoutRequestId
+    );
+    
+    if (payment) {
+      paidTransactionIds.push(transaction.id);
+    } else {
+      unPaidTransactionIds.push(transaction.id);
+    }
+
+    checkedTransactionIds.push(transaction.id);
+  }
+
+  // updat to db
+  await transactionService.updatePaidDepositTransactions(paidTransactionIds);
+  await transactionService.updateUnPaidDepositTransactions(unPaidTransactionIds);
+  await transactionService.updateCheckedTransactions(checkedTransactionIds);
 };
 
 module.exports = {
@@ -124,4 +156,5 @@ module.exports = {
   sendMoney,
   withdrawMoney,
   depositMoney,
+  verifyDepositTransactions,
 };

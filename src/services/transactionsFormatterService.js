@@ -108,6 +108,7 @@ const formatAllTransactions = (transactions) => {
             currency: transaction.currency,
             amount: transaction.amount,
             type: transaction.type,
+            status: transaction.status,
             timestamp: transaction.timestamp
           },
         ],
@@ -120,6 +121,7 @@ const formatAllTransactions = (transactions) => {
         currency: transaction.currency,
         amount: transaction.amount,
         type: transaction.type,
+        status: transaction.status,
         timestamp: transaction.timestamp
       });
     }
@@ -181,6 +183,7 @@ const formatAllUserTransactions = (transactions, user) => {
             currency: transaction.currency,
             amount: transaction.amount,
             type: getType(transaction), // for formatting received transactions
+            status: transaction.status,
             timestamp: transaction.timestamp
           },
         ],
@@ -193,6 +196,7 @@ const formatAllUserTransactions = (transactions, user) => {
         currency: transaction.currency,
         amount: transaction.amount,
         type: getType(transaction), // for formatting received transactions
+        status: transaction.status,
         timestamp: transaction.timestamp
       });
     }
