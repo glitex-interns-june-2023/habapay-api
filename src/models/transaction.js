@@ -62,6 +62,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 0.0,
       },
+      checked: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      checkoutRequestId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       type: {
         type: DataTypes.ENUM,
         values: ["deposit", "withdraw", "sent"],
@@ -69,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       status: {
         type: DataTypes.ENUM,
-        values: ["pending", "approved"],
+        values: ["pending", "approved", "declined"],
         allowNull: false,
         defaultValue: "pending",
       },
