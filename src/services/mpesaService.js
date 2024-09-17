@@ -68,17 +68,16 @@ const b2c = async (phone, amount) => {
   const auth = `Bearer ${accessToken}`;
   const timestamp = getTimestamp();
   const password = Buffer.from(
-    `${process.env.DARAJA_INITIATOR_SECURITY}${process.env.DARAJA_INITIATOR_PASSWORD}${timestamp}`
+    `${process.env.DARAJA_BUSINESS_SHORTCODE}${process.env.DARAJA_PASS_KEY}${timestamp}`
   ).toString("base64");
 
   const response = await axios.post(
     url,
     {
-      InitiatorName: process.env.DARAJA_INITIATOR_NAME,
       SecurityCredential: password,
       CommandID: "BusinessPayment",
       Amount: amount,
-      PartyA: process.env.DARAJA_SHORTCODE,
+      PartyA: process.env.DARAJA_BUSINESS_SHORTCODE,
       PartyB: phone,
       Remarks: "HabaPay Withdrawal",
       QueueTimeOutURL: "https://example.com",

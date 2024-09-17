@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Analytics', {
+    await queryInterface.createTable('Wallets', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -19,10 +19,16 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      appLaunches: {
-        type: Sequelize.INTEGER,
+      balance: {
+        type: Sequelize.FLOAT,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: 0.0,
+      },
+      currency: {
+        type: Sequelize.ENUM,
+        values: ['Ksh', 'USD', 'EUR'],
+        allowNull: false,
+        defaultValue: 'Ksh',
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +43,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Analytics');
+    await queryInterface.dropTable('Wallets');
   },
 };
