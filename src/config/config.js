@@ -1,9 +1,9 @@
 module.exports = {
   development: {
-    username: "root",
-    password: null,
-    database: "habapay_dev",
-    host: "127.0.0.1",
+    username: process.env.DB_USER || "root",
+    password: process.env.DB_PASS || "password@1",
+    database: process.env.DB_NAME || "habapay_dev",
+    host: process.env.DB_HOST || "localhost",
     dialect: "mysql",
   },
   test: {
