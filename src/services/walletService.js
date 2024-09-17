@@ -30,16 +30,18 @@ const sendMoney = async (senderId, receiverId, amount) => {
 };
 
 const getWallet = async (userId) => {
-  const wallet = await Wallet.findOne({
+  let wallet = await Wallet.findOne({
     where: {
       userId,
     },
   });
 
   if (!wallet) {
-    const error = new Error(`No wallet found for userId: ${userId}`);
-    error.statusCode = 404;
-    throw error;
+    wallet = Wallet.create({
+      userId,
+      balance: 0.0,
+      currency: "Ksh", 
+    });
   }
 
   return wallet;
