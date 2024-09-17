@@ -1,0 +1,37 @@
+services:
+  app:
+    container_name: habapay-api-app-dev
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    ports:
+      - "3003:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    container_name: habapay-api-db-dev
+    image: mysql:5.7
+    environment:
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASS}
+    volumes:
+      - db_data_dev:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 1m30s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  db_data_dev:
