@@ -16,6 +16,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - dev-network
+
   db:
     container_name: habapay-api-db-dev
     image: mysql:5.7
@@ -32,6 +35,12 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+    networks:
+      - dev-network
 
 volumes:
   db_data_dev:
+
+networks:
+  dev-network:
+    driver: bridge
