@@ -149,12 +149,14 @@ const depositMoney = async (req, res, next) => {
   try {
     const user = await userService.ensurePhoneRegistered(senderPhone);
     const userId = user.id;
-
+  
     const transaction = await walletService.depositMoney(
       userId,
       mpesaNumber,
       amount
     );
+
+    console.log("Transaction: ", transaction);
 
     const wallet = await walletService.getWallet(userId);
     const balance = wallet.balance;

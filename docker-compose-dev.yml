@@ -31,7 +31,7 @@ services:
       - db_data_dev:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 1m30s
+      interval: 30s
       timeout: 5s
       retries: 5
       start_period: 5s

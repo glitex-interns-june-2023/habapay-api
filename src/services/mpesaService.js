@@ -44,12 +44,13 @@ const sendStkPush = async (phone, amount) => {
     );
 
     const data = response.data;
-    if(data.ResponseCode != "0"){
+    if (data.ResponseCode != "0") {
       throw new StkPushError(data.ResponseDescription);
     }
 
     return data;
   } catch (error) {
+    console.log("stkError", error);
     throw new StkPushError(error.message);
   }
 };

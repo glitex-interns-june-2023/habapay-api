@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const morgan = require("morgan");
 require("dotenv").config();
 
 const { snakeCaseFormatter } = require("./middlewares/snakeCaseFormatter");
@@ -31,6 +32,9 @@ const usersRouter = require("./routes/users");
 const verificationsRouter = require("./routes/verifications");
 const analyticsRouter = require("./routes/analytics");
 const statementRouter = require("./routes/statements");
+
+// morgan logger
+app.use(morgan("combined"));
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/auth/google", googleAuth);
