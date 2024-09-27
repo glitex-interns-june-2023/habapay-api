@@ -41,6 +41,11 @@ module.exports = {
         type: Sequelize.ENUM,
         values: ["pending", "approved", "declined"],
       },
+      currency: {
+        type: Sequelize.ENUM,
+        values: ["Ksh", "USD", "EUR"],
+        defaultValue: "Ksh",
+      },
       timestamp: {
         type: Sequelize.DATE,
       },
