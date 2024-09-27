@@ -145,6 +145,7 @@ const getTransaction = async (transactionId) => {
       model: User,
       as: "sender",
       attributes: ["firstName", "lastName", "phone"],
+      foreignKey: "senderId",
     },
     raw: true,
   });
