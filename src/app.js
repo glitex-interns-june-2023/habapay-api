@@ -37,6 +37,9 @@ const paymentsRouter = require("./routes/payments")
 // morgan logger
 app.use(morgan("dev"));
 
+// morgan logger
+app.use(morgan("combined"));
+
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/auth/google", googleAuth);
 app.use("/api/v1/admins", adminRouter);

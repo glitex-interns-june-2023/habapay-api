@@ -1,9 +1,11 @@
 const walletService = require("../services/walletService");
 const userService = require("../services/userService");
+const mpesaService = require("../services/mpesaService")
 const UserNotFoundError = require("../errors/UserNotFoundError");
 const { formatTimestamp } = require("../utils");
 const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");
 const UnauthorizedOperationError = require("../errors/UnauthorizedOperationError");
+const { createPayment, savePayment } = require("../services/paymentService");
 
 const getBalance = async (req, res, next) => {
   try {
@@ -141,9 +143,31 @@ const withdrawMoney = async (req, res, next) => {
   }
 };
 
+const depositMoney = async (req, res, next) => {
+  const { senderPhone, mpesaNumber, amount } = req.body;
+  try {
+    const user = await userService.ensurePhoneRegistered(senderPhone);
+
+    const stkRes = await mpesaService.sendStkPush(mpesaNumber, amount);
+    console.log("STK Response: ", stkRes);
+    const { CheckoutRequestID } = stkRes;
+    const paymentObj = createPayment(user, CheckoutRequestID, "deposit");
+    await savePayment(paymentObj);
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "STK push sent successfully. Please enter your M-Pesa PIN to complete your deposit",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getBalance,
   confirmDetails,
   sendMoney,
+  depositMoney,
   withdrawMoney,
 };

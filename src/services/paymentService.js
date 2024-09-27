@@ -44,6 +44,20 @@ const updatePaymentAmount = async (ref, amount) => {
   await Payment.update({ amount }, { where: { ref } });
 };
 
+const updatePaymentRef = async (oldRef, newRef) => {
+  try {
+    const payment = await Payment.findOne({ where: { ref: oldRef } });
+
+    if (!payment) {
+      throw new Error("No payment with the given old ref was found.");
+    }
+
+    await Payment.update({ ref: newRef }, { where: { ref: oldRef } });
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getAllPayments = async (page, perPage) => {
   page = parseInt(page);
   perPage = parseInt(perPage);
@@ -65,6 +79,7 @@ module.exports = {
   createPayment,
   savePayment,
   getPaymentByRef,
+  updatePaymentRef,
   updatePaymentAmount,
   getAllPayments,
 };

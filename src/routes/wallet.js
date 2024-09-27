@@ -11,6 +11,7 @@ const {
   getBalance,
   withdrawMoney,
   confirmDetails,
+  depositMoney
 } = require("../controllers/walletController");
 
 router.get(
@@ -102,13 +103,13 @@ router.post(
       .toFloat(),
     validateInput,
   ],
-  sendMoney
+  depositMoney
 );
 
 router.post(
   "/withdraw",
   [
-    body("senderPhone")
+    body("senderPhone") 
       .notEmpty()
       .withMessage("Sender phone is required")
       .isLength({
