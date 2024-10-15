@@ -34,7 +34,7 @@ const analyticsRouter = require("./routes/analytics");
 const statementRouter = require("./routes/statements");
 
 // morgan logger
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/auth/google", googleAuth);
