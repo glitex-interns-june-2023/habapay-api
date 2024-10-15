@@ -24,4 +24,4 @@ jobs:
           script: |
             cd ${{ secrets.PROJECT_PATH }}
             git pull
-            docker compose -p habapay-api-dev -f docker-compose.dev.yml up --build -d
+            docker compose -p habapay-api-dev -f docker-compose-dev.yml up --build -d
