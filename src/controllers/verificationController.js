@@ -31,7 +31,10 @@ const verifyOTP = async (req, res, next) => {
   const { phoneNumber, otp } = req.body;
   try {
     const user = await userService.findByPhone(phoneNumber);
-
+    
+    if(!user){
+      throw UserNotFoundError("No user with the given phone number was found")
+    }
     await verificationService.verifyOTP(user.id, otp);
 
     await userService.setPhoneVerified(user.id);

@@ -9,7 +9,6 @@ const {
 const {
   sendMoney,
   getBalance,
-  depositMoney,
   withdrawMoney,
   confirmDetails,
 } = require("../controllers/walletController");
@@ -74,27 +73,6 @@ router.post(
     validateInput,
   ],
   sendMoney
-);
-
-router.post(
-  "/deposit",
-  [
-    body("userId")
-      .notEmpty()
-      .withMessage("UserId is is required"),
-    body("transactionRef")
-      .notEmpty()
-      .withMessage("Transaction Ref is required")
-      .withMessage("M-Pesa number must be between 10 and 13 characters"),
-    body("amount")
-      .notEmpty()
-      .withMessage("Amount to deposit is required")
-      .isNumeric()
-      .withMessage("Amount should be numeric")
-      .toFloat(),
-    validateInput,
-  ],
-  depositMoney
 );
 
 router.post(

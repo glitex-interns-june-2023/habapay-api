@@ -13,9 +13,6 @@ const getBalance = async (req, res, next) => {
       throw new PhoneNotRegisteredError(phone);
     }
 
-    // verify deposit transactions of each user
-    await walletService.verifyDepositTransactions(user);
-
     const wallet = await walletService.getWallet(user.id);
     const balance = await walletService.getBalance(user.id);
 
@@ -43,8 +40,8 @@ const sendMoney = async (req, res, next) => {
       throw new UnauthorizedOperationError("You cannot send money to yourself");
     }
 
-    const sender = await userService.findByPhone(senderPhone);
-    const receiver = await userService.findByPhone(receiverPhone);
+    const sender = await userService.ensurePhoneRegistered(senderPhone);
+    const receiver = await userService.ensurePhoneRegistered(receiverPhone);
     const transaction = await walletService.sendMoney(
       sender.id,
       receiver.id,
@@ -144,45 +141,9 @@ const withdrawMoney = async (req, res, next) => {
   }
 };
 
-const depositMoney = async (req, res, next) => {
-  const { userId, transactionRef, amount } = req.body;
-  try {
-    const transaction = await walletService.depositMoney(
-      userId,
-      transactionRef,
-      amount
-    );
-
-    console.log("Transaction: ", transaction);
-
-    const wallet = await walletService.getWallet(userId);
-    const balance = wallet.balance;
-    const timestamp = formatTimestamp(transaction.timestamp);
-
-    const message = `${transaction.id} Confirmed. Deposit of ${transaction.currency} ${transaction.amount} to ${user.username},${user.phone} on ${timestamp}. New wallet balance is ${wallet.currency} ${balance}.`;
-    const response = {
-      transactionId: transaction.id,
-      transactionMessage: message,
-      amount: transaction.amount,
-      currency: transaction.currency,
-      timestamp: timestamp,
-      balance: balance,
-    };
-
-    return res.status(200).json({
-      success: true,
-      message: "Deposit successful",
-      data: response,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 module.exports = {
   getBalance,
   confirmDetails,
   sendMoney,
   withdrawMoney,
-  depositMoney,
 };

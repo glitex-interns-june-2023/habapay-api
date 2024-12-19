@@ -32,6 +32,7 @@ const usersRouter = require("./routes/users");
 const verificationsRouter = require("./routes/verifications");
 const analyticsRouter = require("./routes/analytics");
 const statementRouter = require("./routes/statements");
+const paymentsRouter = require("./routes/payments")
 
 // morgan logger
 app.use(morgan("dev"));
@@ -47,6 +48,8 @@ app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/verifications", verificationsRouter);
 app.use("/api/v1/analytics", analyticsRouter);
 app.use("/api/v1/statement", statementRouter);
+app.use("/api/v1/payments", paymentsRouter)
+
 // error handler
 app.use(errorHandler);
 if (process.env.NODE_ENV === 'development') {
