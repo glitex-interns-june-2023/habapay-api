@@ -2,12 +2,17 @@ const userService = require("../services/userService");
 const transactionService = require("../services/transactionService");
 const statementService = require("../services/statementService");
 const messagingService = require("../services/messagingService");
+const { fi } = require("faker/lib/locales");
+const UserNotFoundError = require("../errors/UserNotFoundError");
 
 const downloadStatement = async (req, res, next) => {
   const { email, startDate, endDate, transactionType } = req.body;
 
   try {
     const user = await userService.findByEmail(email);
+    if(!user){
+      throw UserNotFoundError(`No user with email: ${email} was found`)
+    }
 
     // get user statement for the specified transaction type and date range
     const transactions = await transactionService.getAllUserTransactions(user, {

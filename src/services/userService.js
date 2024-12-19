@@ -1,7 +1,7 @@
 const PhoneNotRegisteredError = require("../errors/PhoneNotRegisteredError");
 const PhoneNotVerifiedError = require("../errors/PhoneNotVerifiedError");
 const { User, Business } = require("../models");
-const { hashPassword } = require("./authService");
+const { hashPassword } = require("../services/authService");
 const paginator = require("../middlewares/paginator");
 const { createAccountCreationLog } = require("./loggingService");
 const UserNotFoundError = require("../errors/UserNotFoundError");
@@ -25,11 +25,6 @@ const findByEmail = async (email) => {
       email: email,
     },
   });
-
-  if (!foundUser) {
-    throw new UserNotFoundError(`No user with email: ${email} was found`);
-  }
-
   return foundUser;
 };
 
@@ -39,11 +34,14 @@ const findByPhone = async (phone) => {
       phone,
     },
   });
-
-  if (!user) throw new PhoneNotRegisteredError(phone);
-
   return user;
 };
+
+const findById = async (userId) => {
+  const user = await User.findByPk(userId)
+  if (!user) throw new UserNotFoundError("No user with the given ID was found");
+  return user;
+}
 
 const ensurePhoneRegistered = async (phone) => {
   const user = await findByPhone(phone);
@@ -165,10 +163,8 @@ const getAllUsers = async (page, perPage) => {
 
 const createAdmin = async (data) => {
   const { password, loginPin, businessName, ...rest } = data;
-
-  const hashedPassword = password ? hashPassword(password) : null;
-  const hashedLoginPin = loginPin ? hashPassword(loginPin) : null;
-
+  const hashedPassword = password ??  hashPassword(password);
+  const hashedLoginPin = loginPin ?? hashPassword(loginPin);
   let user = await User.create({
     ...rest,
     role: "admin",
@@ -220,6 +216,7 @@ module.exports = {
   findByGoogleId,
   findByEmail,
   findByPhone,
+  findById,
   saveUser,
   deleteUser,
   updatePhoneNumber,

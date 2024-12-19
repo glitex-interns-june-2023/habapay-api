@@ -29,7 +29,7 @@ const validateQueryParams = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorDetails = errors.array().map((error) => ({
-      param: snakeCase(error.param),
+      param: snakeCase(error.path),
       message: error.msg,
     }));
 
