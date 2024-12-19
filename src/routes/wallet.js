@@ -79,21 +79,12 @@ router.post(
 router.post(
   "/deposit",
   [
-    body("senderPhone")
+    body("userId")
       .notEmpty()
-      .withMessage("Phone to deposit from is required")
-      .isLength({
-        min: 10,
-        max: 13,
-      })
-      .withMessage("Phone must be between 10 and 13 characters"),
-    body("mpesaNumber")
+      .withMessage("UserId is is required"),
+    body("transactionRef")
       .notEmpty()
-      .withMessage("M-Pesa number is required")
-      .isLength({
-        min: 10,
-        max: 13,
-      })
+      .withMessage("Transaction Ref is required")
       .withMessage("M-Pesa number must be between 10 and 13 characters"),
     body("amount")
       .notEmpty()
