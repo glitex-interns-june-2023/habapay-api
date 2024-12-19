@@ -29,11 +29,7 @@ const findByEmail = async (email) => {
 };
 
 const findByPhone = async (phone) => {
-  const user = await User.findOne({
-    where: {
-      phone,
-    },
-  });
+  const user = await User.findOne({ where: { phone } });
   return user;
 };
 

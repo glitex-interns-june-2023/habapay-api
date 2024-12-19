@@ -13,9 +13,6 @@ const getBalance = async (req, res, next) => {
       throw new PhoneNotRegisteredError(phone);
     }
 
-    // verify deposit transactions of each user
-    await walletService.verifyDepositTransactions(user);
-
     const wallet = await walletService.getWallet(user.id);
     const balance = await walletService.getBalance(user.id);
 
