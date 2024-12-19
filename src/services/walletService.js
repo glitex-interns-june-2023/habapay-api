@@ -104,12 +104,7 @@ const updateWalletBalance = async (wallet, amount) => {
   await wallet.save();
 };
 
-const depositMoney = async (senderId, mpesaNumber, amount) => {
-  console.log("Depositing money");
-  const stkRes = await mpesaService.sendStkPush(mpesaNumber, amount);
-  console.log("STK Response: ", stkRes);
-  const { CheckoutRequestID } = stkRes;
-
+const depositMoney = async (senderId, transactionRef, amount) => {
   const wallet = await getWallet(senderId);
   wallet.balance += amount;
   await wallet.save();
@@ -117,7 +112,7 @@ const depositMoney = async (senderId, mpesaNumber, amount) => {
   const transaction = await transactionService.createDepositTransaction(
     wallet,
     amount,
-    CheckoutRequestID
+    transactionRef
   );
 
   await loggingService.createDepositCashLog(wallet, amount);
