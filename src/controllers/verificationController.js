@@ -66,7 +66,7 @@ const sendPin = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message:
-        "A verification pin has been sent to your email account that you entered.",
+        `A verification PIN has been sent to ${email}`,
     });
   } catch (error) {
     next(error);
