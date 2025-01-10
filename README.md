@@ -312,7 +312,7 @@ Verify the PIN that was sent to user's email
 
 ### Send Email Verification Link
 
-**Endpoint** `POST /api/v1/verifications/email/send`
+**Endpoint** `POST /api/v1/verifications/link/send`
 
 #### Description
 
@@ -331,7 +331,7 @@ Send a verification link to user's email.
 ```json
 {
   "success": true,
-  "message": "A verification email has been sent to your email account that you entered."
+  "message": "A verification email has been sent to <email>."
 }
 ```
 
