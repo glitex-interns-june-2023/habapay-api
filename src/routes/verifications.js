@@ -51,11 +51,11 @@ router.post(
 
 // Verify email via verificationToken
 router.post(
-  "/email/send",
+  "/link/send",
   [body("email").notEmpty().withMessage("Email is required"), validateInput],
   sendVerificationEmail
 );
 
-router.get("/email/verify", verifyEmailVerificationToken);
+router.get("/link/verify", verifyEmailVerificationToken);
 
 module.exports = router;
