@@ -182,7 +182,13 @@ const updatePassword = async (email, password, token) => {
 
   user.password = hashPassword(password);
   await user.save();
-  await verification.destroy()
+
+  await Verification.destroy({
+    where: {
+      userId: user.id,
+      type: "password",
+    },
+  });
   return true;
 };
 
