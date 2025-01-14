@@ -164,6 +164,8 @@ const updatePassword = async (email, password, token) => {
       userId: user.id,
       type: "password",
     },
+    order: [["createdAt", "DESC"]],
+    limit: 1
   });
 
   if(!verification){
@@ -180,6 +182,7 @@ const updatePassword = async (email, password, token) => {
 
   user.password = hashPassword(password);
   await user.save();
+  await verification.destroy()
   return true;
 };
 
