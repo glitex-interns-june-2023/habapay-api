@@ -1,8 +1,8 @@
-const uuid = require("uuid");
+const crypto = require("crypto");
 const { Payment } = require("../models/");
 const paginator = require("../middlewares/paginator");
 
-const generatePaymentRef = () => uuid.v4();
+const generatePaymentRef = () => crypto.randomBytes(5).toString("hex").toUpperCase();
 
 const savePayment = async (payment) => {
   try {
