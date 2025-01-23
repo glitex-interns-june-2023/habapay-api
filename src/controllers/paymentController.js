@@ -32,6 +32,7 @@ const getPaymentRef = async (req, res, next) => {
 };
 
 const paymentCallBack = async (req, res, next) => {
+  console.log("Processing Payment Callback data: ", req.body)
   try {
     const {
       event,
