@@ -1,6 +1,6 @@
 const { OAuth2Client } = require("google-auth-library");
 const { User, Verification } = require("../models");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const axios = require("axios");
 const InvalidGoogleTokenError = require("../errors/InvalidGoogleTokenError");
 const InvalidLoginDetailsError = require("../errors/InvalidLoginDetailsError");

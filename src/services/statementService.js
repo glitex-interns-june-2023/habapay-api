@@ -27,7 +27,11 @@ let page;
 let timeoutId;
 
 const startBrowser = async () => {
-  browser = await puppeteer.launch();
+  browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    executablePath: '/usr/bin/google-chrome',
+  });
   page = await browser.newPage();
   await page.setViewport({ width: 1920, height: 1080 });
   await page.emulateMediaType("screen");
