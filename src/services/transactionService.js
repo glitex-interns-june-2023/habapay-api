@@ -186,6 +186,7 @@ const getUserTransactions = async (
     },
     offset,
     limit: perPage,
+    order: [["timestamp", "DESC"]],
     include: [
       {
         model: User,
