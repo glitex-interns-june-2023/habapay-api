@@ -9,11 +9,16 @@ const {
 const walletService = require("../services/walletService");
 
 const userService = require("../services/userService");
+const UserNotFoundError = require("../errors/UserNotFoundError");
 
 const getPaymentRef = async (req, res, next) => {
   const { userId, purpose } = req.query;
   try {
     const user = await userService.findById(userId);
+    if(!user){
+      throw UserNotFoundError("No user with the given ID was found")
+    }
+    
     const paymentRef = generatePaymentRef();
     const payment = createPayment(user, paymentRef, purpose);
     console.log("Generated Payment: ", payment);

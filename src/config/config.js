@@ -4,6 +4,7 @@ module.exports = {
     password: process.env.DB_PASS || "password@1",
     database: process.env.DB_NAME || "habapay_dev",
     host: process.env.DB_HOST || "localhost",
+    logging: true,
     dialect: "mysql",
   },
   test: {
