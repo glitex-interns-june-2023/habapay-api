@@ -104,15 +104,15 @@ const updateWalletBalance = async (wallet, amount) => {
   await wallet.save();
 };
 
-const depositMoney = async (senderId, transactionRef, amount) => {
-  const wallet = await getWallet(senderId);
+const depositMoney = async (userId, receiptNumber, amount) => {
+  const wallet = await getWallet(userId);
   wallet.balance += amount;
   await wallet.save();
-
+  
   const transaction = await transactionService.createDepositTransaction(
     wallet,
     amount,
-    transactionRef
+    receiptNumber
   );
 
   await loggingService.createDepositCashLog(wallet, amount);

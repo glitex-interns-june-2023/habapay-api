@@ -18,7 +18,7 @@ const sendStkPush = async (phone, amount) => {
   const password = Buffer.from(
     `${process.env.DARAJA_BUSINESS_SHORTCODE}${process.env.DARAJA_PASS_KEY}${timestamp}`
   ).toString("base64");
-  const callBackURL = "https://example.com";
+  const callBackURL = process.env.DARAJA_CALLBACK_URL;
 
   try {
     const response = await axios.post(
